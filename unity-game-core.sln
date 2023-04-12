@@ -5,6 +5,7 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7B94157-F48D-4C00-B78C-97FA2B1D46CD}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		package.json = package.json
 	EndProjectSection
 EndProject

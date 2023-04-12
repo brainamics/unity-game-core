@@ -6,6 +6,8 @@
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]in/
+/Runtime/[Oo]bj/
+/Runtime/[Bb]in/
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
