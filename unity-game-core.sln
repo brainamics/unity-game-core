@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7B94157-F48D-4C00-B78C-97FA2B1D46CD}"
+	ProjectSection(SolutionItems) = preProject
+		package.json = package.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{78DF3A99-2BBC-4B15-B4A4-E43F0111D610}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brainamics.Core", "Runtime\Brainamics.Core.csproj", "{10C54524-11F6-4B5E-8FB6-41E367A9FD3A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10C54524-11F6-4B5E-8FB6-41E367A9FD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C54524-11F6-4B5E-8FB6-41E367A9FD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C54524-11F6-4B5E-8FB6-41E367A9FD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C54524-11F6-4B5E-8FB6-41E367A9FD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{10C54524-11F6-4B5E-8FB6-41E367A9FD3A} = {78DF3A99-2BBC-4B15-B4A4-E43F0111D610}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B7B9071-61DD-4610-9750-04CD4F0140E2}
+	EndGlobalSection
+EndGlobal

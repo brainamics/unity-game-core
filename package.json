@@ -1,0 +1,22 @@
+{
+    "name": "com.brainamics.core",
+    "version": "0.9.0",
+    "displayName": "Brainamics Game Core",
+    "description": "Brainamics Game Core Package for Unity",
+    "unity": "2021.3",
+    "unityRelease": "20f1",
+    "documentationUrl": "https://github.com/brainamics/unity-game-core",
+    "changelogUrl": "https://github.com/brainamics/unity-game-core",
+    "licensesUrl": "https://github.com/brainamics/unity-game-core",
+    "dependencies": {
+    },
+    "keywords": [
+        "brainamics",
+        "core"
+    ],
+    "author": {
+        "name": "Brainamics",
+        "email": "gaming@brainamics.de",
+        "url": "https://brainamics.de"
+    }
+}
