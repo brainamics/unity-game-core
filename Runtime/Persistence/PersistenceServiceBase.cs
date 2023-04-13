@@ -14,6 +14,7 @@ namespace Brainamics.Core
         public string LoadingScene;
 
         private TState _state;
+        private ScenePersistenceManager _activeScenePersistenceManager;
         private bool _operating;
         private UnityEvent _onGameSaved = new();
         private UnityEvent _onGameLoaded = new();
