@@ -9,14 +9,13 @@
     "changelogUrl": "https://brainamics.de/",
     "licensesUrl": "https://brainamics.de/",
     "dependencies": {
-      "com.cysharp.unitask": "2.3.3"
-   },
-   "keywords": [
-      "brainamics"
+    },
+    "keywords": [
+        "brainamics"
     ],
     "author": {
-      "name": "Brainamics",
-      "email": "gaming@brainamics.de",
-      "url": "https://brainamics.de"
+        "name": "Brainamics",
+        "email": "gaming@brainamics.de",
+        "url": "https://brainamics.de"
     }
-  }
+}
