@@ -14,7 +14,7 @@ namespace Brainamics.Core
         public string LoadingScene;
 
         private TState _state;
-        private ScenePersistenceManager _activeScenePersistenceManager;
+        private ScenePersistenceManagerBase<TState> _activeScenePersistenceManager;
         private bool _operating;
         private UnityEvent _onGameSaved = new();
         private UnityEvent _onGameLoaded = new();
@@ -41,17 +41,27 @@ namespace Brainamics.Core
 
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
 
-        public async Task NewGameAsync()
+        public void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
+        {
+            if (_state == null)
+            {
+                LoadGameInBackground();
+                return;
+            }
+            _activeScenePersistenceManager = manager;
+        }
+
+        public async Task NewGameAsync(IProgress<float> progress)
         {
             _state = NewState();
             Log("creating a new game.");
             await _persistenceProvider.SaveStateAsync(_state);
-            await LoadGameState(_state, true).AsTask();
+            await LoadGameState(_state, progress);
         }
 
         public void NewGameInBackground()
         {
-            _ = NewGameAsync();
+            _ = NewGameAsync(null);
         }
 
         public Task SaveGameAsync()
@@ -81,21 +91,25 @@ namespace Brainamics.Core
             });
         }
 
-        public Task<AsyncOperation> LoadGameAsync(bool forceReload = false)
+        public Task LoadGameAsync(IProgress<float> progress)
         {
             return StartSaveLoadOperation(async () =>
             {
                 _state = await _persistenceProvider.LoadStateAsync();
-                return LoadGameState(_state, forceReload);
+                return LoadGameState(_state, progress);
             });
+        }
+
+        public void LoadGameInBackground()
+        {
+            LoadGameAsync(null).RunInBackground();
         }
 
         protected abstract TState NewState();
 
-        private AsyncOperation LoadGameState(TState state, bool forceReload = false)
-        {
+        protected abstract Task LoadGameState(TState state, IProgress<float> progress);
 
-        }
+        protected abstract void UpdateStateBeforeSave(TState state);
 
         public void LoadActiveSceneState()
         {
@@ -136,11 +150,10 @@ namespace Brainamics.Core
             }
             else
             {
-                state = new TState();
-                persistableObjects = EnumeratePersistableObjects(_activeScenePersistenceManager[PersistableObjects]);
+                state = NewState();
+                persistableObjects = EnumeratePersistableObjects(_activeScenePersistenceManager.PersistableObjects);
             }
-            state.LevelId = _levelService.CurrentLevel.Id;
-            state.LastSavedAt = DateTime.UtcNow;
+            UpdateStateBeforeSave(state);
             foreach (var obj in persistableObjects)
             {
                 obj.SaveState(state);

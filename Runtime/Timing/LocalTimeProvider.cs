@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class LocalTimeProvider : ITimeProvider
+namespace Brainamics.Core
 {
-    public Task<DateTime> GetTimeAsync()
+    public class LocalTimeProvider : ITimeProvider
     {
-        return Task.FromResult(DateTime.UtcNow);
+        public Task<DateTime> GetTimeAsync()
+        {
+            return Task.FromResult(DateTime.UtcNow);
+        }
     }
 }

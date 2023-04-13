@@ -9,6 +9,7 @@
     "changelogUrl": "https://brainamics.de/",
     "licensesUrl": "https://brainamics.de/",
     "dependencies": {
+		"com.unity.nuget.newtonsoft-json": "3.1.0"
     },
     "keywords": [
         "brainamics"

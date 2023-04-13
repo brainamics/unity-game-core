@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public interface ITimeProvider
+namespace Brainamics.Core
 {
-    Task<DateTime> GetTimeAsync();
+    public interface ITimeProvider
+    {
+        Task<DateTime> GetTimeAsync();
+    }
 }

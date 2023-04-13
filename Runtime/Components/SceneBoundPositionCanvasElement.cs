@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.SceneView;
 
 namespace Brainamics.Core
 {
@@ -26,14 +27,19 @@ namespace Brainamics.Core
                 _camera = Camera.main;
             if (!_camera.TryGetComponent<CameraTransformer>(out _cameraTransformer))
                 return;
-            _cameraTransformer.OnPositionChanged.AddListener(Reposition);
+            _cameraTransformer.OnPositionChanged.AddListener(CameraMoved);
             Reposition();
         }
 
         private void OnDestroy()
         {
             if (_cameraTransformer != null)
-                _cameraTransformer.OnPositionChanged.RemoveListener(Reposition);
+                _cameraTransformer.OnPositionChanged.RemoveListener(CameraMoved);
+        }
+
+        private void CameraMoved(CameraTransformer _)
+        {
+            Reposition();
         }
 
         private void Reposition()

@@ -5,19 +5,20 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    public class ScenePersistenceManager<TState> : MonoBehaviour
+    public abstract class ScenePersistenceManagerBase<TState> : MonoBehaviour
     {
         private readonly List<IPersistentState<TState>> _persistableObjects = new();
-        private PersistenceServiceBase<TState> _persistenceService;
+        private IPersistenceService<TState> _persistenceService;
 
         public IEnumerable<IPersistentState<TState>> PersistableObjects => _persistableObjects;
 
+        protected abstract IPersistenceService<TState> GetPersistenceService();
+
         private void Awake()
         {
-            var serviceLocator = GetComponent<ServiceReference>().ServiceLocator;
-            _persistenceService = serviceLocator.PersistenceService;
-
+            _persistenceService = GetPersistenceService();
             _persistenceService.SetActiveScenePersistenceManager(this);
+
             _persistableObjects.Clear();
             var scene = gameObject.scene;
             var rootObjects = scene.GetRootGameObjects();
