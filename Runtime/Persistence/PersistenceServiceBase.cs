@@ -14,8 +14,8 @@ namespace Brainamics.Core
     {
         public string LoadingScene;
 
-        private TState _state;
-        private ScenePersistenceManagerBase<TState> _activeScenePersistenceManager;
+        protected TState _state;
+        protected ScenePersistenceManagerBase<TState> _activeScenePersistenceManager;
         private bool _operating;
         private UnityEvent _onGameSaved = new();
         private UnityEvent _onGameLoaded = new();
@@ -42,7 +42,7 @@ namespace Brainamics.Core
 
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
 
-        public void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
+        public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
         {
             if (_state == null)
             {
