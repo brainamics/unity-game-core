@@ -42,7 +42,7 @@ namespace Brainamics.Core
 
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
         
-        protected virtual bool RestartIfStateUnavailableDuringSceneAwake => false;
+        protected virtual bool ReloadIfStateUnavailableDuringSceneAwake => false;
 
         public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
         {
@@ -116,9 +116,9 @@ namespace Brainamics.Core
 
         public void LoadActiveSceneState()
         {
-            if (_state == null && RestartIfStateUnavailableDuringSceneAwake)
+            if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
             {
-                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+                LoadGameInBackground();
                 return;
             }
             StartSaveLoadOperation(() =>
