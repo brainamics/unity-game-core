@@ -13,7 +13,7 @@ namespace Brainamics.Core
 
         public bool IsPaused => _paused;
 
-        protected virtual bool LookUpSceneForAudioListeners => false;
+        public bool LookUpSceneForAudioListeners { get; set; }
 
         public void Pause()
         {
