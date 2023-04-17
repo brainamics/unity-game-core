@@ -8,6 +8,11 @@ namespace Brainamics.Core
 {
     public interface IAdService
     {
+        /// <summary>
+        /// Gets whether an ad is currently being played.
+        /// </summary>
+        bool IsAdActive { get; }
+
         UnityEvent<bool> OnAdAvailabilityChanged { get; }
 
         UnityEvent<Action> OnAdShown { get; }

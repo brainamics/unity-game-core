@@ -1,3 +1,4 @@
+using Codice.CM.Common.Tree.Partial;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Brainamics.Core
         private bool _adHooked;
         private Action<bool> _hookCallback;
         private AdHookParameters _hookParams;
+        private PauseSimulator _pauseSimulator;
 
         [SerializeField]
         private UnityEvent<Action> _onAdShown = new();
@@ -31,6 +33,8 @@ namespace Brainamics.Core
 
         protected AdHookParameters CurrentHookParams => _hookParams;
 
+        public bool IsAdActive => _adHooked;
+
         public bool StartAd(AdHookParameters @params, Action<bool> callback)
         {
             RejectCurrentHook();
@@ -42,7 +46,18 @@ namespace Brainamics.Core
             _hookParams = @params;
             _adHooked = true;
             ShowAd();
+            _pauseSimulator ??= CreatePauseSimulator();
+            _pauseSimulator?.Pause();
             return true;
+        }
+
+        protected virtual PauseSimulator CreatePauseSimulator()
+        {
+#if UNITY_IOS
+            return new PauseSimulator();
+#else
+            return null;
+#endif
         }
 
         protected abstract void ShowAd();
@@ -51,8 +66,7 @@ namespace Brainamics.Core
         {
             if (!_adHooked)
                 return;
-            _adHooked = false;
-            _hookParams = null;
+            ClearCurrentHook();
             _hookCallback.Invoke(false);
         }
 
@@ -60,8 +74,7 @@ namespace Brainamics.Core
         {
             if (!_adHooked)
                 return;
-            _adHooked = false;
-            _hookParams = null;
+            ClearCurrentHook();
             _hookCallback.Invoke(true);
         }
 
@@ -72,6 +85,13 @@ namespace Brainamics.Core
 
         protected virtual void OnDestroyInternal()
         {
+        }
+
+        private void ClearCurrentHook()
+        {
+            _adHooked = false;
+            _hookParams = null;
+            _pauseSimulator?.Resume();
         }
 
         private void OnDestroy()
