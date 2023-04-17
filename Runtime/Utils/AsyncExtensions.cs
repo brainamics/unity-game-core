@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    internal static class AsyncExtensions
+    public static class AsyncExtensions
     {
         public static Task AsTask(this AsyncOperation asyncOperation)
         {
