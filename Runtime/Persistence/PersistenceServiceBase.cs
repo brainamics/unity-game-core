@@ -131,7 +131,7 @@ namespace Brainamics.Core
 
         private void LoadSceneState(IEnumerable<IPersistentState<TState>> statefulObjects)
         {
-            if (_state == null && Rest)
+            if (_state == null)
                 return;
             foreach (var obj in EnumeratePersistableObjects(statefulObjects))
             {
