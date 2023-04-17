@@ -41,6 +41,8 @@ namespace Brainamics.Core
         public abstract DateTime? LastSaveTime { get; }
 
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
+        
+        protected virtual bool RestartIfStateUnavailableDuringSceneAwake => false;
 
         public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
         {
@@ -114,6 +116,11 @@ namespace Brainamics.Core
 
         public void LoadActiveSceneState()
         {
+            if (_state == null && RestartIfStateUnavailableDuringSceneAwake)
+            {
+                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+                return;
+            }
             StartSaveLoadOperation(() =>
             {
                 if (_activeScenePersistenceManager == null)
@@ -124,7 +131,7 @@ namespace Brainamics.Core
 
         private void LoadSceneState(IEnumerable<IPersistentState<TState>> statefulObjects)
         {
-            if (_state == null)
+            if (_state == null && Rest)
                 return;
             foreach (var obj in EnumeratePersistableObjects(statefulObjects))
             {
