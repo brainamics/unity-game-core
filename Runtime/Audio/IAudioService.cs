@@ -32,17 +32,17 @@ namespace Brainamics.Core
     {
         public static void PlayEffect(this IAudioService audioService, AudioSource source)
         {
-            return audioService.Play(AudioKind.Effect, source);
+            audioService.Play(AudioKind.Effect, source);
         }
 
         public static void PlayMusic(this IAudioService audioService, AudioSource source)
         {
-            return audioService.Play(AudioKind.Music, source);
+            audioService.Play(AudioKind.Music, source);
         }
 
         public static void PlayEffectOneShot(this IAudioService audioService, AudioKind kind, AudioSource audio, AudioClip clip)
         {
-            return audioService.PlayOneShot(AudioKind.Effect, audio, clip);
+            audioService.PlayOneShot(AudioKind.Effect, audio, clip);
         }
     }
 }
