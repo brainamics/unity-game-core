@@ -1,0 +1,154 @@
+using UnityEditor;
+using UnityEditor.Callbacks;
+using System.Collections.Generic;
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+#endif
+using System.IO;
+
+public class PostBuildStep
+{
+    // Set the IDFA request description:
+    const string k_TrackingDescription = "Your data will be used to provide you a better and personalized ad experience.";
+
+    static readonly IReadOnlyList<string> skadNtworks = new List<string> {
+        "su67r6k2v3", //ironsource
+        "4dzt52r2t5", //unity
+        //"bvpn9ufa9b", //unity
+        "ludvb6z3bs", //apploving
+        "cstr6suwn9", //admob
+        "v9wttpbfk9", //facebook1
+        "n38lu8286q", //facebook2
+        "kbd757ywx3", //mintegral
+    }.AsReadOnly();
+
+    const string advertisingAttributionEndpoint = "https://postbacks-is.com";
+#if UNITY_IOS
+    [PostProcessBuild(0)]
+    public static void OnPostProcessBuild(BuildTarget buildTarget, string pathToXcode)
+    {
+        if (buildTarget != BuildTarget.iOS)
+        {
+            return;
+        }
+
+        // adding values to info.plits
+        AddPlistValues(pathToXcode);
+
+        // disabling bitcode
+        DisableBitcode(pathToXcode);
+
+        // add background capabilities
+        AddBackgroundCapabilities(pathToXcode);
+    }
+
+    // Implement a function to read and write values to the plist file:
+    static void AddPlistValues(string pathToXcode)
+    {
+        // Retrieve the plist file from the Xcode project directory:
+        string plistPath = pathToXcode + "/Info.plist";
+        PlistDocument plistObj = new PlistDocument();
+
+
+        // Read the values from the plist file:
+        plistObj.ReadFromString(File.ReadAllText(plistPath));
+
+        // Set values from the root object:
+        PlistElementDict plistRoot = plistObj.root;
+
+        // adding relevant values
+        AddNSUserTrackingValues(plistRoot);
+        AddSKAdNetworkValues(plistRoot);
+        RemoveArbitraryLoadsInWebContent(plistRoot);
+        AddSkanEndpoint(plistRoot);
+
+        // Save changes to the plist:
+        File.WriteAllText(plistPath, plistObj.WriteToString());
+    }
+   
+     static void AddNSUserTrackingValues(PlistElementDict plistRoot)
+    {
+        //need this one to show the apple popup for data acquisition
+
+        // Set the description key-value in the plist:
+        plistRoot.SetString("NSUserTrackingUsageDescription", k_TrackingDescription);
+    }
+
+    static void AddSKAdNetworkValues(PlistElementDict plistRoot)
+    {
+        PlistElementArray skadArray = plistRoot.CreateArray("SKAdNetworkItems");
+
+        var key = "SKAdNetworkIdentifier";
+        foreach (string skadNet in skadNtworks)
+        {
+            var value = $"{skadNet}.skadnetwork";
+            PlistElementDict dict_i = skadArray.AddDict();
+            dict_i.SetString(key, value);
+        }
+    }
+
+    static void RemoveArbitraryLoadsInWebContent(PlistElementDict plistRoot)
+    {
+        // need this for ironsource. Check https://developers.is.com/ironsource-mobile/unity/unity-plugin/#step-3
+        PlistElement NSAppTransportSecurity = plistRoot["NSAppTransportSecurity"];
+
+        // check if NSAppTransportSecurity is of type PlistElementDict
+        if (NSAppTransportSecurity is PlistElementDict)
+        {
+            PlistElementDict NSAppTransportSecurityDict = (PlistElementDict)NSAppTransportSecurity;
+            NSAppTransportSecurityDict.SetBoolean("NSAllowsArbitraryLoadsInWebContent", false);
+        }
+    }
+
+    static void AddSkanEndpoint(PlistElementDict plistRoot)
+    {
+        // need this for ironsource. Check https://developers.is.com/ironsource-mobile/unity/unity-plugin/#step-3
+        plistRoot.SetString("NSAdvertisingAttributionReportEndpoint", advertisingAttributionEndpoint);
+    }
+
+    static void DisableBitcode(string pathToXcode)
+    {
+        string projectPath = pathToXcode + "/Unity-iPhone.xcodeproj/project.pbxproj";
+        PBXProject pbxProject = new PBXProject();
+        pbxProject.ReadFromFile(projectPath);
+
+        // main
+        string targetGuid = pbxProject.GetUnityMainTargetGuid();
+        pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
+
+        // test
+        var targetTest = pbxProject.TargetGuidByName(PBXProject.GetUnityTestTargetName());
+        if (!string.IsNullOrEmpty(targetTest))
+        {
+            pbxProject.SetBuildProperty(targetTest, "ENABLE_BITCODE", "NO");
+        }
+
+        // unity framework
+        var targetFr = pbxProject.GetUnityFrameworkTargetGuid();
+        if (!string.IsNullOrEmpty(targetFr))
+        {
+            pbxProject.SetBuildProperty(targetFr, "ENABLE_BITCODE", "NO");
+        }
+        
+        pbxProject.WriteToFile(projectPath);
+    }
+
+    static void AddBackgroundCapabilities(string pathToXcode)
+    {
+        string projectPath = pathToXcode + "/Unity-iPhone.xcodeproj/project.pbxproj";
+        PBXProject pbxProject = new PBXProject();
+        pbxProject.ReadFromFile(projectPath);
+
+        ProjectCapabilityManager capManager = new ProjectCapabilityManager(
+            projectPath,
+            "Entitlements.entitlements",
+            targetGuid: pbxProject.GetUnityMainTargetGuid()
+        );
+
+        capManager.AddBackgroundModes(BackgroundModesOptions.BackgroundFetch);
+        //capManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
+
+        capManager.WriteToFile();
+    }
+#endif
+}
