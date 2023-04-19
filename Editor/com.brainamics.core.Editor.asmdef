@@ -1,5 +1,5 @@
 {
-    "name": "com.brainamics.core",
+    "name": "com.brainamics.core.Editor",
     "rootNamespace": "Brainamics.Core",
     "references": [],
     "includePlatforms": [],
