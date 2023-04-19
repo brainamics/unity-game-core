@@ -1,6 +1,6 @@
 {
     "name": "com.brainamics.game-core",
-    "version": "0.9.0",
+    "version": "1.0.0",
     "displayName": "Brainamics Game Core",
     "description": "Brainamics Game Core Package",
     "unity": "2021.3",
@@ -12,7 +12,8 @@
 		"com.unity.nuget.newtonsoft-json": "3.1.0"
     },
     "keywords": [
-        "brainamics"
+        "brainamics",
+		"core"
     ],
     "author": {
         "name": "Brainamics",
