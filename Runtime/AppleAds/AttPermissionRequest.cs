@@ -6,7 +6,7 @@ using Unity.Advertisement.IosSupport;
 
 public class AttPermissionRequest : MonoBehaviour
 {
-    void Awake()
+    private void Awake()
     {
 #if UNITY_IOS
         // Check the user's consent status.
