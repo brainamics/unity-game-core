@@ -1,0 +1,120 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Brainamics.Core;
+using System;
+
+[CreateAssetMenu(menuName = "Game/Services/Ads/IronSource Ad Service")]
+public class IronSourceAdService : AdServiceBase
+{
+    private bool _videoRewarded;
+
+    public IronSourceAdService()
+    {
+        IronSourceRewardedVideoEvents.onAdOpenedEvent += RewardedVideoOnAdOpenedEvent;
+        IronSourceRewardedVideoEvents.onAdClosedEvent += RewardedVideoOnAdClosedEvent;
+        IronSourceRewardedVideoEvents.onAdAvailableEvent += RewardedVideoOnAdAvailable;
+        IronSourceRewardedVideoEvents.onAdUnavailableEvent += RewardedVideoOnAdUnavailable;
+        IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
+        IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
+        IronSourceRewardedVideoEvents.onAdClickedEvent += RewardedVideoOnAdClickedEvent;
+    }
+
+    public override bool IsVideoAvailable => IronSource.Agent.isRewardedVideoAvailable();
+
+    public override bool IsInterstitialAvailable => IronSource.Agent.isInterstitialReady();
+
+    protected override bool ShowAd()
+    {
+        switch (CurrentHookParams.Kind)
+        {
+            case AdKind.Video:
+                return ShowVideoAd();
+
+            case AdKind.Interstitial:
+                return ShowInterstitialAd();
+
+            default:
+                throw new NotImplementedException($"Showing ads of kind '{CurrentHookParams.Kind}' is not implemented.");
+        }
+    }
+
+    protected override void OnDestroyInternal()
+    {
+        IronSourceRewardedVideoEvents.onAdOpenedEvent -= RewardedVideoOnAdOpenedEvent;
+        IronSourceRewardedVideoEvents.onAdClosedEvent -= RewardedVideoOnAdClosedEvent;
+        IronSourceRewardedVideoEvents.onAdAvailableEvent -= RewardedVideoOnAdAvailable;
+        IronSourceRewardedVideoEvents.onAdUnavailableEvent -= RewardedVideoOnAdUnavailable;
+        IronSourceRewardedVideoEvents.onAdShowFailedEvent -= RewardedVideoOnAdShowFailedEvent;
+        IronSourceRewardedVideoEvents.onAdRewardedEvent -= RewardedVideoOnAdRewardedEvent;
+        IronSourceRewardedVideoEvents.onAdClickedEvent -= RewardedVideoOnAdClickedEvent;
+    }
+
+    private bool ShowVideoAd()
+    {
+        if (!IsVideoAvailable)
+            return false;
+
+        _videoRewarded = false;
+        if (string.IsNullOrEmpty(CurrentHookParams.PlacementId))
+            IronSource.Agent.showRewardedVideo();
+        else
+            IronSource.Agent.showRewardedVideo(CurrentHookParams.PlacementId);
+        return true;
+    }
+
+    private bool ShowInterstitialAd()
+    {
+        if (!IsInterstitialAvailable)
+            return false;
+
+        if (string.IsNullOrEmpty(CurrentHookParams.PlacementId))
+            IronSource.Agent.showInterstitial();
+        else
+            IronSource.Agent.showInterstitial(CurrentHookParams.PlacementId);
+        return true;
+    }
+
+    #region Rewarded Video Event Handlers
+    private void RewardedVideoOnAdAvailable(IronSourceAdInfo adInfo)
+    {
+        SetAdAvailability(true);
+    }
+
+    private void RewardedVideoOnAdUnavailable()
+    {
+        SetAdAvailability(false);
+    }
+
+    private void RewardedVideoOnAdOpenedEvent(IronSourceAdInfo adInfo)
+    {
+    }
+
+    private void RewardedVideoOnAdClosedEvent(IronSourceAdInfo adInfo)
+    {
+        if (_videoRewarded)
+            ApproveCurrentHook();
+        else
+            RejectCurrentHook();
+    }
+
+    private void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
+    {
+        if (!string.IsNullOrEmpty(CurrentHookParams.PlacementId) && placement.getPlacementName() != CurrentHookParams.PlacementId)
+        {
+            _videoRewarded = false;
+            return;
+        }
+        _videoRewarded = true;
+    }
+
+    private void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo)
+    {
+        RejectCurrentHook();
+    }
+
+    private void RewardedVideoOnAdClickedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
+    {
+    }
+    #endregion
+}
