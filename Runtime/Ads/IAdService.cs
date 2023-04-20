@@ -20,6 +20,7 @@ namespace Brainamics.Core
         UnityEvent<bool> OnAdComplete { get; }
 
         bool IsVideoAvailable { get; }
+        bool IsInterstitialAvailable { get; }
 
         bool StartAd(AdHookParameters @params, Action<bool> callback);
     }

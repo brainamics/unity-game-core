@@ -1,0 +1,201 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Brainamics.Core
+{
+    public class IronSourceAdManager : MonoBehaviour
+    {
+        private bool _initialized;
+        private string _appKey;
+        private bool _interstitialLoaded, _interstitialPending;
+
+        [SerializeField]
+        private string _appKeyAndroid;
+
+        [SerializeField]
+        private string _appKeyIOS;
+
+        [SerializeField]
+        private bool _initRewardedVideoAds;
+
+        [SerializeField]
+        private bool _initInterstitialAds;
+
+        [SerializeField]
+        private float _interstitialLoadAttemptInterval = 15;
+
+        [SerializeField]
+        private bool _debug = true;
+
+        [SerializeField]
+        private bool _logging;
+
+        public static IronSourceAdManager Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            Instance = this;
+            DontDestroyOnLoad(this);
+
+#if UNITY_ANDROID
+            _appKey = _appKeyAndroid;
+#elif UNITY_IOS
+            _appKey = _appKeyIOS;
+#else
+            _appKey = "unexpected_platform";
+#endif
+        }
+
+        private void Start()
+        {
+            if (Instance == null || Instance != this || _initialized)
+                return;
+
+            //Add Init Event
+            IronSourceEvents.onSdkInitializationCompletedEvent += SdkInitializationCompletedEvent;
+
+            IronSourceInterstitialEvents.onAdReadyEvent += InterstitialOnAdReadyEvent;
+            IronSourceInterstitialEvents.onAdLoadFailedEvent += InterstitialOnAdLoadFailed;
+            IronSourceInterstitialEvents.onAdOpenedEvent += InterstitialOnAdOpenedEvent;
+            IronSourceInterstitialEvents.onAdClickedEvent += InterstitialOnAdClickedEvent;
+            IronSourceInterstitialEvents.onAdShowSucceededEvent += InterstitialOnAdShowSucceededEvent;
+            IronSourceInterstitialEvents.onAdShowFailedEvent += InterstitialOnAdShowFailedEvent;
+            IronSourceInterstitialEvents.onAdClosedEvent += InterstitialOnAdClosedEvent;
+
+            Log("unity-script/AdManager: Ironsource unity version" + IronSource.unityVersion());
+            if (_debug)
+            {
+                IronSource.Agent.setAdaptersDebug(true);
+                IronSource.Agent.setMetaData("is_test_suite", "enable");
+            }
+
+            // SDK init
+            Log($"unity-script/AdManager: Ironsource IronSource.Agent.init with {_appKey}");
+            var adUnits = new List<string>();
+            if (_initRewardedVideoAds)
+                adUnits.Add(IronSourceAdUnits.REWARDED_VIDEO);
+            if (_initInterstitialAds)
+                adUnits.Add(IronSourceAdUnits.INTERSTITIAL);
+            IronSource.Agent.init(_appKey, adUnits.ToArray());
+            IronSourceRewardedVideoEvents.onAdUnavailableEvent += OnAdUnavailableEvent;
+            IronSourceRewardedVideoEvents.onAdLoadFailedEvent += OnAdLoadFailedEvent;
+        }
+
+        private void OnDestroy()
+        {
+            IronSourceInterstitialEvents.onAdReadyEvent -= InterstitialOnAdReadyEvent;
+            IronSourceInterstitialEvents.onAdLoadFailedEvent -= InterstitialOnAdLoadFailed;
+            IronSourceInterstitialEvents.onAdOpenedEvent -= InterstitialOnAdOpenedEvent;
+            IronSourceInterstitialEvents.onAdClickedEvent -= InterstitialOnAdClickedEvent;
+            IronSourceInterstitialEvents.onAdShowSucceededEvent -= InterstitialOnAdShowSucceededEvent;
+            IronSourceInterstitialEvents.onAdShowFailedEvent -= InterstitialOnAdShowFailedEvent;
+            IronSourceInterstitialEvents.onAdClosedEvent -= InterstitialOnAdClosedEvent;
+        }
+
+        void OnApplicationPause(bool isPaused)
+        {
+            Log("unity-script/AdManager: Ironsource OnApplicationPause = " + isPaused);
+            IronSource.Agent.onApplicationPause(isPaused);
+        }
+
+        private void Log(object message)
+        {
+            if (_logging)
+            {
+                Debug.Log(message);
+            }
+        }
+
+        private void SdkInitializationCompletedEvent()
+        {
+            _initialized = true;
+            Log("unity-script/AdManager: Ironsource got SdkInitializationCompletedEvent");
+
+            Log("unity-script/AdManager: Ironsource IronSource.Agent.validateIntegration");
+            IronSource.Agent.validateIntegration();
+
+            LoadInterstitialAdAfterDelay();
+        }
+
+        private void OnAdUnavailableEvent()
+        {
+            Log("unity-script/AdManager: Ironsource got OnAdUnavailableEvent");
+        }
+
+        private void OnAdLoadFailedEvent(IronSourceError obj)
+        {
+            Log($"unity-script/AdManager: Ironsource got OnAdLoadFailedEvent {obj}");
+        }
+
+        private void LoadInterstitialAd()
+        {
+            if (!_initInterstitialAds || _interstitialLoaded || _interstitialPending)
+            {
+                LoadInterstitialAdAfterDelay();
+                return;
+            }
+            _interstitialPending = true;
+            IronSource.Agent.loadInterstitial();
+        }
+
+        private void LoadInterstitialAdAfterDelay()
+        {
+            StopAllCoroutines();
+            StartCoroutine(DelayAndLoad());
+
+            IEnumerator DelayAndLoad()
+            {
+                yield return new WaitForSeconds(_interstitialLoadAttemptInterval);
+                Log("trying to load an interstitial ad");
+                LoadInterstitialAd();
+            }
+        }
+
+        #region Interstitial AdInfo Event Handlers
+        // Invoked when the interstitial ad was loaded succesfully.
+        void InterstitialOnAdReadyEvent(IronSourceAdInfo adInfo)
+        {
+            _interstitialLoaded = true;
+            _interstitialPending = false;
+            LoadInterstitialAdAfterDelay();
+        }
+        // Invoked when the initialization process has failed.
+        void InterstitialOnAdLoadFailed(IronSourceError ironSourceError)
+        {
+            _interstitialPending = false;
+            LoadInterstitialAdAfterDelay();
+        }
+        // Invoked when the Interstitial Ad Unit has opened. This is the impression indication. 
+        void InterstitialOnAdOpenedEvent(IronSourceAdInfo adInfo)
+        {
+            _interstitialLoaded = false;
+        }
+        // Invoked when end user clicked on the interstitial ad
+        void InterstitialOnAdClickedEvent(IronSourceAdInfo adInfo)
+        {
+        }
+        // Invoked when the ad failed to show.
+        void InterstitialOnAdShowFailedEvent(IronSourceError ironSourceError, IronSourceAdInfo adInfo)
+        {
+        }
+        // Invoked when the interstitial ad closed and the user went back to the application screen.
+        void InterstitialOnAdClosedEvent(IronSourceAdInfo adInfo)
+        {
+        }
+        // Invoked before the interstitial ad was opened, and before the InterstitialOnAdOpenedEvent is reported.
+        // This callback is not supported by all networks, and we recommend using it only if  
+        // it's supported by all networks you included in your build. 
+        void InterstitialOnAdShowSucceededEvent(IronSourceAdInfo adInfo)
+        {
+        }
+        #endregion
+    }
+}

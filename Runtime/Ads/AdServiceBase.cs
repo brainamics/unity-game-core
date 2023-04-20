@@ -30,6 +30,8 @@ namespace Brainamics.Core
 
         public abstract bool IsVideoAvailable { get; }
 
+        public abstract bool IsInterstitialAvailable { get; }
+
         protected AdHookParameters CurrentHookParams => _hookParams;
 
         public bool IsAdActive => _adHooked;
@@ -44,7 +46,13 @@ namespace Brainamics.Core
             _hookCallback = callback;
             _hookParams = @params;
             _adHooked = true;
-            ShowAd();
+            if (!ShowAd())
+            {
+                _hookCallback = null;
+                _hookParams = null;
+                _adHooked = false;
+                return false;
+            }
             _pauseSimulator ??= CreatePauseSimulator();
             _pauseSimulator?.Pause();
             return true;
@@ -59,7 +67,7 @@ namespace Brainamics.Core
 #endif
         }
 
-        protected abstract void ShowAd();
+        protected abstract bool ShowAd();
 
         protected void RejectCurrentHook()
         {
@@ -82,6 +90,10 @@ namespace Brainamics.Core
             _onAdVisibilityChanged.Invoke(available);
         }
 
+        protected virtual void OnEnableInternal()
+        {
+        }
+
         protected virtual void OnDestroyInternal()
         {
         }
@@ -91,6 +103,11 @@ namespace Brainamics.Core
             _adHooked = false;
             _hookParams = null;
             _pauseSimulator?.Resume();
+        }
+
+        private void OnEnable()
+        {
+            OnEnableInternal();
         }
 
         private void OnDestroy()
