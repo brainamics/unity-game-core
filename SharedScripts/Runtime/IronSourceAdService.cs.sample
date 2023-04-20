@@ -7,7 +7,7 @@ using System;
 [CreateAssetMenu(menuName = "Game/Services/Ads/IronSource Ad Service")]
 public class IronSourceAdService : AdServiceBase
 {
-    private bool _videoRewarded;
+    private bool _rewarded;
 
     public IronSourceAdService()
     {
@@ -18,6 +18,10 @@ public class IronSourceAdService : AdServiceBase
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
         IronSourceRewardedVideoEvents.onAdClickedEvent += RewardedVideoOnAdClickedEvent;
+
+        IronSourceInterstitialEvents.onAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
+        IronSourceInterstitialEvents.onAdShowFailedEvent += InterstitialAdShowFailedEvent;
+        IronSourceInterstitialEvents.onAdClosedEvent += InterstitialAdClosedEvent;
     }
 
     public override bool IsVideoAvailable => IronSource.Agent.isRewardedVideoAvailable();
@@ -48,6 +52,10 @@ public class IronSourceAdService : AdServiceBase
         IronSourceRewardedVideoEvents.onAdShowFailedEvent -= RewardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent -= RewardedVideoOnAdRewardedEvent;
         IronSourceRewardedVideoEvents.onAdClickedEvent -= RewardedVideoOnAdClickedEvent;
+
+        IronSourceInterstitialEvents.onAdShowSucceededEvent -= InterstitialAdShowSucceededEvent;
+        IronSourceInterstitialEvents.onAdShowFailedEvent -= InterstitialAdShowFailedEvent;
+        IronSourceInterstitialEvents.onAdClosedEvent -= InterstitialAdClosedEvent;
     }
 
     private bool ShowVideoAd()
@@ -55,7 +63,7 @@ public class IronSourceAdService : AdServiceBase
         if (!IsVideoAvailable)
             return false;
 
-        _videoRewarded = false;
+        _rewarded = false;
         if (string.IsNullOrEmpty(CurrentHookParams.PlacementId))
             IronSource.Agent.showRewardedVideo();
         else
@@ -68,11 +76,20 @@ public class IronSourceAdService : AdServiceBase
         if (!IsInterstitialAvailable)
             return false;
 
+        _rewarded = false;
         if (string.IsNullOrEmpty(CurrentHookParams.PlacementId))
             IronSource.Agent.showInterstitial();
         else
             IronSource.Agent.showInterstitial(CurrentHookParams.PlacementId);
         return true;
+    }
+
+    private void ResolveCurrentHook()
+    {
+        if (_rewarded)
+            ApproveCurrentHook();
+        else
+            RejectCurrentHook();
     }
 
     #region Rewarded Video Event Handlers
@@ -92,20 +109,17 @@ public class IronSourceAdService : AdServiceBase
 
     private void RewardedVideoOnAdClosedEvent(IronSourceAdInfo adInfo)
     {
-        if (_videoRewarded)
-            ApproveCurrentHook();
-        else
-            RejectCurrentHook();
+        ResolveCurrentHook();
     }
 
     private void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
     {
         if (!string.IsNullOrEmpty(CurrentHookParams.PlacementId) && placement.getPlacementName() != CurrentHookParams.PlacementId)
         {
-            _videoRewarded = false;
+            _rewarded = false;
             return;
         }
-        _videoRewarded = true;
+        _rewarded = true;
     }
 
     private void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo)
@@ -115,6 +129,23 @@ public class IronSourceAdService : AdServiceBase
 
     private void RewardedVideoOnAdClickedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
     {
+    }
+    #endregion
+
+    #region Interstitial Event Handlers
+    private void InterstitialAdShowSucceededEvent(IronSourceAdInfo _)
+    {
+        _rewarded = true;
+    }
+
+    private void InterstitialAdShowFailedEvent(IronSourceError _, IronSourceAdInfo __)
+    {
+        _rewarded = false;
+    }
+
+    private void InterstitialAdClosedEvent(IronSourceAdInfo _)
+    {
+        ResolveCurrentHook();
     }
     #endregion
 }
