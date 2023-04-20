@@ -38,6 +38,11 @@ namespace Brainamics.Core
 
         public bool StartAd(AdHookParameters @params, Action<bool> callback)
         {
+			if (@params == null)
+				throw new ArgumentNullException(nameof(@params));
+			if (callback == null)
+				throw new ArgumentNullException(nameof(callback));
+			
             RejectCurrentHook();
 
             if (!IsVideoAvailable)
