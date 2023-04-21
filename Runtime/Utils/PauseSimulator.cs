@@ -7,13 +7,10 @@ namespace Brainamics.Core
 {
     public class PauseSimulator
     {
-        private readonly List<AudioListener> _pausedAudioListeners = new();
         private bool _paused;
         private float _timeScale;
 
         public bool IsPaused => _paused;
-
-        public bool LookUpSceneForAudioListeners { get; set; }
 
         public void Pause()
         {
@@ -23,42 +20,17 @@ namespace Brainamics.Core
 
             _timeScale = Time.timeScale;
             Time.timeScale = 0;
-            foreach (var listener in EnumerateAudioListeners())
-                if (listener.enabled)
-                {
-                    listener.enabled = false;
-                    _pausedAudioListeners.Add(listener);
-                }
+            AudioListener.pause = true;
         }
 
         public void Resume()
         {
-            if (_paused)
+            if (!_paused)
                 return;
             _paused = false;
 
             Time.timeScale = _timeScale;
-            foreach (var listener in _pausedAudioListeners)
-                listener.enabled = true;
-            _pausedAudioListeners.Clear();
-        }
-
-        private IEnumerable<AudioListener> EnumerateAudioListeners()
-        {
-            if (!LookUpSceneForAudioListeners)
-            {
-                if (Camera.main.TryGetComponent<AudioListener>(out var listener))
-                    yield return listener;
-                yield break;
-            }
-
-            var scene = SceneManager.GetActiveScene();
-            foreach (var rootObj in scene.GetRootGameObjects())
-            {
-                var listeners = rootObj.GetComponentsInChildren<AudioListener>();
-                foreach (var listener in listeners)
-                    yield return listener;
-            }
+            AudioListener.pause = false;
         }
     }
 }
