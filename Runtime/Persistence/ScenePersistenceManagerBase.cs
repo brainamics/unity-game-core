@@ -9,6 +9,9 @@ namespace Brainamics.Core
     {
         private readonly List<IPersistentState<TState>> _persistableObjects = new();
         private IPersistenceService<TState> _persistenceService;
+        
+        [SerializeField]
+        private bool _loadOnFirstFrame;
 
         public IEnumerable<IPersistentState<TState>> PersistableObjects => _persistableObjects;
 
@@ -31,6 +34,11 @@ namespace Brainamics.Core
 
         private void Start()
         {
+            if (_loadOnFirstFrame)
+            {
+                _persistenceService.LoadActiveSceneState();
+                return;
+            }
             this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
         }
     }
