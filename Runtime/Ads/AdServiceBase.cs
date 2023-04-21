@@ -21,6 +21,9 @@ namespace Brainamics.Core
 
         [SerializeField]
         private UnityEvent<bool> _onAdVisibilityChanged = new();
+	
+	[SerializeField]
+	private bool _logging = true;
 
         public UnityEvent<Action> OnAdShown => _onAdShown;
 
@@ -42,7 +45,8 @@ namespace Brainamics.Core
 				throw new ArgumentNullException(nameof(@params));
 			if (callback == null)
 				throw new ArgumentNullException(nameof(callback));
-			
+	    Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
+	
             RejectCurrentHook();
 
             if (!IsVideoAvailable)
@@ -102,6 +106,12 @@ namespace Brainamics.Core
         protected virtual void OnDestroyInternal()
         {
         }
+	
+	protected void Log(object o)
+	{
+	    if (_logging)
+	        Debug.Log(o);
+	}
 
         private void ClearCurrentHook()
         {
