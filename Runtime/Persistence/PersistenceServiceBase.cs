@@ -99,6 +99,7 @@ namespace Brainamics.Core
             return StartSaveLoadOperation(async () =>
             {
                 _state = await _persistenceProvider.LoadStateAsync();
+                Log($"loading game: {_state}");
                 return LoadGameState(_state, progress);
             });
         }
