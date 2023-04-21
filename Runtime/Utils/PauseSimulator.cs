@@ -19,6 +19,7 @@ namespace Brainamics.Core
             _paused = true;
 
             _timeScale = Time.timeScale;
+            Debug.Log($"unity-script/PauseSimulator: simulating pause with timescale {_timeScale}");
             Time.timeScale = 0;
             AudioListener.pause = true;
         }
@@ -31,6 +32,7 @@ namespace Brainamics.Core
 
             Time.timeScale = _timeScale;
             AudioListener.pause = false;
+            Debug.Log($"unity-script/PauseSimulator: resuming with timescale {_timeScale}");
         }
     }
 }
