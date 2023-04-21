@@ -76,6 +76,12 @@ namespace Brainamics.Core
 #endif
         }
 
+        /// <summary>
+        /// Gets invoked by <see cref="AdServiceBase"/> to show an ad.
+        /// </summary>
+        /// <remarks>
+        /// Information about the ad request will be accessible via <see cref="CurrentHookParams"/>.
+        /// </remarks>
         protected abstract bool ShowAd();
 
         protected void RejectCurrentHook()
