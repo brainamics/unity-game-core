@@ -14,7 +14,7 @@ public class PostBuildStep
     static readonly IReadOnlyList<string> skadNtworks = new List<string> {
         "su67r6k2v3", //ironsource
         "4dzt52r2t5", //unity
-        //"bvpn9ufa9b", //unity
+        "bvpn9ufa9b", //unity
         "ludvb6z3bs", //apploving
         "cstr6suwn9", //admob
         "v9wttpbfk9", //facebook1
@@ -22,7 +22,7 @@ public class PostBuildStep
         "kbd757ywx3", //mintegral
     }.AsReadOnly();
 
-    const string advertisingAttributionEndpoint = "https://postbacks-is.com";
+    const string advertisingAttributionEndpoint = "https://appsflyer-skadnetwork.com/";
 #if UNITY_IOS
     [PostProcessBuild(0)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string pathToXcode)
@@ -37,6 +37,9 @@ public class PostBuildStep
 
         // disabling bitcode
         DisableBitcode(pathToXcode);
+
+        // fix swift standard libraries
+        FixSwiftLibraries(pathToXcode);
 
         // add background capabilities
         AddBackgroundCapabilities(pathToXcode);
@@ -104,6 +107,26 @@ public class PostBuildStep
     {
         // need this for ironsource. Check https://developers.is.com/ironsource-mobile/unity/unity-plugin/#step-3
         plistRoot.SetString("NSAdvertisingAttributionReportEndpoint", advertisingAttributionEndpoint);
+    }
+
+    private static void FixSwiftLibraries(string pathToXcode)
+    {
+        // need to be like this to upload to app store
+        string projPath = PBXProject.GetPBXProjectPath(pathToXcode) + "/Unity-iPhone.xcodeproj/project.pbxproj";
+
+        var project = new PBXProject();
+        project.ReadFromFile(projPath);
+
+        string mainTargetGuid = project.GetUnityMainTargetGuid();
+
+        foreach (var targetGuid in new[] { mainTargetGuid, project.GetUnityFrameworkTargetGuid() })
+        {
+            project.SetBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
+        }
+
+        project.SetBuildProperty(mainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+
+        project.WriteToFile(projPath);
     }
 
     static void DisableBitcode(string pathToXcode)
