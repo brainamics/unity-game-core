@@ -31,7 +31,7 @@ namespace Brainamics.Core
 
         private void Start()
         {
-            _persistenceService.LoadActiveSceneState();
+            this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
         }
     }
 }
