@@ -11,8 +11,8 @@ namespace Brainamics.Core
     /// <summary>
     /// Stores references to important objects or components on the scene.
     /// </summary>
-    public abstract class GameSceneScannerBase<TGameSceneManager> : MonoBehaviour
-        where TGameSceneManager : GameSceneScannerBase<TGameSceneManager>
+    public abstract class GameSceneScannerBase<TGameSceneScanner> : MonoBehaviour
+        where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
     {
         // scene => scene manager
         private static readonly HybridDictionary _managers = new();
@@ -21,7 +21,7 @@ namespace Brainamics.Core
         /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TGameSceneManager Locate(MonoBehaviour component)
+        public static TGameSceneScanner Locate(MonoBehaviour component)
         {
             return LocateByScene(component.gameObject.scene);
         }
@@ -29,12 +29,12 @@ namespace Brainamics.Core
         /// <summary>
         /// Locates the game scene manager for the specified scene.
         /// </summary>
-        public static TGameSceneManager LocateByScene(Scene scene)
+        public static TGameSceneScanner LocateByScene(Scene scene)
         {
             var manager = _managers[scene];
             if (manager == null)
                 throw new InvalidOperationException("Could not find the game scene manager, it's not registered.");
-            return (TGameSceneManager)manager;
+            return (TGameSceneScanner)manager;
         }
 
         protected virtual void AwakeInternal() { }
