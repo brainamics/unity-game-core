@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace Brainamics.Core
 {
-    // [CreateAssetMenu("Game/Services/Persistence/Persistence Service")]
+    // [CreateAssetMenu(menuName = "Game/Services/Persistence/Persistence Service")]
     public abstract class PersistenceServiceBase<TState> : ScriptableObject, IPersistenceService<TState>
     {
         public string LoadingScene;
