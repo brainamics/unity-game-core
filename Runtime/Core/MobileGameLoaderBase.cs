@@ -6,12 +6,21 @@ namespace Brainamics.Core
 {
     public abstract class MobileGameLoaderBase : MonoBehaviour
     {
+        private static MobileGameLoaderBase Instance;
+
         public bool IsPaused { get; private set; }
 
         protected abstract void Initialize();
 
         protected virtual void PauseStateChanged(bool paused)
         {
+        }
+
+        private void Awake()
+        {
+            if (Instance != null)
+                Destroy(Instance.gameObject);
+            Instance = this;
         }
 
         private void Start()
