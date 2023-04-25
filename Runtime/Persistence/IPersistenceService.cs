@@ -25,6 +25,8 @@ namespace Brainamics.Core
 
         Task LoadGameAsync(IProgress<float> progress);
 
+        void LoadGameInBackground(IProgress<float> progress);
+
         Task NewGameAsync(IProgress<float> progress);
 
         void NewGameInBackground();

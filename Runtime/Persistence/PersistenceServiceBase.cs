@@ -45,7 +45,7 @@ namespace Brainamics.Core
         {
             if (_state == null)
             {
-                LoadGameInBackground();
+                LoadGameInBackground(null);
                 return;
             }
             _activeScenePersistenceManager = manager;
@@ -101,9 +101,9 @@ namespace Brainamics.Core
             });
         }
 
-        public void LoadGameInBackground()
+        public void LoadGameInBackground(IProgress<float> progress)
         {
-            LoadGameAsync(null).RunInBackground();
+            LoadGameAsync(progress).RunInBackground();
         }
 
         protected abstract TState NewState();
@@ -131,7 +131,7 @@ namespace Brainamics.Core
         {
             if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
             {
-                LoadGameInBackground();
+                LoadGameInBackground(null);
                 return;
             }
             StartSaveLoadOperation(() =>
