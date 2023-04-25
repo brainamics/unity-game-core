@@ -8,9 +8,9 @@ namespace Brainamics.Core
 {
     public static class LoggingServiceExtensions
     {
-        public static void LogMessage<TEventType>(this ILoggingService<TEventType> service, LogLevel level, string message)
+        public static void LogMessage<TEventType>(this ILoggingService<TEventType> service, LogLevel level, string message, object category = null)
         {
-            service.Log(new LogRecord<TEventType>(level, service.UnknownEventType, message, null, null));
+            service.Log(new LogRecord<TEventType>(level, service.UnknownEventType, message, category: category));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -27,24 +27,24 @@ namespace Brainamics.Core
             service.Debug(null, message);
         }
 
-        public static void Trace<TEventType>(this ILoggingService<TEventType> service, string message)
+        public static void Trace<TEventType>(this ILoggingService<TEventType> service, string message, object category = null)
         {
-            service.LogMessage(LogLevel.Trace, message);
+            service.LogMessage(LogLevel.Trace, message, category: category);
         }
 
-        public static void Info<TEventType>(this ILoggingService<TEventType> service, string message)
+        public static void Info<TEventType>(this ILoggingService<TEventType> service, string message, object category = null)
         {
-            service.LogMessage(LogLevel.Info, message);
+            service.LogMessage(LogLevel.Info, message, category: category);
         }
 
-        public static void Warning<TEventType>(this ILoggingService<TEventType> service, string message)
+        public static void Warning<TEventType>(this ILoggingService<TEventType> service, string message, object category = null)
         {
-            service.LogMessage(LogLevel.Warning, message);
+            service.LogMessage(LogLevel.Warning, message, category: category);
         }
 
-        public static void Error<TEventType>(this ILoggingService<TEventType> service, string message)
+        public static void Error<TEventType>(this ILoggingService<TEventType> service, string message, object category = null)
         {
-            service.LogMessage(LogLevel.Error, message);
+            service.LogMessage(LogLevel.Error, message, category: category);
         }
 
         public static void Error<TEventType>(this ILoggingService<TEventType> service, Exception exception)
