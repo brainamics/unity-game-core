@@ -29,9 +29,6 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _reloadActiveScene;
 
-        [SerializeField]
-        private bool _enableLogging;
-
         public UnityEvent OnGameSaved => _onGameSaved;
 
         public UnityEvent OnGameLoaded => _onGameLoaded;
@@ -41,7 +38,7 @@ namespace Brainamics.Core
         public abstract DateTime? LastSaveTime { get; }
 
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
-        
+
         protected virtual bool ReloadIfStateUnavailableDuringSceneAwake => false;
 
         public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
@@ -115,6 +112,21 @@ namespace Brainamics.Core
 
         protected abstract void UpdateStateBeforeSave(TState state);
 
+        protected virtual void Log(object o)
+        {
+            Debug.Log($"[Persistence] {o}");
+        }
+
+        protected virtual void LogWarning(object o)
+        {
+            Debug.LogWarning($"[Persistence] {o}");
+        }
+
+        protected virtual void LogError(object o)
+        {
+            Debug.LogError($"[Persistence] {o}");
+        }
+
         public void LoadActiveSceneState()
         {
             if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
@@ -145,7 +157,7 @@ namespace Brainamics.Core
             var activeScene = SceneManager.GetActiveScene();
             if (activeScene.name == LoadingScene)
             {
-                Debug.LogWarning("Blocked save of the loading scene.");
+                LogWarning("Blocked save of the loading scene.");
                 return false;
             }
 
@@ -153,7 +165,7 @@ namespace Brainamics.Core
             IEnumerable<IPersistentState<TState>> persistableObjects;
             if (_activeScenePersistenceManager == null)
             {
-                Debug.LogWarning("Updating the previous state; because the active scene persistence manager is missing.");
+                LogWarning("Updating the previous state; because the active scene persistence manager is missing.");
                 state = _state;
                 persistableObjects = EnumeratePersistableObjects(Enumerable.Empty<IPersistentState<TState>>());
             }
@@ -170,22 +182,6 @@ namespace Brainamics.Core
             _state = state;
             Log($"saving game: {state}");
             return true;
-        }
-
-        private void Log(object o)
-        {
-            if (_enableLogging)
-                Debug.Log($"[Persistence] {o}");
-        }
-
-        private void LogWarning(object o)
-        {
-            Debug.LogWarning($"[Persistence] {o}");
-        }
-
-        private void LogError(object o)
-        {
-            Debug.LogError($"[Persistence] {o}");
         }
 
         private IEnumerable<IPersistentState<TState>> EnumeratePersistableObjects(IEnumerable<IPersistentState<TState>> statefulObjects)
