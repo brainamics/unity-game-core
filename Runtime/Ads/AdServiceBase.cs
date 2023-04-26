@@ -20,7 +20,7 @@ namespace Brainamics.Core
         private UnityEvent<bool> _onAdComplete = new();
 
         [SerializeField]
-        private UnityEvent<bool> _onAdVisibilityChanged = new();
+        private UnityEvent<bool> _onAdAvailabilityChanged = new();
 
         [SerializeField]
         private bool _logging = true;
@@ -29,7 +29,7 @@ namespace Brainamics.Core
 
         public UnityEvent<bool> OnAdComplete => _onAdComplete;
 
-        public UnityEvent<bool> OnAdAvailabilityChanged => _onAdVisibilityChanged;
+        public UnityEvent<bool> OnAdAvailabilityChanged => _onAdAvailabilityChanged;
 
         public abstract bool IsVideoAvailable { get; }
 
@@ -122,21 +122,21 @@ namespace Brainamics.Core
         {
             if (!_exclusiveAdHooked)
                 return;
-            ClearCurrentHook();
+            ClearCurrentExclusiveHook();
             _exclusiveHookCallback.Invoke(false);
         }
 
-        protected void ApproveCurrentHook()
+        protected void ApproveCurrentExclusiveHook()
         {
             if (!_exclusiveAdHooked)
                 return;
-            ClearCurrentHook();
+            ClearCurrentExclusiveHook();
             _exclusiveHookCallback.Invoke(true);
         }
 
         protected void SetAdAvailability(bool available)
         {
-            _onAdVisibilityChanged.Invoke(available);
+            _onAdAvailabilityChanged.Invoke(available);
         }
 
         protected virtual void OnEnableInternal()
@@ -153,7 +153,7 @@ namespace Brainamics.Core
                 Debug.Log(o);
         }
 
-        private void ClearCurrentHook()
+        private void ClearCurrentExclusiveHook()
         {
             _exclusiveAdHooked = false;
             _exclusiveHookParams = null;
