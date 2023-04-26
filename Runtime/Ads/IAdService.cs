@@ -37,6 +37,11 @@ namespace Brainamics.Core
 
     public static class AdServiceExtensions
     {
+        public static bool StartAd(this IAdService adService, AdHookParameters @params, Action<bool> callback)
+        {
+            return adService.StartAd(@params, callback, out _);
+        }
+
         public static bool StartAd(this IAdService adService, AdHookParameters @params, Action successCallback)
         {
             return adService.StartAd(@params, success =>
