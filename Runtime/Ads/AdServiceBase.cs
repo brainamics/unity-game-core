@@ -54,8 +54,7 @@ namespace Brainamics.Core
             switch (presentationMode)
             {
                 case AdPresentationMode.Exclusive:
-                    handle = null;
-                    return ShowExclusiveAd(@params, callback);
+                    return ShowExclusiveAd(@params, callback, out handle);
                 case AdPresentationMode.Concurrent:
                     return ShowConcurrentAd(@params, callback, out handle);
                 default:
@@ -72,13 +71,13 @@ namespace Brainamics.Core
             return false;
         }
 
-        private bool ShowExclusiveAd(AdHookParameters @params, Action<bool> callback)
+        private bool ShowExclusiveAd(AdHookParameters @params, Action<bool> callback, out object handle)
         {
             RejectCurrentExclusiveHook();
             _exclusiveHookCallback = callback;
             _exclusiveHookParams = @params;
             _exclusiveAdHooked = true;
-            if (!ShowExclusiveAd())
+            if (!ShowExclusiveAd(out handle))
             {
                 _exclusiveHookCallback = null;
                 _exclusiveHookParams = null;
@@ -105,7 +104,7 @@ namespace Brainamics.Core
         /// <remarks>
         /// Information about the ad request will be accessible via <see cref="CurrentExclusiveHookParams"/>.
         /// </remarks>
-        protected abstract bool ShowExclusiveAd();
+        protected abstract bool ShowExclusiveAd(out object handle);
 
         /// <summary>
         /// Gets invoked to show a concurrent ad.
