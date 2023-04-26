@@ -8,5 +8,6 @@ namespace Brainamics.Core
     {
         Video,
         Interstitial,
+        Banner
     }
 }

@@ -8,9 +8,9 @@ namespace Brainamics.Core
 {
     public abstract class AdServiceBase : ScriptableObject, IAdService
     {
-        private bool _adHooked;
-        private Action<bool> _hookCallback;
-        private AdHookParameters _hookParams;
+        private bool _exclusiveAdHooked;
+        private Action<bool> _exclusiveHookCallback;
+        private AdHookParameters _exclusiveHookParams;
         private PauseSimulator _pauseSimulator;
 
         [SerializeField]
@@ -21,9 +21,9 @@ namespace Brainamics.Core
 
         [SerializeField]
         private UnityEvent<bool> _onAdVisibilityChanged = new();
-	
-	[SerializeField]
-	private bool _logging = true;
+
+        [SerializeField]
+        private bool _logging = true;
 
         public UnityEvent<Action> OnAdShown => _onAdShown;
 
@@ -35,31 +35,45 @@ namespace Brainamics.Core
 
         public abstract bool IsInterstitialAvailable { get; }
 
-        protected AdHookParameters CurrentHookParams => _hookParams;
+        public abstract bool IsBannerAdAvailable { get; }
 
-        public bool IsAdActive => _adHooked;
+        protected AdHookParameters CurrentExclusiveHookParams => _exclusiveHookParams;
 
-        public bool StartAd(AdHookParameters @params, Action<bool> callback)
+        public bool IsExclusiveAdActive => _exclusiveAdHooked;
+
+        public bool StartAd(AdHookParameters @params, Action<bool> callback, out object handle)
         {
-			if (@params == null)
-				throw new ArgumentNullException(nameof(@params));
-			if (callback == null)
-				throw new ArgumentNullException(nameof(callback));
-	    Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
-	
-            RejectCurrentHook();
+            if (@params == null)
+                throw new ArgumentNullException(nameof(@params));
+            if (callback == null)
+                throw new ArgumentNullException(nameof(callback));
+            Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
 
-            if (!IsVideoAvailable)
-                return false;
+            var presentationMode = GetPresentationMode(@params);
 
-            _hookCallback = callback;
-            _hookParams = @params;
-            _adHooked = true;
-            if (!ShowAd())
+            switch (presentationMode)
             {
-                _hookCallback = null;
-                _hookParams = null;
-                _adHooked = false;
+                case AdPresentationMode.Exclusive:
+                    handle = null;
+                    return ShowExclusiveAd(@params, callback);
+                case AdPresentationMode.Concurrent:
+                    return ShowConcurrentAd(@params, callback, out handle);
+                default:
+                    throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
+            }
+        }
+
+        private bool ShowExclusiveAd(AdHookParameters @params, Action<bool> callback)
+        {
+            RejectCurrentExclusiveHook();
+            _exclusiveHookCallback = callback;
+            _exclusiveHookParams = @params;
+            _exclusiveAdHooked = true;
+            if (!ShowExclusiveAd())
+            {
+                _exclusiveHookCallback = null;
+                _exclusiveHookParams = null;
+                _exclusiveAdHooked = false;
                 return false;
             }
             _pauseSimulator ??= CreatePauseSimulator();
@@ -80,24 +94,44 @@ namespace Brainamics.Core
         /// Gets invoked by <see cref="AdServiceBase"/> to show an ad.
         /// </summary>
         /// <remarks>
-        /// Information about the ad request will be accessible via <see cref="CurrentHookParams"/>.
+        /// Information about the ad request will be accessible via <see cref="CurrentExclusiveHookParams"/>.
         /// </remarks>
-        protected abstract bool ShowAd();
+        protected abstract bool ShowExclusiveAd();
 
-        protected void RejectCurrentHook()
+        /// <summary>
+        /// Gets invoked to show a concurrent ad.
+        /// </summary>
+        /// <returns>A handle by which the ad can be manipulated.</returns>
+        /// <exception cref="NotSupportedException">Thrown if the requested ad is not supported by the implementation.</exception>
+        protected virtual bool ShowConcurrentAd(AdHookParameters @params, Action<bool> callback, out object handle)
         {
-            if (!_adHooked)
+            throw new NotSupportedException();
+        }
+
+        protected AdPresentationMode GetPresentationMode(AdHookParameters @params)
+        {
+            return @params.Kind switch
+            {
+                AdKind.Video or AdKind.Interstitial => AdPresentationMode.Exclusive,
+                AdKind.Banner => AdPresentationMode.Concurrent,
+                _ => throw new NotImplementedException($"Unknown ad kind '{@params.Kind}'."),
+            };
+        }
+
+        protected void RejectCurrentExclusiveHook()
+        {
+            if (!_exclusiveAdHooked)
                 return;
             ClearCurrentHook();
-            _hookCallback.Invoke(false);
+            _exclusiveHookCallback.Invoke(false);
         }
 
         protected void ApproveCurrentHook()
         {
-            if (!_adHooked)
+            if (!_exclusiveAdHooked)
                 return;
             ClearCurrentHook();
-            _hookCallback.Invoke(true);
+            _exclusiveHookCallback.Invoke(true);
         }
 
         protected void SetAdAvailability(bool available)
@@ -112,17 +146,17 @@ namespace Brainamics.Core
         protected virtual void OnDestroyInternal()
         {
         }
-	
-	protected void Log(object o)
-	{
-	    if (_logging)
-	        Debug.Log(o);
-	}
+
+        protected void Log(object o)
+        {
+            if (_logging)
+                Debug.Log(o);
+        }
 
         private void ClearCurrentHook()
         {
-            _adHooked = false;
-            _hookParams = null;
+            _exclusiveAdHooked = false;
+            _exclusiveHookParams = null;
             _pauseSimulator?.Resume();
         }
 

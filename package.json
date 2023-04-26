@@ -1,24 +1,24 @@
 {
-    "name": "com.brainamics.game-core",
-    "version": "1.0.0",
-    "displayName": "Brainamics Game Core",
-    "description": "Brainamics Game Core Package",
-    "unity": "2021.3",
-    "unityRelease": "20f1",
-    "documentationUrl": "https://brainamics.de/",
-    "changelogUrl": "https://brainamics.de/",
-    "licensesUrl": "https://brainamics.de/",
-    "dependencies": {
-		"com.unity.nuget.newtonsoft-json": "3.1.0",
-		"com.unity.ads.ios-support": "1.0.0"
-    },
-    "keywords": [
-        "brainamics",
-		"core"
-    ],
-    "author": {
-        "name": "Brainamics",
-        "email": "gaming@brainamics.de",
-        "url": "https://brainamics.de"
-    }
+  "name": "com.brainamics.game-core",
+  "version": "1.0.2",
+  "displayName": "Brainamics Game Core",
+  "description": "Brainamics Game Core Package",
+  "unity": "2021.3",
+  "unityRelease": "20f1",
+  "documentationUrl": "https://brainamics.de/",
+  "changelogUrl": "https://brainamics.de/",
+  "licensesUrl": "https://brainamics.de/",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.1.0",
+    "com.unity.ads.ios-support": "1.0.0"
+  },
+  "keywords": [
+    "brainamics",
+    "core"
+  ],
+  "author": {
+    "name": "Brainamics",
+    "email": "gaming@brainamics.de",
+    "url": "https://brainamics.de"
+  }
 }
