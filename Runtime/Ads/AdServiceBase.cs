@@ -63,6 +63,15 @@ namespace Brainamics.Core
             }
         }
 
+        /// <summary>
+        /// Cancels a previously started ad.
+        /// </summary>
+        /// <returns>True either if ad was stopped successfully or already stopped; otherwise, false.</returns>
+        public virtual bool Cancel(object handle)
+        {
+            return false;
+        }
+
         private bool ShowExclusiveAd(AdHookParameters @params, Action<bool> callback)
         {
             RejectCurrentExclusiveHook();

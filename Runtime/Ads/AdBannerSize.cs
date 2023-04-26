@@ -10,5 +10,6 @@ namespace Brainamics.Core
         Standard,
         Medium,
         Large,
+        Custom
     }
 }
