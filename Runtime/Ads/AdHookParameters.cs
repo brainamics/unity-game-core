@@ -16,5 +16,9 @@ namespace Brainamics.Core
         public string PlacementId { get; set; }
 
         public string SourceName { get; set; }
+
+        public AdBannerSize BannerSize { get; set; } = AdBannerSize.Standard;
+
+        public AdBannerPosition BannerPosition { get; set; } = AdBannerPosition.Top;
     }
 }
