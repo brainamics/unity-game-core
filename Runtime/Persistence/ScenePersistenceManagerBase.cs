@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [DefaultExecutionOrder(100)]
     public abstract class ScenePersistenceManagerBase<TState> : MonoBehaviour
     {
         private readonly List<IPersistentState<TState>> _persistableObjects = new();
