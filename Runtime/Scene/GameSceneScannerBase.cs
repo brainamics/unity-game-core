@@ -11,6 +11,7 @@ namespace Brainamics.Core
     /// <summary>
     /// Stores references to important objects or components on the scene.
     /// </summary>
+    [DefaultExecutionOrder(-99)]
     public abstract class GameSceneScannerBase<TGameSceneScanner> : MonoBehaviour
         where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
     {
