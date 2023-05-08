@@ -166,7 +166,7 @@ namespace Brainamics.Core
             if (_activeScenePersistenceManager == null)
             {
                 LogWarning("Updating the previous state; because the active scene persistence manager is missing.");
-                state = _state;
+                state = _state ?? NewState();
                 persistableObjects = EnumeratePersistableObjects(Enumerable.Empty<IPersistentState<TState>>());
             }
             else
