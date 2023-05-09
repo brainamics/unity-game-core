@@ -28,13 +28,28 @@ namespace Brainamics.Core
         }
 
         /// <summary>
+        /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TGameSceneScanner TryLocate(MonoBehaviour component)
+        {
+            return TryLocateByScene(component.gameObject.scene);
+        }
+
+        /// <summary>
         /// Locates the game scene manager for the specified scene.
         /// </summary>
         public static TGameSceneScanner LocateByScene(Scene scene)
         {
+            return TryLocateByScene(scene) ?? throw new InvalidOperationException("Could not find the game scene manager, it's not registered.");
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the specified scene.
+        /// </summary>
+        public static TGameSceneScanner TryLocateByScene(Scene scene)
+        {
             var manager = _managers[scene];
-            if (manager == null)
-                throw new InvalidOperationException("Could not find the game scene manager, it's not registered.");
             return (TGameSceneScanner)manager;
         }
 

@@ -20,5 +20,10 @@ namespace Brainamics.Core
         public AdBannerSize BannerSize { get; set; } = AdBannerSize.Standard;
 
         public AdBannerPosition BannerPosition { get; set; } = AdBannerPosition.Top;
+
+        public override string ToString()
+        {
+            return $"{Kind} (placement={PlacementId}) (src={SourceName})";
+        }
     }
 }
