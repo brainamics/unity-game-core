@@ -40,7 +40,7 @@ namespace Brainamics.Core
             audioService.Play(AudioKind.Music, source);
         }
 
-        public static void PlayEffectOneShot(this IAudioService audioService, AudioKind kind, AudioSource audio, AudioClip clip)
+        public static void PlayEffectOneShot(this IAudioService audioService, AudioSource audio, AudioClip clip)
         {
             audioService.PlayOneShot(AudioKind.Effect, audio, clip);
         }
