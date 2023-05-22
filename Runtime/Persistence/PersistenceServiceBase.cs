@@ -97,7 +97,9 @@ namespace Brainamics.Core
             {
                 _state = await _persistenceProvider.LoadStateAsync();
                 Log($"loading game: {_state}");
-                return LoadGameState(_state, progress);
+                await LoadGameState(_state, progress);
+                if (_activeScenePersistenceManager != null)
+                    LoadSceneState(_activeScenePersistenceManager.PersistableObjects);
             });
         }
 
