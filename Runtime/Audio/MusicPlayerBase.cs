@@ -24,7 +24,7 @@ namespace Brainamics.Core
 
         protected abstract IAudioService AudioService { get; }
 
-        private void Awake()
+        private void Start()
         {
             AudioService.ConfigurationChanged.AddListener(UpdatePlayState);
         }
