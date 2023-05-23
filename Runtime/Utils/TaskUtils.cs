@@ -10,6 +10,8 @@ namespace Brainamics.Core
     {
         public static async void RunInBackground(this Task task)
         {
+            if (task == null)
+                return;
             try
             {
                 await task;
