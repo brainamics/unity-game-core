@@ -36,6 +36,9 @@ namespace Brainamics.Core
         private void Awake()
         {
             _filePath = Path.Combine(Application.persistentDataPath, _fileName);
+            var dirName = Path.GetDirectoryName(_filePath);
+            if (!Directory.Exists(dirName))
+                Directory.CreateDirectory(dirName);
         }
 
         private TState LoadStateFromFile()
