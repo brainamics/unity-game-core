@@ -30,8 +30,8 @@ namespace Brainamics.Core
         public override void Trigger()
         {
             if (_coroutine != null)
-                StopCoroutine(_coroutine);
-            var initialScale = _autoInitialScale ? transform.localScale : _initialScale;
+                return;
+            initialScale = _autoInitialScale ? transform.localScale : _initialScale;
             if (initialScale == _targetScale)
                 return;
             _coroutine = StartCoroutine(PlayAnimation(initialScale));
