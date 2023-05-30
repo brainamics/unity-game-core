@@ -14,6 +14,9 @@ namespace Brainamics.Core
 
         [SerializeField]
         private bool _useMiddleScale = true;
+        
+        [SerializeField]
+        private bool _useInitialScaleAsTarget = false;
 
         [SerializeField]
         private float _middleScaleDuration = 0.1f;
@@ -39,19 +42,21 @@ namespace Brainamics.Core
 
         private IEnumerator PlayAnimation(Vector3 initialScale)
         {
-            var e = ScaleTo(initialScale, _targetScale, _duration);
-            while (e.MoveNext())
-                yield return e.Current;
-
+            var targetScale = _useInitialScaleAsTarget ? initialScale : _targetScale;
+        
             if (_useMiddleScale)
             {
                 var bounceDuration = _middleScaleDuration / 2;
 
-                e = ScaleTo(_targetScale, _middleScale, bounceDuration);
+                e = ScaleTo(initialScale, _middleScale, bounceDuration);
                 while (e.MoveNext())
                     yield return e.Current;
 
-                e = ScaleTo(_middleScale, _targetScale, bounceDuration);
+                e = ScaleTo(_middleScale, targetScale, bounceDuration);
+                while (e.MoveNext())
+                    yield return e.Current;
+            } else {
+                var e = ScaleTo(initialScale, targetScale, _duration);
                 while (e.MoveNext())
                     yield return e.Current;
             }
