@@ -31,6 +31,12 @@ namespace Brainamics.Core
             _normalTimescale /= timescaleMultiplier;
             UpdateTimescale();
         }
+        
+        public void Reset()
+        {
+            _normalTimescale = 1f;
+            UpdateTimescale();
+        }
 
         private void UpdateTimescale()
         {
