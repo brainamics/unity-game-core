@@ -32,8 +32,10 @@ namespace Brainamics.Core
             UpdateTimescale();
         }
         
-        public void Reset()
+        public void Reset(bool unpause = true)
         {
+            if (unpause)
+                _paused = false;
             _normalTimescale = 1f;
             UpdateTimescale();
         }
