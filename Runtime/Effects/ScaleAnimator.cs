@@ -48,7 +48,7 @@ namespace Brainamics.Core
             {
                 var bounceDuration = _middleScaleDuration / 2;
 
-                e = ScaleTo(initialScale, _middleScale, bounceDuration);
+                var e = ScaleTo(initialScale, _middleScale, bounceDuration);
                 while (e.MoveNext())
                     yield return e.Current;
 
