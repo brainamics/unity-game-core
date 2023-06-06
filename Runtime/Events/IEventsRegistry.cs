@@ -11,6 +11,10 @@ namespace Brainamics.Core
 
         void Unregister<T>(Action<T> handler);
 
+        void RegisterGlobal(Action<object> handler);
+
+        void UnregisterGlobal(Action<object> handler);
+
         void Invoke<T>(T eventArgs);
     }
 }
