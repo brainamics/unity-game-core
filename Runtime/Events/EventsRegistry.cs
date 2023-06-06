@@ -8,7 +8,7 @@ namespace Brainamics.Core
     public class EventsRegistry : IEventsRegistry
     {
         private readonly Dictionary<Type, List<Delegate>> _listeners = new();
-        private readonly Action<object> _globalListeners = new();
+        private readonly List<Action<object>> _globalListeners = new();
 
         public IReadOnlyList<Delegate> GetListeners(Type type)
             => _listeners.TryGetValue(type, out var list) ? list : Array.Empty<Delegate>();
@@ -20,7 +20,8 @@ namespace Brainamics.Core
             {
                 listener.DynamicInvoke(eventArgs);
             }
-            _globalListeners.Invoke(eventArgs);
+            foreach (var globalListener in _globalListeners)
+                globalListener.Invoke(eventArgs);
         }
 
         public void RegisterGlobal(Action<object> handler)

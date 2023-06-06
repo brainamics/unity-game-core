@@ -15,6 +15,9 @@ namespace Brainamics.Core
         [SerializeField]
         private GameObject _prefab;
 
+        [SerializeField]
+        private Transform _parent;
+
         public GameObjectPool()
         {
             _pool = new ObjectPool<GameObject>
@@ -47,7 +50,7 @@ namespace Brainamics.Core
 
         protected virtual GameObject CreateNew()
         {
-            return Instantiate(_prefab);
+            return Instantiate(_prefab, _parent);
         }
 
         protected virtual void DestroyObject(GameObject obj)
