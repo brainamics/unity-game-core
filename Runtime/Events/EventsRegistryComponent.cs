@@ -17,5 +17,11 @@ namespace Brainamics.Core
 
         public void Unregister<T>(Action<T> handler)
             => _registry.Unregister(handler);
+
+        public void RegisterGlobal(Action<object> handler)
+            => _registry.RegisterGlobal(handler);
+
+        public void UnregisterGlobal(Action<object> handler)
+            => _registry.UnregisterGlobal(handler);
     }
 }
