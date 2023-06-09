@@ -65,6 +65,8 @@ namespace Brainamics.Core
 
         protected virtual void WakeFromSleep(GameObject obj)
         {
+            foreach (var recyclable in obj.GetComponents<IRecyclable>())
+                recyclable.Recycle();
             obj.SetActive(true);
         }
 
