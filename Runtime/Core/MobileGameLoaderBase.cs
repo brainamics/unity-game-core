@@ -8,6 +8,10 @@ namespace Brainamics.Core
     {
         private static MobileGameLoaderBase Instance;
 
+        [SerializeField]
+        [Tooltip("Overrides max frame rate for the game")]
+        private int _targetFrameRate = 0;
+
         public bool IsPaused { get; private set; }
 
         protected abstract void Initialize();
@@ -18,6 +22,8 @@ namespace Brainamics.Core
 
         private void Awake()
         {
+            if (_targetFrameRate > 0)
+                Application.targetFrameRate = _targetFrameRate;
             if (Instance != null)
                 Destroy(Instance.gameObject);
             Instance = this;
