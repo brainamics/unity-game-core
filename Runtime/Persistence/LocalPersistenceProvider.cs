@@ -36,9 +36,7 @@ namespace Brainamics.Core
         private void Awake()
         {
             _filePath = Path.Combine(Application.persistentDataPath, _fileName);
-            var dirName = Path.GetDirectoryName(_filePath);
-            if (!Directory.Exists(dirName))
-                Directory.CreateDirectory(dirName);
+            EnsureDirectory();
         }
 
         private TState LoadStateFromFile()
@@ -61,7 +59,15 @@ namespace Brainamics.Core
 
         private void SaveStateToFile(TState state)
         {
+            EnsureDirectory();
             File.WriteAllText(_filePath, JsonConvert.SerializeObject(state));
+        }
+
+        private void EnsureDirectory()
+        {
+            var dirName = Path.GetDirectoryName(_filePath);
+            if (!Directory.Exists(dirName))
+                Directory.CreateDirectory(dirName);
         }
     }
 }
