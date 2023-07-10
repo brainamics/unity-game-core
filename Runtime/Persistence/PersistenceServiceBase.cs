@@ -61,7 +61,7 @@ namespace Brainamics.Core
         {
             _state = NewState();
             Log("creating a new game.");
-            await NewGameAsync(_state);
+            await NewGameAsync(progress, _state);
         }
 
         public void NewGameInBackground()
