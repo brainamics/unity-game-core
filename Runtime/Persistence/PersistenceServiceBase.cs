@@ -51,12 +51,24 @@ namespace Brainamics.Core
             _activeScenePersistenceManager = manager;
         }
 
+        public async Task NewGameAsync(IProgress<float> progress, TState state)
+        {
+            await _persistenceProvider.SaveStateAsync(_state);
+            await LoadGameState(_state, progress);
+        }
+
         public async Task NewGameAsync(IProgress<float> progress)
         {
             _state = NewState();
             Log("creating a new game.");
-            await _persistenceProvider.SaveStateAsync(_state);
-            await LoadGameState(_state, progress);
+            await NewGameAsync(_state);
+        }
+
+        public async Task NewGameAsync(IProgress<float> progress)
+        {
+            _state = NewState();
+            Log("creating a new game.");
+            await NewGameAsync(_state);
         }
 
         public void NewGameInBackground()
