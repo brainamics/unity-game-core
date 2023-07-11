@@ -11,16 +11,24 @@ namespace Brainamics.Core
     {
         private const int BigIntegerPrecisionNumber = 1000;
 
-        public static BigInteger Multiply(this BigInteger val, float mul, int precisionNumber = BigIntegerPrecisionNumber)
+        public static BigInteger Multiply(this BigInteger val, float mul)
         {
-            mul *= precisionNumber;
-            return val * (long)mul / precisionNumber;
+            if (mul == 1)
+                return val;
+            if (mul == 0)
+                return BigInteger.Zero;
+            mul *= Constants.BigIntegerPrecisionNumber;
+            return val * (long)mul / Constants.BigIntegerPrecisionNumber;
         }
-
-        public static BigInteger Multiply(this BigInteger val, double mul, int precisionNumber = BigIntegerPrecisionNumber)
+    
+        public static BigInteger Multiply(this BigInteger val, double mul)
         {
-            mul *= precisionNumber;
-            return val * (long)mul / precisionNumber;
+            if (mul == 1)
+                return val;
+            if (mul == 0)
+                return BigInteger.Zero;
+            mul *= Constants.BigIntegerPrecisionNumber;
+            return val * (long)mul / Constants.BigIntegerPrecisionNumber;
         }
     }
 }
