@@ -17,8 +17,8 @@ namespace Brainamics.Core
                 return val;
             if (mul == 0)
                 return BigInteger.Zero;
-            mul *= Constants.BigIntegerPrecisionNumber;
-            return val * (long)mul / Constants.BigIntegerPrecisionNumber;
+            mul *= BigIntegerPrecisionNumber;
+            return val * (long)mul / BigIntegerPrecisionNumber;
         }
     
         public static BigInteger Multiply(this BigInteger val, double mul)
@@ -27,8 +27,8 @@ namespace Brainamics.Core
                 return val;
             if (mul == 0)
                 return BigInteger.Zero;
-            mul *= Constants.BigIntegerPrecisionNumber;
-            return val * (long)mul / Constants.BigIntegerPrecisionNumber;
+            mul *= BigIntegerPrecisionNumber;
+            return val * (long)mul / BigIntegerPrecisionNumber;
         }
     }
 }
