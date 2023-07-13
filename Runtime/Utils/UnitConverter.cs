@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ namespace Brainamics.Core
                 throw new InvalidOperationException($"Cannot convert to BigInteger: {str}");
             var negative = !string.IsNullOrEmpty(match.Groups[1].Value);
             var numPart = BigInteger.Parse(match.Groups[2].Value);
-            var floatPart = string.IsNullOrEmpty(match.Groups[3].Value) ? 0d : double.Parse($"0.{match.Groups[4].Value}");
+            var floatPart = string.IsNullOrEmpty(match.Groups[3].Value) ? 0d : double.Parse($"0.{match.Groups[4].Value}", CultureInfo.InvariantCulture);
             var unitPart = match.Groups[5].Value;
             if (!UnitMultipliers.TryGetValue(unitPart, out var unitMul))
                 throw new InvalidOperationException($"Unknown unit: {unitPart}");
