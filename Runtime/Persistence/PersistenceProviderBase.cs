@@ -8,6 +8,8 @@ namespace Brainamics.Core
 
     public abstract class PersistenceProviderBase<TState> : ScriptableObject, IPersistenceProvider<TState>
     {
+        public abstract Task<TCustomState> LoadStateAsync<TCustomState>();
+
         public abstract Task<TState> LoadStateAsync();
 
         public abstract Task SaveStateAsync(TState state);

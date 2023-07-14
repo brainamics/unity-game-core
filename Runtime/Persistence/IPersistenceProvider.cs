@@ -7,6 +7,8 @@ namespace Brainamics.Core
 {
     public interface IPersistenceProvider<TState>
     {
+        Task<TCustomState> LoadStateAsync<TCustomState>();
+
         Task<TState> LoadStateAsync();
 
         Task SaveStateAsync(TState state);

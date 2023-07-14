@@ -22,6 +22,11 @@ namespace Brainamics.Core
         [SerializeField]
         private string _fileName = "savedata";
 
+        public override Task<TCustomState> LoadStateAsync<TCustomState>()
+        {
+            return Task.FromResult(LoadStateFromFile<TCustomState>());
+        }
+
         public override Task<TState> LoadStateAsync()
         {
             return Task.FromResult(LoadStateFromFile());
@@ -39,13 +44,13 @@ namespace Brainamics.Core
             EnsureDirectory();
         }
 
-        private TState LoadStateFromFile()
+        private TCustomState LoadStateFromFile<TCustomState>()
         {
             try
             {
                 if (!File.Exists(_filePath))
                     return default;
-                return JsonConvert.DeserializeObject<TState>(File.ReadAllText(_filePath));
+                return JsonConvert.DeserializeObject<TCustomState>(File.ReadAllText(_filePath));
             }
             catch (Exception)
             {
@@ -56,6 +61,9 @@ namespace Brainamics.Core
 #endif
             }
         }
+
+        private TState LoadStateFromFile()
+            => LoadStateFromFile<TState>();
 
         private void SaveStateToFile(TState state)
         {

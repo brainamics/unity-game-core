@@ -10,7 +10,10 @@ using UnityEngine.SceneManagement;
 namespace Brainamics.Core
 {
     // [CreateAssetMenu(menuName = "Game/Services/Persistence/Persistence Service")]
-    public abstract class PersistenceServiceBase<TState> : ScriptableObject, IPersistenceService<TState>
+    public abstract class PersistenceServiceBase<TState> : PersistenceServiceBase<TState, TState> { }
+
+    public abstract class PersistenceServiceBase<TState, TMinimalState> : ScriptableObject, IPersistenceService<TState>
+        where TState : TMinimalState
     {
         public string LoadingScene;
 
@@ -37,9 +40,15 @@ namespace Brainamics.Core
 
         public abstract DateTime? LastSaveTime { get; }
 
+        public virtual int LatestIntVersion => 0;
+
         public IEnumerable<ScriptableObject> ScriptableObjects => _scriptableObjects;
 
         protected virtual bool ReloadIfStateUnavailableDuringSceneAwake => false;
+
+        public virtual int? GetIntVersion(TMinimalState state) => null;
+
+        public virtual bool SetIntVersion(TMinimalState state, int version) => false;
 
         public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
         {
@@ -53,8 +62,8 @@ namespace Brainamics.Core
 
         public async Task NewGameAsync(IProgress<float> progress, TState state)
         {
-            await _persistenceProvider.SaveStateAsync(_state);
-            await LoadGameState(_state, progress);
+            await _persistenceProvider.SaveStateAsync(state);
+            await LoadGameState(state, progress);
         }
 
         public async Task NewGameAsync(IProgress<float> progress)
@@ -100,7 +109,7 @@ namespace Brainamics.Core
         {
             return StartSaveLoadOperation(async () =>
             {
-                _state = await _persistenceProvider.LoadStateAsync();
+                _state = await MigrateAndLoadStateFromProviderAsync();
                 Log($"loading game: {_state}");
                 await LoadGameState(_state, progress);
                 if (_activeScenePersistenceManager != null)
@@ -134,6 +143,11 @@ namespace Brainamics.Core
             Debug.LogError($"[Persistence] {o}");
         }
 
+        protected virtual Task<TState> MigrateAsync(int fromVersion, int toVersion, IPersistenceProvider<TState> persistenceProvider)
+        {
+            throw new NotSupportedException($"Migrating save file from version {fromVersion} to {toVersion} is not supported.");
+        }
+
         public void LoadActiveSceneState()
         {
             if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
@@ -147,6 +161,26 @@ namespace Brainamics.Core
                     throw new InvalidOperationException("No active scene persistence manager is set.");
                 LoadSceneState(_activeScenePersistenceManager.PersistableObjects);
             });
+        }
+
+        private async Task<TState> MigrateAndLoadStateFromProviderAsync()
+        {
+            // check if versioning is supported
+            var latestVersion = LatestIntVersion;
+            if (latestVersion < 1)
+                return await _persistenceProvider.LoadStateAsync();
+
+            // load the minimal state first
+            var minimalState = await _persistenceProvider.LoadStateAsync<TMinimalState>();
+            var saveVersion = GetIntVersion(minimalState);
+            if (saveVersion == null)
+                return await _persistenceProvider.LoadStateAsync();
+
+            // test if migration is necessary
+            if (saveVersion.Value < latestVersion)
+                return await MigrateAsync(saveVersion.Value, latestVersion, _persistenceProvider);
+
+            return await _persistenceProvider.LoadStateAsync();
         }
 
         private void LoadSceneState(IEnumerable<IPersistentState<TState>> statefulObjects)
