@@ -172,7 +172,7 @@ namespace Brainamics.Core
 
             // load the minimal state first
             var minimalState = await _persistenceProvider.LoadStateAsync<TMinimalState>();
-            var saveVersion = GetIntVersion(minimalState);
+            var saveVersion = minimalState == null ? null : GetIntVersion(minimalState);
             if (saveVersion == null)
                 return await _persistenceProvider.LoadStateAsync();
 
