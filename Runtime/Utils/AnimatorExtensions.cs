@@ -19,7 +19,7 @@ public static class AnimatorExtensions
         }
     }
 
-    public static IEnumerable WaitForStateDuration(Animator animator, string stateName, int layerIndex = 0)
+    public static IEnumerable WaitForStateDuration(this Animator animator, string stateName, int layerIndex = 0)
     {
         var waitTime = 0f;
 
