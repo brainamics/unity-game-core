@@ -28,7 +28,7 @@ public static class AnimatorExtensions
             var state = animator.GetCurrentAnimatorStateInfo(layerIndex);
             if (state.IsName(stateName))
             {
-                waitTime = state.normalizedTime;
+                waitTime = state.length;
                 break;
             }
             yield return null;
