@@ -46,7 +46,7 @@ namespace Brainamics.Core
             else if (record.Params == null || record.Params.Length == 0)
                 message = record.LogObject.ToString();
             else if (record.Level == LogLevel.Event && record.Params != null && record.Params.Length > 0)
-                message = record.Params[0].ToString(),
+                message = record.Params[0].ToString();
             else
                 message = string.Format(record.LogObject.ToString(), record.Params);
             if (Equals(record.Event, UnknownEventType))
