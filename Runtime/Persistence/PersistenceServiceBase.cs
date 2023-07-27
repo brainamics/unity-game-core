@@ -82,7 +82,7 @@ namespace Brainamics.Core
 
         public Task SaveGameAsync()
         {
-            return StartSaveLoadOperation(async () =>
+            return StartSaveLoadOperationAsync(async () =>
             {
                 if (!SaveGameState())
                     return;
@@ -109,7 +109,7 @@ namespace Brainamics.Core
 
         public Task LoadGameAsync(IProgress<float> progress)
         {
-            return StartSaveLoadOperation(async () =>
+            return StartSaveLoadOperationAsync(async () =>
             {
                 _state = await MigrateAndLoadStateFromProviderAsync();
                 Log($"loading game: {_state}");
