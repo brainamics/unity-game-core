@@ -78,6 +78,8 @@ namespace Brainamics.Core
                     break;
 
                 case LogLevel.Event:
+                    if (record.Params != null && record.Params.Length > 0)
+                        message ??= record.Params[0]?.ToString();
                     Debug.Log($"[Event] {message}");
                     break;
 
