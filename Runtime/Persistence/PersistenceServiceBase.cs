@@ -38,6 +38,8 @@ namespace Brainamics.Core
 
         public TState LastState => _state;
 
+        public bool IsSavingOrLoading => _operating;
+
         public abstract DateTime? LastSaveTime { get; }
 
         public virtual int LatestIntVersion => 0;
