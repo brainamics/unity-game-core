@@ -19,6 +19,11 @@ namespace Brainamics.Core
 
         TState LastState { get; }
 
+        /// <summary>
+        /// Gets whether or not the persistence service is busy either loading or saving the game.
+        /// </summary>
+        bool IsSavingOrLoading { get; }
+
         void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> persistenceManager);
 
         void LoadActiveSceneState();
