@@ -16,7 +16,7 @@ namespace Brainamics.Core
 
         public float FrameRate => _lastFramerate;
 
-        public FrameRateCounter()
+        private void Awake()
         {
             _lastFramerate = Application.targetFrameRate;
         }
