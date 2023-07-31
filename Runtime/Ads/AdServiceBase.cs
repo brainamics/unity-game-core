@@ -79,6 +79,7 @@ namespace Brainamics.Core
             _exclusiveAdHooked = true;
             if (!ShowExclusiveAd(out handle))
             {
+                Log($"ShowExclusiveAd failed for {@params}.");
                 _exclusiveHookCallback = null;
                 _exclusiveHookParams = null;
                 _exclusiveAdHooked = false;
@@ -163,6 +164,7 @@ namespace Brainamics.Core
 
         private void ClearCurrentExclusiveHook()
         {
+            Log("Current exclusive hook clear requested.");
             _exclusiveAdHooked = false;
             _exclusiveHookParams = null;
             _pauseSimulator?.Resume();
