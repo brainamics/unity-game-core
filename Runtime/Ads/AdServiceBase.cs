@@ -80,7 +80,7 @@ namespace Brainamics.Core
             if (!ShowExclusiveAd(out handle))
             {
                 Log($"ShowExclusiveAd failed for {@params}.");
-                _exclusiveHookCallback = null;
+                // _exclusiveHookCallback = null;
                 _exclusiveHookParams = null;
                 _exclusiveAdHooked = false;
                 return false;
