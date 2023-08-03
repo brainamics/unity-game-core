@@ -49,8 +49,8 @@ namespace Brainamics.Core
         {
             AudioClip clip = clips.Count switch
             {
-                    case 0 => null,
-                    case 1 => clips[0],
+                    0 => null,
+                    1 => clips[0],
                     _ => clips[Random.Range(0, clips.Count)],
             };
             audioService.PlayEffectOneShot(audio, clip);
