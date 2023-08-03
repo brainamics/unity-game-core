@@ -55,4 +55,5 @@ namespace Brainamics.Core
             };
             audioService.PlayEffectOneShot(audio, clip);
         }
+    }
 }
