@@ -44,5 +44,15 @@ namespace Brainamics.Core
         {
             audioService.PlayOneShot(AudioKind.Effect, audio, clip);
         }
-    }
+
+        public static void PlayRandomEffect(this IAudioService audioService, AudioSource audio, IReadOnlyList<AudioClip> clips)
+        {
+            AudioClip clip = clips.Count switch
+            {
+                    case 0 => null,
+                    case 1 => clips[0],
+                    _ => clips[Random.Range(0, clips.Count)],
+            };
+            audioService.PlayEffectOneShot(audio, clip);
+        }
 }
