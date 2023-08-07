@@ -165,6 +165,7 @@ namespace Brainamics.Core
         private void ClearCurrentExclusiveHook()
         {
             Log("Current exclusive hook clear requested.");
+            Log((new System.Diagnostics.StackTrace()).ToString());
             _exclusiveAdHooked = false;
             _exclusiveHookParams = null;
             _pauseSimulator?.Resume();
