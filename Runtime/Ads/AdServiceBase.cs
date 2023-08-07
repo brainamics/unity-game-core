@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -127,16 +128,18 @@ namespace Brainamics.Core
             };
         }
 
-        protected void RejectCurrentExclusiveHook()
+        protected void RejectCurrentExclusiveHook([CallerMemberName] string callerName = null)
         {
+            Log($"RejectCurrentExclusiveHook caller={callerName} state={StateToString()}");
             if (!_exclusiveAdHooked)
                 return;
             ClearCurrentExclusiveHook();
             _exclusiveHookCallback.Invoke(false);
         }
 
-        protected void ApproveCurrentExclusiveHook()
+        protected void ApproveCurrentExclusiveHook([CallerMemberName] string callerName = null)
         {
+            Log($"ApproveCurrentExclusiveHook caller={callerName} state={StateToString()}");
             if (!_exclusiveAdHooked)
                 return;
             ClearCurrentExclusiveHook();
@@ -146,6 +149,11 @@ namespace Brainamics.Core
         protected void SetAdAvailability(bool available)
         {
             _onAdAvailabilityChanged.Invoke(available);
+        }
+
+        protected void HandleAdClosed()
+        {
+            _pauseSimulator?.Resume();
         }
 
         protected virtual void OnEnableInternal()
@@ -162,14 +170,6 @@ namespace Brainamics.Core
                 Debug.Log($"[AdService] {o}");
         }
 
-        private void ClearCurrentExclusiveHook()
-        {
-            Log("Current exclusive hook clear requested.");
-            _exclusiveAdHooked = false;
-            _exclusiveHookParams = null;
-            _pauseSimulator?.Resume();
-        }
-
         private void OnEnable()
         {
             OnEnableInternal();
@@ -178,6 +178,19 @@ namespace Brainamics.Core
         private void OnDestroy()
         {
             OnDestroyInternal();
+        }
+
+        private void ClearCurrentExclusiveHook()
+        {
+            Log("Current exclusive hook clear requested.");
+            _exclusiveAdHooked = false;
+            _exclusiveHookParams = null;
+            HandleAdClosed();
+        }
+
+        private string StateToString()
+        {
+            return $"hooked={_exclusiveAdHooked},params={_exclusiveHookParams},cb={_exclusiveHookCallback}";
         }
     }
 }
