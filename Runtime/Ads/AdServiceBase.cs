@@ -159,13 +159,12 @@ namespace Brainamics.Core
         protected void Log(object o)
         {
             if (_logging)
-                Debug.Log(o);
+                Debug.Log($"[AdService] {o}");
         }
 
         private void ClearCurrentExclusiveHook()
         {
             Log("Current exclusive hook clear requested.");
-            Log((new System.Diagnostics.StackTrace()).ToString());
             _exclusiveAdHooked = false;
             _exclusiveHookParams = null;
             _pauseSimulator?.Resume();
