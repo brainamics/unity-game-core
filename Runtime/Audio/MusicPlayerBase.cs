@@ -34,6 +34,12 @@ namespace Brainamics.Core
             CheckForClipChanges();
         }
 
+        private void OnEnable()
+            => UpdatePlayState();
+
+        private void OnDisable()
+            => UpdatePlayState();
+
         private void OnDestroy()
         {
             AudioService.ConfigurationChanged.RemoveListener(UpdatePlayState);
@@ -48,7 +54,7 @@ namespace Brainamics.Core
 
         private void UpdatePlayState()
         {
-            var shouldPlay = AudioService.CanPlay(AudioKind.Music) && _musicClip != null;
+            var shouldPlay = enabled && AudioService.CanPlay(AudioKind.Music) && _musicClip != null;
             if (_activeClip == _musicClip && _playing == shouldPlay)
                 return;
 
