@@ -15,8 +15,12 @@ namespace Brainamics.Core
     public abstract class GameSceneScannerBase<TGameSceneScanner> : MonoBehaviour
         where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
     {
+        public static event Action<TGameSceneScanner> OnScannerCreated;
+    
         // scene => scene manager
         private static readonly HybridDictionary _managers = new();
+
+        public event Action<TGameSceneScanner> OnDestroying;
 
         /// <summary>
         /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
@@ -68,6 +72,8 @@ namespace Brainamics.Core
 #endif
             _managers[scene] = this;
             AwakeInternal();
+
+            OnScannerCreated?.Invoke((TGameSceneScanner)this);
         }
 
         private void Start()
@@ -78,6 +84,7 @@ namespace Brainamics.Core
         private void OnDestroy()
         {
             _managers.Remove(gameObject.scene);
+            OnDestroying?.Invoke((TGameSceneScanner)this);
         }
     }
 }
