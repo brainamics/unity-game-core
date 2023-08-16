@@ -12,6 +12,9 @@ namespace Brainamics.Core
         private IPersistenceService<TState> _persistenceService;
 
         [SerializeField]
+        private bool _loadOnStart = true;
+
+        [SerializeField]
         private bool _loadOnFirstFrame;
 
         public IEnumerable<IPersistentState<TState>> PersistableObjects => _persistableObjects;
@@ -30,7 +33,7 @@ namespace Brainamics.Core
             }
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             _persistenceService = GetPersistenceService();
             _persistenceService.SetActiveScenePersistenceManager(this);
@@ -38,8 +41,10 @@ namespace Brainamics.Core
             RescanSceneObjects();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
+            if (!_loadOnStart)
+                return;
             if (_loadOnFirstFrame)
             {
                 _persistenceService.LoadActiveSceneState();
