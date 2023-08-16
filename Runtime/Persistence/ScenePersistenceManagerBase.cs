@@ -49,5 +49,10 @@ namespace Brainamics.Core
             }
             this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
         }
+
+        protected virtual void OnDestroy()
+        {
+            _persistenceService.ClearActiveScenePersistenceManager(this);
+        }
     }
 }

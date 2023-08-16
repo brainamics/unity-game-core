@@ -26,6 +26,8 @@ namespace Brainamics.Core
 
         void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> persistenceManager);
 
+        void ClearActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> persistenceManager);
+
         void LoadActiveSceneState();
 
         Task LoadGameAsync(IProgress<float> progress);

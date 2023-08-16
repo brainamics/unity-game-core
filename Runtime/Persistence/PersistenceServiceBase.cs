@@ -62,6 +62,12 @@ namespace Brainamics.Core
             _activeScenePersistenceManager = manager;
         }
 
+        public virtual void ClearActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
+        {
+            if (_activeScenePersistenceManager == manager)
+                _activeScenePersistenceManager = null;
+        }
+
         public async Task NewGameAsync(IProgress<float> progress, TState state)
         {
             await _persistenceProvider.SaveStateAsync(state);
