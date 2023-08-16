@@ -11,11 +11,8 @@ namespace Brainamics.Core
         private readonly List<IPersistentState<TState>> _persistableObjects = new();
         private IPersistenceService<TState> _persistenceService;
 
-        [SerializeField]
-        private bool _loadOnStart = true;
-
-        [SerializeField]
-        private bool _loadOnFirstFrame;
+        public bool LoadOnStart = true;
+        public bool LoadOnFirstFrame = true;
 
         public IEnumerable<IPersistentState<TState>> PersistableObjects => _persistableObjects;
 
@@ -43,9 +40,9 @@ namespace Brainamics.Core
 
         protected virtual void Start()
         {
-            if (!_loadOnStart)
+            if (!LoadOnStart)
                 return;
-            if (_loadOnFirstFrame)
+            if (LoadOnFirstFrame)
             {
                 _persistenceService.LoadActiveSceneState();
                 return;
