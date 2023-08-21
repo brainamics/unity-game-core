@@ -16,6 +16,8 @@ namespace Brainamics.Core
         public Transform BoundObject;
         public Vector3 TranslateOnCanvas = Vector3.zero;
 
+        public bool RepositionOnUpdate = false;
+
         [SerializeField]
         [Tooltip("Optional camera; falls back to the main camera")]
         private Camera _camera;
@@ -43,12 +45,17 @@ namespace Brainamics.Core
 
         private void Update()
         {
+            if (RepositionOnUpdate)
+            {
+                Reposition();
+                return;
+            }
             UpdateBoundObject();
         }
 
         private void UpdateBoundObject()
         {
-            if (_lastBoundObject == BoundObject)
+            if (_lastBoundObject == BoundObject || RepositionOnUpdate)
                 return;
             UnbindFromBoundObject(_lastBoundObject);
             _lastBoundObject = BoundObject;
