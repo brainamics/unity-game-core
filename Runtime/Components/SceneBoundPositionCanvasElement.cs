@@ -28,15 +28,17 @@ namespace Brainamics.Core
                 _camera = Camera.main;
             _cameraTransformNotifier = TransformChangeNotifier.For(_camera);
             _cameraTransformNotifier.OnTransformChanged.AddListener(HandleTransformMoved);
-            var notifier = TransformChangeNotifier.For(BoundObject);
-            notifier.OnTransformChanged.AddListener(HandleTransformMoved);
             Reposition();
+            UpdateBoundObject();
         }
 
         private void OnDisable()
         {
             if (_cameraTransformNotifier != null)
                 _cameraTransformNotifier.OnTransformChanged.RemoveListener(HandleTransformMoved);
+            if (_lastBoundObject != null)
+                UnbindFromBoundObject(_lastBoundObject);
+            _lastBoundObject = null;
         }
 
         private void Update()
