@@ -53,6 +53,7 @@ namespace Brainamics.Core
             UnbindFromBoundObject(_lastBoundObject);
             _lastBoundObject = BoundObject;
             BindToBoundObject(BoundObject);
+            Reposition();
         }
 
         private void BindToBoundObject(Transform bo)
