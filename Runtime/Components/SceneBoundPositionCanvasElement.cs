@@ -10,33 +10,64 @@ namespace Brainamics.Core
     /// </summary>
     public class SceneBoundPositionCanvasElement : MonoBehaviour
     {
+        private Transform _lastBoundObject;
+
         public Vector3 Position;
         public Transform BoundObject;
         public Vector3 TranslateOnCanvas = Vector3.zero;
 
         [SerializeField]
-        [Tooltip("Optional camera; falls back to the main camera (The camera should have the CameraTransformer component attached)")]
+        [Tooltip("Optional camera; falls back to the main camera")]
         private Camera _camera;
 
-        private CameraTransformer _cameraTransformer;
+        private TransformChangeNotifier _cameraTransformNotifier;
 
-        private void Start()
+        private void OnEnable()
         {
             if (_camera == null)
                 _camera = Camera.main;
-            if (!_camera.TryGetComponent<CameraTransformer>(out _cameraTransformer))
-                return;
-            _cameraTransformer.OnPositionChanged.AddListener(CameraMoved);
+            _cameraTransformNotifier = TransformChangeNotifier.For(_camera);
+            _cameraTransformNotifier.OnTransformChanged.AddListener(HandleTransformMoved);
+            var notifier = TransformChangeNotifier.For(BoundObject);
+            notifier.OnTransformChanged.AddListener(HandleTransformMoved);
             Reposition();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            if (_cameraTransformer != null)
-                _cameraTransformer.OnPositionChanged.RemoveListener(CameraMoved);
+            if (_cameraTransformNotifier != null)
+                _cameraTransformNotifier.OnTransformChanged.RemoveListener(HandleTransformMoved);
         }
 
-        private void CameraMoved(CameraTransformer _)
+        private void Update()
+        {
+            UpdateBoundObject();
+        }
+
+        private void UpdateBoundObject()
+        {
+            if (_lastBoundObject == BoundObject)
+                return;
+            UnbindFromBoundObject(_lastBoundObject);
+            _lastBoundObject = BoundObject;
+            BindToBoundObject(BoundObject);
+        }
+
+        private void BindToBoundObject(Transform bo)
+        {
+            if (bo == null)
+                return;
+            var notifier = TransformChangeNotifier.For(bo);
+            notifier.OnTransformChanged.AddListener(HandleTransformMoved);
+        }
+
+        private void UnbindFromBoundObject(Transform bo)
+        {
+            var notifier = TransformChangeNotifier.For(bo);
+            notifier.OnTransformChanged.RemoveListener(HandleTransformMoved);
+        }
+
+        private void HandleTransformMoved(Transform _)
         {
             Reposition();
         }
