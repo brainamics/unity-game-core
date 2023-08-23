@@ -22,6 +22,8 @@ namespace Brainamics.Core
             set => _musicClip = value;
         }
 
+        public bool IsPlaying => _playing;
+
         protected abstract IAudioService AudioService { get; }
 
         private void Start()
