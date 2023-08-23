@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
@@ -10,12 +11,26 @@ namespace Brainamics.Core
         private TutorialStep[] _steps;
         private TutorialStep _activeStep;
 
-        public TutorialStep ActiveStep { get; private set; }
+        public UnityEvent<TutorialStep, TutorialStep> OnActiveStepChanged;
+
+        public TutorialStep ActiveStep
+        {
+            get => _activeStep;
+            set
+            {
+                if (_activeStep == value)
+                    return;
+                var oldStep = _activeStep;
+                _activeStep = value;
+                OnActiveStepChanged.Invoke(oldStep, value);
+            }
+        }
 
         private void OnEnable()
         {
             _steps = GetComponentsInChildren<TutorialStep>();
             BindSteps();
+            UpdateActiveStep();
         }
 
         private void OnDisable()
@@ -54,7 +69,7 @@ namespace Brainamics.Core
 
         private void UpdateActiveStep()
         {
-            if (ActiveStep != null && !ActiveStep.IsActive)
+            if (_activeStep != null && !_activeStep.IsActive)
             {
                 ActiveStep = null;
             }
