@@ -30,7 +30,7 @@ namespace Brainamics.Core
 
         public override SpaceCoordinates Coordinates { get; }
 
-        public override bool IsVisible => Image.gameObject.activeInHierarchy;
+        public override bool IsVisible { get; private set; }
 
         public bool IsDown { get; private set; }
 
@@ -160,6 +160,7 @@ namespace Brainamics.Core
         {
             if (visible == IsVisible)
                 return;
+            IsVisible = visible;
 
             if (immediate)
             {
