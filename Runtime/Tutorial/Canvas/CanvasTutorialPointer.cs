@@ -144,7 +144,8 @@ namespace Brainamics.Core
         {
             var position = screenPosition + CanvasPostTranslate;
 
-            SetPosition(position, request);
+            if (request.Visible)
+                SetPosition(position, request);
             SetVisibility(true, request.Immediate);
         }
 
