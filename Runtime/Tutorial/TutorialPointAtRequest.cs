@@ -8,6 +8,11 @@ namespace Brainamics.Core
     {
         public static readonly TutorialPointAtRequest Invisible = default;
 
+        public static readonly TutorialPointAtRequest InvisibleImmediate = new() {
+            Visible = false,
+            Immediate = true
+        };
+
         public bool Visible;
         public SpaceCoordinates TargetPosition;
         public bool Immediate;

@@ -22,6 +22,8 @@ namespace Brainamics.Core
                     return;
                 var oldStep = _activeStep;
                 _activeStep = value;
+                if (value.State != TutorialStepState.Active)
+                    value.State = TutorialStepState.Active;
                 OnActiveStepChanged.Invoke(oldStep, value);
             }
         }
