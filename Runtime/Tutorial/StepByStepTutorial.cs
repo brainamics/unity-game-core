@@ -30,6 +30,8 @@ namespace Brainamics.Core
             }
         }
 
+        protected virtual void Awake() { }
+
         protected virtual void OnEnable()
         {
             _steps = GetComponentsInChildren<TutorialStep>();
