@@ -73,6 +73,19 @@ namespace Brainamics.Core
             {
                 ActiveStep = null;
             }
+
+            ActivateFirstIncompleteStep();
+        }
+
+        private void ActivateFirstIncompleteStep()
+        {
+            foreach (var step in _steps)
+            {
+                if (step.State is not TutorialStepState.NotStarted and not TutorialStepState.Failed)
+                    continue;
+                ActiveStep = step;
+                break;
+            }
         }
     }
 }
