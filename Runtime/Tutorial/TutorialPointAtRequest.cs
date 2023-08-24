@@ -6,6 +6,8 @@ namespace Brainamics.Core
 {
     public struct TutorialPointAtRequest
     {
+        public static readonly TutorialPointAtRequest Invisible = default;
+
         public bool Visible;
         public SpaceCoordinates TargetPosition;
         public bool Immediate;
