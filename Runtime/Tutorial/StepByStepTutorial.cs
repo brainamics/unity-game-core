@@ -6,11 +6,13 @@ using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
+    [DefaultExecutionOrder(1)]
     public class StepByStepTutorial : MonoBehaviour
     {
-        private TutorialStep[] _steps;
-        private TutorialStep _activeStep;
+        protected TutorialStep[] _steps;
+        protected TutorialStep _activeStep;
 
+        public bool ActivateOnEnable = true;
         public UnityEvent<TutorialStep, TutorialStep> OnActiveStepChanged;
 
         public TutorialStep ActiveStep
@@ -28,14 +30,15 @@ namespace Brainamics.Core
             }
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _steps = GetComponentsInChildren<TutorialStep>();
             BindSteps();
-            UpdateActiveStep();
+            if (ActivateOnEnable)
+                UpdateActiveStep();
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             UnbindSteps();
             _steps = System.Array.Empty<TutorialStep>();
