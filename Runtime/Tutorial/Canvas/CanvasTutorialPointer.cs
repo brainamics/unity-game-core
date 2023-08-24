@@ -38,15 +38,22 @@ namespace Brainamics.Core
 
         public override void PointAt(TutorialPointAtRequest request)
         {
-            var position = request.TargetPosition.Position;
-            if (request.TargetPosition.Mode == CoordinateMode.World)
-                position += WorldPreTranslate;
-            if (request.TargetPosition.Mode == CoordinateMode.Screen)
-                position += ScreenPreTranslate;
+            if (request.Visible)
+            {
+                var position = request.TargetPosition.Position;
+                if (request.TargetPosition.Mode == CoordinateMode.World)
+                    position += WorldPreTranslate;
+                if (request.TargetPosition.Mode == CoordinateMode.Screen)
+                    position += ScreenPreTranslate;
 
-            var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
-            target += ScreenPostTranslate;
-            PointAt(target.Position, request);
+                var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
+                target += ScreenPostTranslate;
+                PointAt(target.Position, request);
+            }
+            else
+            {
+                PointAt(Vector3.zero, request);
+            }
             OnPoint.Invoke(request);
         }
 
