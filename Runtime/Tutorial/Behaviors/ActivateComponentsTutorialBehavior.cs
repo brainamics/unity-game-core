@@ -7,17 +7,21 @@ namespace Brainamics.Core
     public class ActivateComponentsTutorialBehavior : TutorialStepBehaviorBase
     {
         public Behaviour[] Components;
+        public bool Deactivate;
+        public bool RestoreOnExit = true;
 
         protected override void OnActivate()
         {
             foreach (var component in Components)
-                component.enabled = true;
+                component.enabled = !Deactivate;
         }
 
         protected override void OnDeactivate()
         {
+            if (!RestoreOnExit)
+                return;
             foreach (var component in Components)
-                component.enabled = false;
+                component.enabled = Deactivate;
         }
     }
 }
