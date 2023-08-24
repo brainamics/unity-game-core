@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,15 +25,25 @@ namespace Brainamics.Core
                     return;
                 var wasActive = IsActive;
                 _state = value;
+                HandleStateChanged(value);
                 OnStateChanged.Invoke(this);
                 if (wasActive != IsActive)
                 {
+                    HandleActivationChanged();
                     if (IsActive)
                         OnActivated.Invoke(this);
                     else
                         OnDeactivated.Invoke(this);
                 }
             }
+        }
+
+        private void HandleStateChanged(TutorialStepState state)
+        {
+        }
+
+        private void HandleActivationChanged()
+        {
         }
     }
 }
