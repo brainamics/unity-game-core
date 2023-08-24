@@ -153,7 +153,7 @@ namespace Brainamics.Core
 
             if (request.Visible)
                 SetPosition(position, request);
-            SetVisibility(true, request.Immediate);
+            SetVisibility(request.Visible, request.Immediate);
         }
 
         private void SetVisibility(bool visible, bool immediate = false)
