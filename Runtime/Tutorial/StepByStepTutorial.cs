@@ -74,7 +74,7 @@ namespace Brainamics.Core
             _activeStep = null;
         }
 
-        private void UpdateActiveStep()
+        protected void UpdateActiveStep()
         {
             if (_activeStep != null && !_activeStep.IsActive)
             {
