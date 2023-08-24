@@ -23,7 +23,11 @@ namespace Brainamics.Core
             Step.OnDeactivated.AddListener(HandleStepDeactivated);
         }
 
-        protected virtual void OnDisable() { }
+        protected virtual void OnDisable()
+        {
+            Step.OnActivated.RemoveListener(HandleStepActivated);
+            Step.OnDeactivated.RemoveListener(HandleStepDeactivated);
+        }
 
         protected abstract void OnActivate();
 

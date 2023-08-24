@@ -8,7 +8,7 @@ namespace Brainamics.Core
 {
     public class TutorialStep : MonoBehaviour
     {
-        private TutorialStepState _state;
+        private TutorialStepState _state = TutorialStepState.NotStarted;
 
         public UnityEvent<TutorialStep> OnActivated;
         public UnityEvent<TutorialStep> OnDeactivated;
