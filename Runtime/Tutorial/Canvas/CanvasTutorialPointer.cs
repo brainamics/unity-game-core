@@ -9,6 +9,7 @@ namespace Brainamics.Core
 {
     public class CanvasTutorialPointer : TutorialPointerBase
     {
+        private bool _visible;
         private Canvas _canvas;
         private Coroutine _visibilityCoroutine, _positionCoroutine;
 
@@ -30,7 +31,7 @@ namespace Brainamics.Core
 
         public override SpaceCoordinates Coordinates { get; }
 
-        public override bool IsVisible { get; private set; }
+        public override bool IsVisible => _visible;
 
         public bool IsDown { get; private set; }
 
@@ -160,7 +161,7 @@ namespace Brainamics.Core
         {
             if (visible == IsVisible)
                 return;
-            IsVisible = visible;
+            _visible = visible;
 
             if (immediate)
             {
