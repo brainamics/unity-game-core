@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [RequireComponent(typeof(TutorialStep))]
+    [DefaultExecutionOrder(99)]
     public abstract class TutorialStepBehaviorBase : MonoBehaviour
     {
         public bool IsActive { get; private set; }
