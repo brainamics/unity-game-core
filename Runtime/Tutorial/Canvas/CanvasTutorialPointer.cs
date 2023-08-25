@@ -183,7 +183,7 @@ namespace Brainamics.Core
                 return;
             }
 
-            StartOmniCoroutine(ref _visibilityCoroutine, AnimateVisibility(visible));
+            StartOmniCoroutine(ref _visibilityCoroutine, AnimateVisibility(visible), () => _visibilityCoroutine = null);
         }
 
         private void SetPosition(Vector3 position, TutorialPointAtRequest request)
@@ -194,7 +194,7 @@ namespace Brainamics.Core
                 return;
             }
 
-            StartOmniCoroutine(ref _positionCoroutine, AnimatePosition(position, request));
+            StartOmniCoroutine(ref _positionCoroutine, AnimatePosition(position, request), () => _positionCoroutine = null);
         }
     }
 }

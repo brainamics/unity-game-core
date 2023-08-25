@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,14 +15,25 @@ namespace Brainamics.Core
 
         public abstract void SetClickState(bool down);
 
-        protected void StartOmniCoroutine(ref Coroutine coroutine, IEnumerator actions)
+        protected void StartOmniCoroutine(ref Coroutine coroutine, IEnumerator actions, Action clearCoroutineRef)
         {
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
             }
 
-            coroutine = StartCoroutine(actions);
+            var finished = false;
+            coroutine = StartCoroutine(Run());
+            if (finished)
+                coroutine = null;
+
+            IEnumerator Run()
+            {
+                while (actions.MoveNext())
+                    yield return actions;
+                clearCoroutineRef?.Invoke();
+                finished = true;
+            }
         }
 
         protected void StopCoroutine(ref Coroutine coroutine)
