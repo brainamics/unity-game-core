@@ -9,10 +9,12 @@ namespace Brainamics.Core
 {
     public class CanvasTutorialPointer : TutorialPointerBase
     {
+        private TutorialPointAtRequest _request = TutorialPointAtRequest.InvisibleImmediate;
         private bool _visible;
         private Canvas _canvas;
         private Coroutine _visibilityCoroutine, _positionCoroutine;
 
+        public bool RepositionOnUpdate = true;
         public RectTransform Image;
         public CanvasGroup CanvasGroup;
         public Vector3 WorldPreTranslate;
@@ -80,6 +82,12 @@ namespace Brainamics.Core
 
         protected virtual void OnDisable() { }
 
+        private void Update()
+        {
+            if (RepositionOnUpdate && _positionCoroutine == null)
+                PointAt(_request);
+        }
+
         protected virtual IEnumerator AnimateVisibility(bool visible)
         {
             if (CanvasGroup == null)
@@ -115,7 +123,9 @@ namespace Brainamics.Core
 
         protected virtual IEnumerator AnimatePosition(Vector3 position, TutorialPointAtRequest request)
         {
-            if (!IsVisible)
+            var startPos = GetPosition();
+
+            if (!IsVisible || startPos == position)
             {
                 SetPositionImmediate(position, request);
                 yield break;
@@ -124,7 +134,6 @@ namespace Brainamics.Core
             var duration = request.TransitionDuration > 0 ? request.TransitionDuration : DefaultPositionTransitionDuration;
             var curve = request.TransitionCurve != null ? request.TransitionCurve : DefaultPositionTransitionAnimation;
             var startTime = Time.time;
-            var startPos = GetPosition();
             var diff = position - startPos;
             while (true)
             {
@@ -156,6 +165,7 @@ namespace Brainamics.Core
 
         private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request)
         {
+            _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
             if (request.Visible)
