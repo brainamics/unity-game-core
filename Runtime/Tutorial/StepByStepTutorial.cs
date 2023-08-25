@@ -23,6 +23,8 @@ namespace Brainamics.Core
                 if (_activeStep == value)
                     return;
                 var oldStep = _activeStep;
+                if (oldStep != null && oldStep.State == TutorialStepState.Active)
+                    oldStep.State = IsPriorStep(value, oldStep) ? TutorialStepState.NotStarted : TutorialStepState.Failed;
                 _activeStep = value;
                 if (value != null && value.State != TutorialStepState.Active)
                     value.State = TutorialStepState.Active;
@@ -44,6 +46,13 @@ namespace Brainamics.Core
         {
             UnbindSteps();
             _steps = System.Array.Empty<TutorialStep>();
+        }
+
+        private bool IsPriorStep(TutorialStep step, TutorialStep priorToStep)
+        {
+            var index = Array.IndexOf(_steps, step);
+            var priorIndex = Array.IndexOf(_steps, priorToStep);
+            return index < priorIndex;
         }
 
         private void BindSteps()
