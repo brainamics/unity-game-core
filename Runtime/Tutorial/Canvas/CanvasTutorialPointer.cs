@@ -91,6 +91,9 @@ namespace Brainamics.Core
             if (visible)
                 Activate(true);
 
+            if (CanvasGroup.alpha == (visible ? 1 : 0))
+                yield break;
+
             var startTime = Time.time;
             while (true)
             {
@@ -162,8 +165,6 @@ namespace Brainamics.Core
 
         private void SetVisibility(bool visible, bool immediate = false)
         {
-            if (visible == IsVisible)
-                return;
             _visible = visible;
 
             if (immediate)
