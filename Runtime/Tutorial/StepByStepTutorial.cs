@@ -81,6 +81,8 @@ namespace Brainamics.Core
                 ActiveStep = null;
             }
 
+            if (_activeStep != null)
+                return;
             ActivateFirstIncompleteStep();
         }
 
