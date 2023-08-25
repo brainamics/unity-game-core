@@ -19,10 +19,17 @@ namespace Brainamics.Core
             if (coroutine != null)
             {
                 StopCoroutine(coroutine);
-                coroutine = null;
             }
 
             coroutine = StartCoroutine(actions);
+        }
+
+        protected void StopCoroutine(ref Coroutine coroutine)
+        {
+            if (coroutine == null)
+                return;
+            StopCoroutine(coroutine);
+            coroutine = null;
         }
     }
 }

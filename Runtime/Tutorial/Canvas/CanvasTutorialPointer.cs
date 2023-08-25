@@ -39,6 +39,9 @@ namespace Brainamics.Core
 
         public override void PointAt(TutorialPointAtRequest request)
         {
+            StopCoroutine(ref _visibilityCoroutine);
+            StopCoroutine(ref _positionCoroutine);
+
             if (request.Visible)
             {
                 var position = request.TargetPosition.Position;
