@@ -31,13 +31,13 @@ namespace Brainamics.Core
                     if (oldStep != null && oldStep.State == TutorialStepState.Active)
                         oldStep.State = IsPriorStep(value, oldStep) ? TutorialStepState.NotStarted : TutorialStepState.Failed;
                     _activeStep = value;
+                    if (value != null && value.State != TutorialStepState.Active)
+                        value.State = TutorialStepState.Active;
                 }
                 finally
                 {
                     _preventStepUpdates = false;
                 }
-                if (value != null && value.State != TutorialStepState.Active)
-                    value.State = TutorialStepState.Active;
                 OnActiveStepChanged.Invoke(oldStep, value);
             }
         }
