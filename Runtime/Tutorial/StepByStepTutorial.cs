@@ -9,6 +9,7 @@ namespace Brainamics.Core
     [DefaultExecutionOrder(1)]
     public class StepByStepTutorial : MonoBehaviour
     {
+        private bool _preventStepUpdates;
         protected TutorialStep[] _steps;
         protected TutorialStep _activeStep;
 
@@ -22,12 +23,21 @@ namespace Brainamics.Core
             {
                 if (_activeStep == value)
                     return;
+
                 var oldStep = _activeStep;
-                if (oldStep != null && oldStep.State == TutorialStepState.Active)
-                    oldStep.State = IsPriorStep(value, oldStep) ? TutorialStepState.NotStarted : TutorialStepState.Failed;
-                _activeStep = value;
-                if (value != null && value.State != TutorialStepState.Active)
-                    value.State = TutorialStepState.Active;
+                _preventStepUpdates = true;
+                try
+                {
+                    if (oldStep != null && oldStep.State == TutorialStepState.Active)
+                        oldStep.State = IsPriorStep(value, oldStep) ? TutorialStepState.NotStarted : TutorialStepState.Failed;
+                    _activeStep = value;
+                    if (value != null && value.State != TutorialStepState.Active)
+                        value.State = TutorialStepState.Active;
+                }
+                finally
+                {
+                    _preventStepUpdates = false;
+                }
                 OnActiveStepChanged.Invoke(oldStep, value);
             }
         }
@@ -85,6 +95,9 @@ namespace Brainamics.Core
 
         protected void UpdateActiveStep()
         {
+            if (_preventStepUpdates)
+                return;
+
             if (_activeStep != null && !_activeStep.IsActive)
             {
                 ActiveStep = null;
