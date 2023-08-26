@@ -26,7 +26,6 @@ namespace Brainamics.Core
                 var wasActive = IsActive;
                 _state = value;
                 HandleStateChanged(value);
-                OnStateChanged.Invoke(this);
                 if (wasActive != IsActive)
                 {
                     HandleActivationChanged();
@@ -35,6 +34,7 @@ namespace Brainamics.Core
                     else
                         OnDeactivated.Invoke(this);
                 }
+                OnStateChanged.Invoke(this);
             }
         }
 

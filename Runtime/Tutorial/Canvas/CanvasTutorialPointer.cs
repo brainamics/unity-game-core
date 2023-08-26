@@ -40,9 +40,15 @@ namespace Brainamics.Core
         protected Camera ResolvedCamera => Camera == null ? Camera.main : Camera;
 
         public override void PointAt(TutorialPointAtRequest request)
+            => PointAt(request, true);
+
+        public void PointAt(TutorialPointAtRequest request, bool cancelAnimations, bool invokeEvents = true)
         {
-            StopCoroutine(ref _visibilityCoroutine);
-            StopCoroutine(ref _positionCoroutine);
+            if (cancelAnimations)
+            {
+                StopCoroutine(ref _visibilityCoroutine);
+                StopCoroutine(ref _positionCoroutine);
+            }
 
             if (request.Visible)
             {
@@ -60,7 +66,8 @@ namespace Brainamics.Core
             {
                 PointAt(Vector3.zero, request);
             }
-            OnPoint.Invoke(request);
+            if (invokeEvents)
+                OnPoint.Invoke(request);
         }
 
         public override void SetClickState(bool down)
@@ -85,7 +92,7 @@ namespace Brainamics.Core
         private void Update()
         {
             if (RepositionOnUpdate && _positionCoroutine == null)
-                PointAt(_request);
+                PointAt(_request, false, false);
         }
 
         protected virtual IEnumerator AnimateVisibility(bool visible)
@@ -175,6 +182,8 @@ namespace Brainamics.Core
 
         private void SetVisibility(bool visible, bool immediate = false)
         {
+            if (_visible == visible)
+                return;
             _visible = visible;
 
             if (immediate)
