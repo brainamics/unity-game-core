@@ -44,12 +44,6 @@ namespace Brainamics.Core
 
         public void PointAt(TutorialPointAtRequest request, bool cancelAnimations, bool invokeEvents = true)
         {
-            if (cancelAnimations)
-            {
-                StopCoroutine(ref _visibilityCoroutine);
-                StopCoroutine(ref _positionCoroutine);
-            }
-
             if (request.Visible)
             {
                 var position = request.TargetPosition.Position;
@@ -60,11 +54,11 @@ namespace Brainamics.Core
 
                 var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
                 target += ScreenPostTranslate;
-                PointAt(target.Position, request);
+                PointAt(target.Position, request, cancelAnimations);
             }
             else
             {
-                PointAt(Vector3.zero, request);
+                PointAt(Vector3.zero, request, cancelAnimations);
             }
             if (invokeEvents)
                 OnPoint.Invoke(request);
@@ -170,21 +164,26 @@ namespace Brainamics.Core
 
         protected virtual void SetClickStateInternal() { }
 
-        private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request)
+        private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
         {
             _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
             if (request.Visible)
-                SetPosition(position, request);
-            SetVisibility(request.Visible, request.Immediate);
+                SetPosition(position, request, cancelAnimations);
+            SetVisibility(request.Visible, request.Immediate, cancelAnimations);
         }
 
-        private void SetVisibility(bool visible, bool immediate = false)
+        private void SetVisibility(bool visible, bool immediate = false, bool cancelAnimations = false)
         {
             if (_visible == visible)
                 return;
             _visible = visible;
+
+            if (cancelAnimations)
+            {
+                StopCoroutine(ref _visibilityCoroutine);
+            }
 
             if (immediate)
             {
@@ -195,8 +194,14 @@ namespace Brainamics.Core
             StartOmniCoroutine(ref _visibilityCoroutine, AnimateVisibility(visible), () => _visibilityCoroutine = null);
         }
 
-        private void SetPosition(Vector3 position, TutorialPointAtRequest request)
+        private void SetPosition(Vector3 position, TutorialPointAtRequest request, bool cancelAnimations = false)
         {
+            if (cancelAnimations)
+            {
+                StopCoroutine(ref _visibilityCoroutine);
+                StopCoroutine(ref _positionCoroutine);
+            }
+        
             if (request.Immediate || !IsVisible)
             {
                 SetPositionImmediate(position, request);
