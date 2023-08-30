@@ -15,9 +15,9 @@ namespace Brainamics.Core
 
         UnityEvent<bool> OnAdAvailabilityChanged { get; }
 
-        UnityEvent<Action> OnAdShown { get; }
+        UnityEvent<AdHookParameters, object> OnAdStart { get; }
 
-        UnityEvent<bool> OnAdComplete { get; }
+        UnityEvent<AdHookParameters, bool> OnAdEnd { get; }
 
         bool IsVideoAvailable { get; }
 
