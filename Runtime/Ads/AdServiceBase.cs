@@ -55,6 +55,7 @@ namespace Brainamics.Core
             var presentationMode = GetPresentationMode(@params);
 
             bool success;
+            handle = null;
             switch (presentationMode)
             {
                 case AdPresentationMode.Exclusive:
