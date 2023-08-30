@@ -26,8 +26,6 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _logging = true;
 
-        public UnityEvent<AdHookParameters, bool, object> OnAdStart => _onAdStart;
-
         public UnityEvent<bool> OnAdAvailabilityChanged => _onAdAvailabilityChanged;
 
         public UnityEvent<AdHookParameters, object> OnAdStart => _onAdStart;
