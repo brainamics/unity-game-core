@@ -50,6 +50,7 @@ namespace Brainamics.Core
                 throw new ArgumentNullException(nameof(callback));
             Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
             var callbackCalled = false;
+            var startEventDispatched = false;
 
             var presentationMode = GetPresentationMode(@params);
 
@@ -65,6 +66,7 @@ namespace Brainamics.Core
                 default:
                     throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
             }
+            DispatchStartEvent();
             if (!success)
                 HandleResult(false);
             return success;
@@ -74,8 +76,18 @@ namespace Brainamics.Core
                 if (callbackCalled)
                     return;
                 callbackCalled = true;
-                
+
+                DispatchStartEvent();
                 callback?.Invoke(success);
+                OnAdEnd.Invoke(@params, success);
+            }
+
+            void DispatchStartEvent()
+            {
+                if (startEventDispatched)
+                    return;
+                startEventDispatched = true;
+                OnAdStart.Invoke(@params, handle);
             }
         }
 
