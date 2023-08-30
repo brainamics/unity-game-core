@@ -15,10 +15,10 @@ namespace Brainamics.Core
         private PauseSimulator _pauseSimulator;
 
         [SerializeField]
-        private UnityEvent<Action> _onAdShown = new();
+        private UnityEvent<AdHookParameters, object> _onAdStart = new();
 
         [SerializeField]
-        private UnityEvent<bool> _onAdComplete = new();
+        private UnityEvent<AdHookParameters, bool> _onAdEnd = new();
 
         [SerializeField]
         private UnityEvent<bool> _onAdAvailabilityChanged = new();
@@ -26,11 +26,13 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _logging = true;
 
-        public UnityEvent<Action> OnAdShown => _onAdShown;
-
-        public UnityEvent<bool> OnAdComplete => _onAdComplete;
+        public UnityEvent<AdHookParameters, bool, object> OnAdStart => _onAdStart;
 
         public UnityEvent<bool> OnAdAvailabilityChanged => _onAdAvailabilityChanged;
+
+        public UnityEvent<AdHookParameters, object> OnAdStart => _onAdStart;
+
+        public UnityEvent<AdHookParameters, bool> OnAdEnd => _onAdEnd;
 
         public abstract bool IsVideoAvailable { get; }
 
