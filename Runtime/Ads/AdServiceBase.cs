@@ -42,13 +42,14 @@ namespace Brainamics.Core
 
         public bool IsExclusiveAdActive => _exclusiveAdHooked;
 
-        public bool StartAd(AdHookParameters @params, Action<bool> callback, out object handle)
+        public bool StartAd(AdHookParameters @params, Action<bool> callback, out object outHandle)
         {
             if (@params == null)
                 throw new ArgumentNullException(nameof(@params));
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
             Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
+            object handle = null;
             var callbackCalled = false;
             var startEventDispatched = false;
 
@@ -67,6 +68,7 @@ namespace Brainamics.Core
                 default:
                     throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
             }
+            outHandle = handle;
             DispatchStartEvent();
             if (!success)
                 HandleResult(false);
