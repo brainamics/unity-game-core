@@ -58,8 +58,10 @@ namespace Brainamics.Core
             {
                 case AdPresentationMode.Exclusive:
                     success = ShowExclusiveAd(@params, HandleResult, out handle);
+                    break;
                 case AdPresentationMode.Concurrent:
                     success = ShowConcurrentAd(@params, HandleResult, out handle);
+                    break;
                 default:
                     throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
             }
