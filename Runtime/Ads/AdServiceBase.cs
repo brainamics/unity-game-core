@@ -49,17 +49,31 @@ namespace Brainamics.Core
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
             Log($"unity-script: [AdServiceBase] StartAd (placement={@params.PlacementId}, sourceName={@params.SourceName})");
+            var callbackCalled = false;
 
             var presentationMode = GetPresentationMode(@params);
 
+            bool success;
             switch (presentationMode)
             {
                 case AdPresentationMode.Exclusive:
-                    return ShowExclusiveAd(@params, callback, out handle);
+                    success = ShowExclusiveAd(@params, HandleResult, out handle);
                 case AdPresentationMode.Concurrent:
-                    return ShowConcurrentAd(@params, callback, out handle);
+                    success = ShowConcurrentAd(@params, HandleResult, out handle);
                 default:
                     throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
+            }
+            if (!success)
+                HandleResult(false);
+            return success;
+
+            void HandleResult(bool success)
+            {
+                if (callbackCalled)
+                    return;
+                callbackCalled = true;
+                
+                callback?.Invoke(success);
             }
         }
 
