@@ -182,7 +182,7 @@ namespace Brainamics.Core
                 return;
             _visible = visible;
 
-            if (activate)
+            if (visible)
                 _canvas.gameObject.SetActive(true);
 
             if (cancelAnimations)
