@@ -12,6 +12,9 @@ namespace Brainamics.Core
         [Tooltip("Overrides max frame rate for the game")]
         private int _targetFrameRate = 0;
 
+        [SerializeField]
+        private bool _enablePhysicsSimulation = true;
+
         public bool IsPaused { get; private set; }
 
         protected abstract void Initialize();
@@ -24,6 +27,7 @@ namespace Brainamics.Core
         {
             if (_targetFrameRate > 0)
                 Application.targetFrameRate = _targetFrameRate;
+            Physics.autoSimulation = _enablePhysicsSimulation;
             if (Instance != null)
                 Destroy(Instance.gameObject);
             Instance = this;
