@@ -159,6 +159,8 @@ namespace Brainamics.Core
 
         protected virtual void Activate(bool activate)
         {
+            if (activate)
+                _canvas.SetActive(true);
             Image.gameObject.SetActive(activate);
         }
 
