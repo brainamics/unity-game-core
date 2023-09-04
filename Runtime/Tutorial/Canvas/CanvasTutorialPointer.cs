@@ -168,6 +168,8 @@ namespace Brainamics.Core
 
         private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
         {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
             _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
