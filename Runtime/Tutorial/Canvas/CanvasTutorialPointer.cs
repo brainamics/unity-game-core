@@ -92,8 +92,8 @@ namespace Brainamics.Core
             if (_canvas != null)
                 return;
             _canvas = GetComponentInParent<Canvas>();
-            if (_canvas == null)
-                throw new System.InvalidOperationException($"The canvas pointer should be placed inside a canvas.");
+            // if (_canvas == null)
+            //    throw new System.InvalidOperationException($"The canvas pointer should be placed inside a canvas.");
         }
 
         protected virtual IEnumerator AnimateVisibility(bool visible)
