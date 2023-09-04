@@ -10,6 +10,8 @@ namespace Brainamics.Core
     {
         public static Task AsTask(this AsyncOperation asyncOperation)
         {
+            if (asyncOperation == null)
+                return Task.CompletedTask;
             var taskSource = new TaskCompletionSource<bool>();
             asyncOperation.completed += AsyncOperation_completed;
             if (asyncOperation.isDone)
