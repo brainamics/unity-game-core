@@ -74,9 +74,7 @@ namespace Brainamics.Core
 
         protected virtual void Awake()
         {
-            _canvas = GetComponentInParent<Canvas>();
-            if (_canvas == null)
-                throw new System.InvalidOperationException($"The canvas pointer should be placed inside a canvas.");
+            InitializeCanvas();
         }
 
         protected virtual void OnEnable() { }
@@ -87,6 +85,15 @@ namespace Brainamics.Core
         {
             if (RepositionOnUpdate && _positionCoroutine == null)
                 PointAt(_request, false, false);
+        }
+
+        private void InitializeCanvas()
+        {
+            if (_canvas != null)
+                return;
+            _canvas = GetComponentInParent<Canvas>();
+            if (_canvas == null)
+                throw new System.InvalidOperationException($"The canvas pointer should be placed inside a canvas.");
         }
 
         protected virtual IEnumerator AnimateVisibility(bool visible)
@@ -168,6 +175,7 @@ namespace Brainamics.Core
 
         private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
         {
+            InitializeCanvas();
             _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
