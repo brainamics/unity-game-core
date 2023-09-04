@@ -169,7 +169,7 @@ namespace Brainamics.Core
         private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
         {
             if (request == null)
-                throw new ArgumentNullException(nameof(request));
+                throw new System.ArgumentNullException(nameof(request));
             _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
@@ -183,6 +183,9 @@ namespace Brainamics.Core
             if (_visible == visible)
                 return;
             _visible = visible;
+
+            if (_canvas == null)
+                throw new System.InvalidOperationException("Canvas cannot be NULL.");
 
             if (visible)
                 _canvas.gameObject.SetActive(true);
