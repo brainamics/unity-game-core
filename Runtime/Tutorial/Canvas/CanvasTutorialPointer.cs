@@ -176,6 +176,11 @@ namespace Brainamics.Core
         private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
         {
             InitializeCanvas();
+            if (_canvas == null)
+            {
+                Debug.Error("The CanvasTutorialPointer object is not placed on a canvas.");
+                return;
+            }
             _request = request;
             var position = screenPosition + CanvasPostTranslate;
 
