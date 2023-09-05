@@ -11,8 +11,10 @@ namespace Brainamics.Core
     {
         private TutorialPointAtRequest _request = TutorialPointAtRequest.InvisibleImmediate;
         private bool _visible;
-        private Canvas _canvas;
         private Coroutine _visibilityCoroutine, _positionCoroutine;
+
+        [SerializeField]
+        private Canvas _canvas;
 
         public bool RepositionOnUpdate = true;
         public RectTransform Image;
