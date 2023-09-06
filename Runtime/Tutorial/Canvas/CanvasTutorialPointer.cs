@@ -180,7 +180,7 @@ namespace Brainamics.Core
             InitializeCanvas();
             if (_canvas == null)
             {
-                Debug.LogError("The CanvasTutorialPointer object is not placed on a canvas.");
+                Debug.LogWarning("The CanvasTutorialPointer object is not placed on a canvas.");
                 return;
             }
             _request = request;
