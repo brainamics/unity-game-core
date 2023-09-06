@@ -27,7 +27,8 @@ namespace Brainamics.Core
         {
             if (_targetFrameRate > 0)
                 Application.targetFrameRate = _targetFrameRate;
-            Physics.autoSimulation = _enablePhysicsSimulation;
+            if (!_enablePhysicsSimulation)
+                Physics.simulationMode = _enablePhysicsSimulation ? SimulationMode.FixedUpdate : SimulationMode.Script;
             if (Instance != null)
                 Destroy(Instance.gameObject);
             Instance = this;
