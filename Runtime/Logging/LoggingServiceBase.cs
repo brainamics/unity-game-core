@@ -97,7 +97,7 @@ namespace Brainamics.Core
             try
             {
                 _onLog?.Invoke(record);
-            } catch (Exception exception) {
+            } catch (System.Exception exception) {
                 Debug.LogError("A log handler failed when handling: " + record.ToString());
                 Debug.LogError(exception);
             }
