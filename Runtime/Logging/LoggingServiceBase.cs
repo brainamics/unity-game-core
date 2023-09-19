@@ -94,7 +94,13 @@ namespace Brainamics.Core
         {
             if (record.Level < _eventMinimumLogType || _eventMinimumLogType == LogLevel.None)
                 return;
-            _onLog?.Invoke(record);
+            try
+            {
+                _onLog?.Invoke(record);
+            } catch (Exception exception) {
+                Debug.LogError("A log handler failed when handling: " + record.ToString());
+                Debug.LogError(exception);
+            }
         }
     }
 }
