@@ -29,5 +29,12 @@ namespace Brainamics.Core
             _texture = new RenderTexture(width, height, 24);
             return _texture;
         }
+
+        private void OnDestroy()
+        {
+            if (_texture != null)
+                _texture.Release();
+            _texture = null;
+        }
     }
 }
