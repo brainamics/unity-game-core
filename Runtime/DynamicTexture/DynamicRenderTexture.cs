@@ -25,7 +25,8 @@ namespace Brainamics.Core
             if (_texture != null && width == _texture.width && height == _texture.height)
                 return _texture;
 
-            _texture?.Release();
+            if (_texture != null)
+                _texture.Release();
             _texture = new RenderTexture(width, height, 24);
             return _texture;
         }
