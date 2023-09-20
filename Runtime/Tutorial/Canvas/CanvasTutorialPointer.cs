@@ -79,6 +79,7 @@ namespace Brainamics.Core
                 return;
             _down = down;
             SetClickStateInternal();
+            OnClickStateChanged.Invoke(this);
         }
 
         protected virtual void Awake()
