@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
@@ -10,6 +11,12 @@ namespace Brainamics.Core
         public abstract SpaceCoordinates Coordinates { get; }
 
         public abstract bool IsVisible { get; }
+
+        public abstract bool IsClickDown { get; }
+
+        public abstract UnityEvent<ITutorialPointer, TutorialPointAtRequest> OnPoint { get; }
+
+        public abstract UnityEvent<ITutorialPointer> OnClickStateChanged { get; }
 
         public abstract void PointAt(TutorialPointAtRequest request);
 

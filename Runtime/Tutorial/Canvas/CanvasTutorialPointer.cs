@@ -10,7 +10,7 @@ namespace Brainamics.Core
     public class CanvasTutorialPointer : TutorialPointerBase
     {
         private TutorialPointAtRequest _request = TutorialPointAtRequest.InvisibleImmediate;
-        private bool _visible;
+        private bool _visible, _down;
         private Coroutine _visibilityCoroutine, _positionCoroutine;
 
         [SerializeField]
@@ -25,8 +25,11 @@ namespace Brainamics.Core
         public Vector3 CanvasPostTranslate;
         public Camera Camera;
 
-        public UnityEvent<bool> OnClickStateChanged;
-        public UnityEvent<TutorialPointAtRequest> OnPoint;
+        [SerializeField]
+        private UnityEvent<ITutorialPointer> _onClickStateChanged;
+
+        [SerializeField]
+        public UnityEvent<ITutorialPointer, TutorialPointAtRequest> _onPoint;
 
         [Header("Animations")]
         public float VisibilityTransitionDuration = 0.1f;
@@ -37,9 +40,13 @@ namespace Brainamics.Core
 
         public override bool IsVisible => _visible;
 
-        public bool IsDown { get; private set; }
+        public override bool IsClickDown => _down;
 
         protected Camera ResolvedCamera => Camera == null ? Camera.main : Camera;
+
+        public override UnityEvent<ITutorialPointer, TutorialPointAtRequest> OnPoint => _onPoint;
+
+        public override UnityEvent<ITutorialPointer> OnClickStateChanged => _onClickStateChanged;
 
         public override void PointAt(TutorialPointAtRequest request)
             => PointAt(request, true);
@@ -63,14 +70,14 @@ namespace Brainamics.Core
                 PointAt(Vector3.zero, request, cancelAnimations);
             }
             if (invokeEvents)
-                OnPoint.Invoke(request);
+                OnPoint.Invoke(this, request);
         }
 
         public override void SetClickState(bool down)
         {
-            if (IsDown == down)
+            if (_down == down)
                 return;
-            IsDown = down;
+            _down = down;
             SetClickStateInternal();
         }
 
@@ -224,7 +231,7 @@ namespace Brainamics.Core
                 StopCoroutine(ref _visibilityCoroutine);
                 StopCoroutine(ref _positionCoroutine);
             }
-        
+
             if (request.Immediate || !IsVisible)
             {
                 SetPositionImmediate(position, request);
