@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,11 +16,6 @@ namespace Brainamics.Core
     public abstract class GameSceneScannerBase<TGameSceneScanner> : MonoBehaviour
         where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
     {
-        public static event Action<TGameSceneScanner> OnScannerCreated;
-    
-        // scene => scene manager
-        private static readonly HybridDictionary _managers = new();
-
         public event Action<TGameSceneScanner> OnDestroying;
 
         /// <summary>
@@ -27,35 +23,28 @@ namespace Brainamics.Core
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner Locate(MonoBehaviour component)
-        {
-            return LocateByScene(component.gameObject.scene);
-        }
+            => SceneScannersManager.Locate<TGameSceneScanner>(component);
 
         /// <summary>
         /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner TryLocate(MonoBehaviour component)
-        {
-            return TryLocateByScene(component.gameObject.scene);
-        }
+            => SceneScannersManager.TryLocate<TGameSceneScanner>(component);
 
         /// <summary>
         /// Locates the game scene manager for the specified scene.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner LocateByScene(Scene scene)
-        {
-            return TryLocateByScene(scene) ?? throw new InvalidOperationException("Could not find the game scene manager, it's not registered.");
-        }
+            => SceneScannersManager.LocateByScene<TGameSceneScanner>(scene);
 
         /// <summary>
         /// Locates the game scene manager for the specified scene.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner TryLocateByScene(Scene scene)
-        {
-            var manager = _managers[scene];
-            return (TGameSceneScanner)manager;
-        }
+            => SceneScannersManager.TryLocateByScene<TGameSceneScanner>(scene);
 
         protected virtual void AwakeInternal() { }
 
@@ -65,15 +54,8 @@ namespace Brainamics.Core
 
         private void Awake()
         {
-            var scene = gameObject.scene;
-#if DEBUG
-            if (_managers[scene] != null)
-                throw new InvalidOperationException("There is another manager associated with the current scene already.");
-#endif
-            _managers[scene] = this;
+            SceneScannersManager.Register((TGameSceneScanner)this);
             AwakeInternal();
-
-            OnScannerCreated?.Invoke((TGameSceneScanner)this);
         }
 
         private void Start()
@@ -83,8 +65,8 @@ namespace Brainamics.Core
 
         private void OnDestroy()
         {
-            _managers.Remove(gameObject.scene);
             OnDestroying?.Invoke((TGameSceneScanner)this);
+            SceneScannersManager.Unregister((TGameSceneScanner)this);
         }
     }
 }
