@@ -30,10 +30,28 @@ namespace Brainamics.Core
         /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static object Locate(MonoBehaviour component)
+        {
+            return LocateByScene(component.gameObject.scene);
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner TryLocate<TGameSceneScanner>(MonoBehaviour component)
             where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
         {
             return TryLocateByScene<TGameSceneScanner>(component.gameObject.scene);
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static object TryLocate(MonoBehaviour component)
+        {
+            return TryLocateByScene(component.gameObject.scene);
         }
 
         /// <summary>
@@ -48,11 +66,27 @@ namespace Brainamics.Core
         /// <summary>
         /// Locates the game scene manager for the specified scene.
         /// </summary>
+        public static object LocateByScene(Scene scene)
+        {
+            return TryLocateByScene(scene) ?? throw new InvalidOperationException("Could not find the game scene manager, it's not registered.");
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the specified scene.
+        /// </summary>
         public static TGameSceneScanner TryLocateByScene<TGameSceneScanner>(Scene scene)
             where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
         {
             var manager = _managers[scene];
             return (TGameSceneScanner)manager;
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the specified scene.
+        /// </summary>
+        public static object TryLocateByScene(Scene scene)
+        {
+            return _managers[scene];
         }
 
         /// <summary>
