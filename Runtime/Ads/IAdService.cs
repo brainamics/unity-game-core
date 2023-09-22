@@ -9,6 +9,11 @@ namespace Brainamics.Core
     public interface IAdService
     {
         /// <summary>
+        /// Gets the friendly name of the provider e.g. 'IronSource'
+        /// </summary>
+        string ProviderName { get; }
+
+        /// <summary>
         /// Gets whether an ad is currently being played.
         /// </summary>
         bool IsExclusiveAdActive { get; }

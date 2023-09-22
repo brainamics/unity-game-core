@@ -32,6 +32,8 @@ namespace Brainamics.Core
 
         public UnityEvent<AdHookParameters, bool> OnAdEnd => _onAdEnd;
 
+        public abstract string ProviderName { get; }
+
         public abstract bool IsVideoAvailable { get; }
 
         public abstract bool IsInterstitialAvailable { get; }
