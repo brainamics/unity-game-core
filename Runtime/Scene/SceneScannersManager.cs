@@ -78,7 +78,7 @@ namespace Brainamics.Core
             where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
         {
             var manager = _managers[scene];
-            return (TGameSceneScanner)manager;
+            return manager as TGameSceneScanner;
         }
 
         /// <summary>
