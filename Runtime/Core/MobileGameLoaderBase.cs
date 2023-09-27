@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -7,6 +8,7 @@ namespace Brainamics.Core
     public abstract class MobileGameLoaderBase : MonoBehaviour
     {
         private static MobileGameLoaderBase Instance;
+        private readonly List<Task> _startupTasks = new();
 
         [SerializeField]
         [Tooltip("Overrides max frame rate for the game")]
@@ -16,6 +18,23 @@ namespace Brainamics.Core
         private bool _enablePhysicsSimulation = true;
 
         public bool IsPaused { get; private set; }
+
+        public IEnumerable<Task> StartupTasks => _startupTasks;
+
+        public void AddStartupTask(Task task)
+        {
+            _startupTasks.Add(task);
+        }
+
+        public Task WaitForStartupTasksAsync()
+        {
+            var result = Task.WhenAll(_startupTasks);
+            result.ContinueWith(_ =>
+            {
+                _startupTasks.Clear();
+            });
+            return result;
+        }
 
         protected abstract void Initialize();
 
@@ -28,7 +47,6 @@ namespace Brainamics.Core
             if (_targetFrameRate > 0)
                 Application.targetFrameRate = _targetFrameRate;
             if (!_enablePhysicsSimulation)
-                // Physics.simulationMode = _enablePhysicsSimulation ? SimulationMode.FixedUpdate : SimulationMode.Script;
                 Physics.simulationMode = SimulationMode.Script;
             if (Instance != null)
                 Destroy(Instance.gameObject);
