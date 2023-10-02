@@ -16,14 +16,14 @@ namespace Brainamics.Core
         protected virtual void Awake()
         {
             Step = GetComponent<TutorialStep>();
-            if (Step.State == TutorialStepState.Active)
-                HandleStepActivated(Step);
         }
 
         protected virtual void OnEnable()
         {
             Step.OnActivated.AddListener(HandleStepActivated);
             Step.OnDeactivated.AddListener(HandleStepDeactivated);
+            if (Step.State == TutorialStepState.Active)
+                HandleStepActivated(Step);
         }
 
         protected virtual void OnDisable()
