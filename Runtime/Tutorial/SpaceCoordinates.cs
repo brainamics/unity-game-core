@@ -49,6 +49,36 @@ namespace Brainamics.Core
         public static SpaceCoordinates Viewport(Vector2 position)
             => new(position, CoordinateMode.Viewport);
 
+        public static SpaceCoordinates FromObject(object o)
+        {
+            switch (o)
+            {
+                case Behaviour b:
+                    return FromObject(b.transform);
+
+                case GameObject go:
+                    return FromObject(go.transform);
+
+                case RectTransform rectTransform:
+                    var canvas = rectTransform.GetComponentInParent<Canvas>();
+                    if (canvas == null)
+                        throw new System.InvalidOperationException("Could not find the parent canvas for the RectTransform.");
+
+                    return Screen(GetScreenCenterOfRectTransform(rectTransform));
+
+                case Transform transform:
+                    return World(transform.position);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private static Vector3 GetScreenCenterOfRectTransform(RectTransform rectTransform)
+        {
+            return rectTransform.position;
+        }
+
         public SpaceCoordinates WithPosition(Vector3 position)
             => new(position, Mode);
 

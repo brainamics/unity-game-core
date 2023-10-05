@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -53,24 +54,8 @@ namespace Brainamics.Core
 
         public void PointAt(TutorialPointAtRequest request, bool cancelAnimations, bool invokeEvents = true)
         {
-            if (request.Visible)
-            {
-                var position = request.TargetPosition.Position;
-                if (request.TargetPosition.Mode == CoordinateMode.World)
-                    position += WorldPreTranslate;
-                if (request.TargetPosition.Mode == CoordinateMode.Screen)
-                    position += ScreenPreTranslate;
-
-                var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
-                target += ScreenPostTranslate;
-                PointAt(target.Position, request, cancelAnimations);
-            }
-            else
-            {
-                PointAt(Vector3.zero, request, cancelAnimations);
-            }
-            if (invokeEvents)
-                OnPoint.Invoke(this, request);
+            _request = request;
+            PointAt(cancelAnimations, invokeEvents);
         }
 
         public override void SetClickState(bool down)
@@ -93,8 +78,31 @@ namespace Brainamics.Core
 
         private void Update()
         {
-            if (RepositionOnUpdate && _positionCoroutine == null)
-                PointAt(_request, false, false);
+            if (RepositionOnUpdate && _positionCoroutine == null && _request.Visible)
+                PointAt(false, false);
+        }
+
+        private void PointAt(bool cancelAnimations, bool invokeEvents = true)
+        {
+            var request = _request;
+            if (request.Visible)
+            {
+                var position = request.TargetPosition.Position;
+                if (request.TargetPosition.Mode == CoordinateMode.World)
+                    position += WorldPreTranslate;
+                if (request.TargetPosition.Mode == CoordinateMode.Screen)
+                    position += ScreenPreTranslate;
+
+                var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
+                target += ScreenPostTranslate;
+                PointAt(target.Position, request, cancelAnimations);
+            }
+            else
+            {
+                PointAt(Vector3.zero, request, cancelAnimations);
+            }
+            if (invokeEvents)
+                OnPoint.Invoke(this, request);
         }
 
         private void InitializeCanvas()
