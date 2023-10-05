@@ -42,6 +42,17 @@ namespace Brainamics.Core
             }
         }
 
+        public int GetStepIndex(TutorialStep step)
+            => Array.IndexOf(_steps, step);
+
+        public TutorialStep GetNextStep(TutorialStep step)
+        {
+            var index = GetStepIndex(step);
+            if (index++ < 0 || index >= _steps.Length)
+                return null;
+            return _steps[index];
+        }
+
         protected virtual void Awake() { }
 
         protected virtual void OnEnable()
