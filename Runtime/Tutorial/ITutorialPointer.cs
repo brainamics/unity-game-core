@@ -46,6 +46,7 @@ namespace Brainamics.Core
                     if (request == newRequest)
                         break;
                     request = newRequest;
+                    pointer.PointAt(request);
                 }
             }
         }
