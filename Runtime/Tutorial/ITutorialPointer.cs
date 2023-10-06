@@ -36,13 +36,11 @@ namespace Brainamics.Core
 
             IEnumerator RunLoop()
             {
-                var request = pointer.ActiveRequest;
+                var request = getRequest();
+                pointer.PointAt(request);
 
-                while (true)
+                while (pointer.ActiveRequest.Visible)
                 {
-                    if (!pointer.ActiveRequest.Visible)
-                        break;
-
                     yield return null;
 
                     if (request != pointer.ActiveRequest)
