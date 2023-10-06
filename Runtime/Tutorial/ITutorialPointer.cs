@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,5 +24,30 @@ namespace Brainamics.Core
         void PointAt(TutorialPointAtRequest request);
 
         void SetClickState(bool down);
+    }
+
+    public static class TutorialPointerExtensions
+    {
+        public static void KeepPointingAt(this ITutorialPointer pointer, Action point)
+        {
+            if (pointer is not MonoBehaviour b)
+                throw new InvalidOperationException("Pointer is not a MonoBehaviour.");
+            b.StartCoroutine(RunLoop());
+
+            IEnumerator RunLoop()
+            {
+                var request = pointer.ActiveRequest;
+
+                while (true)
+                {
+                    yield return null;
+
+                    point();
+                    var newRequest = pointer.ActiveRequest;
+                    if (request == newRequest)
+                        break;
+                }
+            }
+        }
     }
 }

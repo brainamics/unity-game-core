@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -97,8 +98,10 @@ namespace Brainamics.Core
             try
             {
                 _onLog?.Invoke(record);
-            } catch (System.Exception exception) {
-                Debug.LogError("A log handler failed when handling: " + record.ToString());
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"A log handler failed when handling: {record}{Environment.NewLine}{exception}");
 #if DEBUG
                 throw;
 #else
