@@ -7,6 +7,8 @@ namespace Brainamics.Core
 {
     public interface ITutorialPointer
     {
+        TutorialPointAtRequest ActiveRequest { get; }
+
         SpaceCoordinates Coordinates { get; }
 
         bool IsVisible { get; }

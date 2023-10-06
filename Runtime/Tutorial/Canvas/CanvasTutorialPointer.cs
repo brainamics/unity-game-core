@@ -43,6 +43,8 @@ namespace Brainamics.Core
 
         public override bool IsClickDown => _down;
 
+        public override TutorialPointAtRequest ActiveRequest => _request;
+
         protected Camera ResolvedCamera => Camera == null ? Camera.main : Camera;
 
         public override UnityEvent<ITutorialPointer, TutorialPointAtRequest> OnPoint => _onPoint;

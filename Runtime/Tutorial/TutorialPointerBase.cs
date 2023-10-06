@@ -14,6 +14,8 @@ namespace Brainamics.Core
 
         public abstract bool IsClickDown { get; }
 
+        public abstract TutorialPointAtRequest ActiveRequest { get; }
+
         public abstract UnityEvent<ITutorialPointer, TutorialPointAtRequest> OnPoint { get; }
 
         public abstract UnityEvent<ITutorialPointer> OnClickStateChanged { get; }
