@@ -28,7 +28,7 @@ namespace Brainamics.Core
 
     public static class TutorialPointerExtensions
     {
-        public static void KeepPointingAt(this ITutorialPointer pointer, Action point)
+        public static void KeepPointingAt(this ITutorialPointer pointer, Func<TutorialPointAtRequest> getRequest)
         {
             if (pointer is not MonoBehaviour b)
                 throw new InvalidOperationException("Pointer is not a MonoBehaviour.");
@@ -42,10 +42,10 @@ namespace Brainamics.Core
                 {
                     yield return null;
 
-                    point();
-                    var newRequest = pointer.ActiveRequest;
+                    var newRequest = getRequest();
                     if (request == newRequest)
                         break;
+                    request = newRequest;
                 }
             }
         }
