@@ -69,6 +69,11 @@ namespace Brainamics.Core
             _steps = System.Array.Empty<TutorialStep>();
         }
 
+        protected virtual void HandleStepStateChanged(TutorialStep step)
+        {
+            UpdateActiveStep();
+        }
+
         private bool IsPriorStep(TutorialStep step, TutorialStep priorToStep)
         {
             var index = Array.IndexOf(_steps, step);
@@ -87,11 +92,6 @@ namespace Brainamics.Core
             DeactivateCurrentStep();
             foreach (var step in _steps)
                 step.OnStateChanged.RemoveListener(HandleStepStateChanged);
-        }
-
-        private void HandleStepStateChanged(TutorialStep step)
-        {
-            UpdateActiveStep();
         }
 
         private void DeactivateCurrentStep()
