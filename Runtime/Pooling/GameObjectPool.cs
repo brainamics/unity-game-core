@@ -7,7 +7,7 @@ namespace Brainamics.Core
 {
     public class GameObjectPool : MonoBehaviour, IGameObjectPool
     {
-        private readonly ObjectPool<GameObject> _pool;
+        private ObjectPool<GameObject> _pool;
 
         [SerializeField]
         private int _capacity = 50;
@@ -17,18 +17,6 @@ namespace Brainamics.Core
 
         [SerializeField]
         private Transform _parent;
-
-        public GameObjectPool()
-        {
-            _pool = new ObjectPool<GameObject>
-            {
-                Factory = CreateNew,
-                DestroyHandler = DestroyObject,
-                SleepHandler = PutToSleep,
-                WakeHandler = WakeFromSleep,
-                Capacity = _capacity,
-            };
-        }
 
         public int Capacity
         {
@@ -68,6 +56,18 @@ namespace Brainamics.Core
             foreach (var recyclable in obj.GetComponents<IRecyclable>())
                 recyclable.Recycle();
             obj.SetActive(true);
+        }
+
+        private void Awake()
+        {
+            _pool = new ObjectPool<GameObject>
+            {
+                Factory = CreateNew,
+                DestroyHandler = DestroyObject,
+                SleepHandler = PutToSleep,
+                WakeHandler = WakeFromSleep,
+                Capacity = _capacity,
+            };
         }
 
         private void OnDestroy()
