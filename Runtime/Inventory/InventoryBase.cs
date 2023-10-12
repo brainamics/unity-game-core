@@ -41,6 +41,7 @@ namespace Brainamics.Core
                 return false;
             _items.Add(item);
             OnItemAdded.Invoke(this, item);
+            ItemEntered(item);
             return true;
         }
 
@@ -51,11 +52,14 @@ namespace Brainamics.Core
             if (!_items.Remove(item))
                 return false;
             OnItemRemoved.Invoke(this, item);
+            ItemExited(item);
             return true;
         }
 
         public void Clear()
         {
+            foreach (var item in _items)
+                ItemExited(item);
             _items.Clear();
             OnItemRemoved.Invoke(this, null);
         }
@@ -74,6 +78,14 @@ namespace Brainamics.Core
                 if (!interceptor(item))
                     return false;
             return true;
+        }
+
+        protected virtual void ItemEntered(IInventoryItem item)
+        {
+        }
+
+        protected virtual void ItemExited(IInventoryItem item)
+        {
         }
     }
 }
