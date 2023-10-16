@@ -32,15 +32,10 @@ namespace Brainamics.Core
             set => _map[GetArrayIndex(index)] = value;
         }
 
-        private int GetArrayIndex(TEnum value)
+        public void Reset(TValue @default = default)
         {
-            var val = GetIntValue(value);
-            return val - _lowBound;
-        }
-
-        private static int GetIntValue(TEnum value)
-        {
-            return (int)(object)value;
+            for (var i = 0; i < _map.Length; i++)
+                _map[i] = @default;
         }
 
         public bool ContainsKey(TEnum key)
@@ -63,6 +58,17 @@ namespace Brainamics.Core
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private int GetArrayIndex(TEnum value)
+        {
+            var val = GetIntValue(value);
+            return val - _lowBound;
+        }
+
+        private static int GetIntValue(TEnum value)
+        {
+            return (int)(object)value;
         }
     }
 }
