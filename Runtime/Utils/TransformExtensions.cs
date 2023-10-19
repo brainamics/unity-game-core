@@ -26,9 +26,14 @@ namespace Brainamics.Core
     		return new Rect(topLeft, scaledSize);
 	    }
 
-        public static Rect GetWorldRect(this RectTransform rt, CanvasScaler canvas)
+        public static Rect GetWorldRect(this RectTransform rt, Canvas canvas)
         {
-            return rt.GetWorldRect(canvas.scaleFactor);
+            return rt.GetWorldRect(new Vector2(canvas.scaleFactor, canvas.scaleFactor));
+        }
+
+        public static Rect GetWorldRect(this RectTransform rt, CanvasScaler s)
+        {
+            return rt.GetWorldRect(new Vector2(s.scaleFactor, s.scaleFactor));
         }
     }
 }
