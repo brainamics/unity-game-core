@@ -10,7 +10,7 @@ namespace Brainamics.Core
         private readonly List<IInventoryItem> _items = new();
         private readonly List<InventoryItemInterceptionDelegate> _addInterceptors = new();
 
-        IList<IInventoryItem> Items => _items;
+        public IList<IInventoryItem> Items => _items;
 
         IEnumerable<IInventoryItem> IInventory.Items => Items;
 
