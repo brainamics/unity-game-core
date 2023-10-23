@@ -34,7 +34,11 @@ namespace Brainamics.Core
             => _pool.Rent();
 
         public void Return(GameObject obj)
-            => _pool.Return(obj);
+        {
+            if (obj == null)
+                return;
+            _pool.Return(obj);
+        }
 
         protected virtual GameObject CreateNew()
         {
