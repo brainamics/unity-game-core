@@ -60,13 +60,10 @@ namespace Brainamics.Core
 
         public T Rent()
         {
-            if (_pool.TryDequeue(out var obj))
-            {
-                WakeHandler.Invoke(obj);
-                return obj;
-            }
-
-            return Factory();
+            if (!_pool.TryDequeue(out var obj))
+                obj = Factory();
+            WakeHandler.Invoke(obj);
+            return obj;
         }
 
         public void Return(T obj)
