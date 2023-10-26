@@ -9,7 +9,7 @@ namespace Brainamics.Core
     [DefaultExecutionOrder(1)]
     public class StepByStepTutorial : MonoBehaviour
     {
-        private bool _preventStepUpdates;
+        protected bool _preventStepUpdates;
         protected TutorialStep[] _steps;
         protected TutorialStep _activeStep;
 
