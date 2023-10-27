@@ -82,6 +82,9 @@ namespace Brainamics.Core
         public SpaceCoordinates WithPosition(Vector3 position)
             => new(position, Mode);
 
+        public SpaceCoordinates Translate(Vector3 vector)
+            => WithPosition(Position + vector);
+
         public override bool Equals(object obj)
         {
             if (obj is SpaceCoordinates coord)
