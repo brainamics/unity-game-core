@@ -30,6 +30,9 @@ namespace Brainamics.Core
     {
         public static void KeepPointingAt(this ITutorialPointer pointer, Func<TutorialPointAtRequest> getRequest, bool stopAfterNoRequestUpdates = true)
         {
+            var go = GameObjectUtils.GetGameObject(pointer);
+            go.SetActive(true);
+            
             if (pointer is not MonoBehaviour b)
                 throw new InvalidOperationException("Pointer is not a MonoBehaviour.");
             b.StartCoroutine(RunLoop());
