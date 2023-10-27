@@ -39,6 +39,7 @@ namespace Brainamics.Core
                     _preventStepUpdates = false;
                 }
                 OnActiveStepChanged.Invoke(oldStep, value);
+                UpdateActiveStep();
             }
         }
 
