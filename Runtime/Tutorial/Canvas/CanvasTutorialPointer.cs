@@ -238,7 +238,7 @@ namespace Brainamics.Core
         {
             if (cancelAnimations)
             {
-                StopCoroutine(ref _visibilityCoroutine);
+                // StopCoroutine(ref _visibilityCoroutine);
                 StopCoroutine(ref _positionCoroutine);
             }
 
