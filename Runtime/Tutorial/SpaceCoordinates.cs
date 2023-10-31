@@ -54,6 +54,7 @@ namespace Brainamics.Core
 
         public static SpaceCoordinates FromObject(object o, Func<RectTransform, Vector3> getRectTransformPos)
         {
+            Debug.Log(getRectTransformPos);
             getRectTransformPos ??= GetScreenCenterOfRectTransform;
             switch (o)
             {
@@ -68,7 +69,6 @@ namespace Brainamics.Core
                     if (canvas == null)
                         throw new System.InvalidOperationException("Could not find the parent canvas for the RectTransform.");
 
-                    Debug.Log(getRectTransformPos);
                     return Screen(getRectTransformPos(rectTransform));
 
                 case Transform transform:
