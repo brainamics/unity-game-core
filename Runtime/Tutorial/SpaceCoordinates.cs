@@ -54,8 +54,8 @@ namespace Brainamics.Core
 
         public static SpaceCoordinates FromObject(object o, Func<RectTransform, Vector3> getRectTransformPos)
         {
-            Debug.Log(getRectTransformPos);
-            getRectTransformPos ??= GetScreenCenterOfRectTransform;
+            if (getRectTransformPos == null)
+                getRectTransformPos = GetScreenCenterOfRectTransform;
             switch (o)
             {
                 case Behaviour b:
