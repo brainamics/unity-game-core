@@ -50,7 +50,11 @@ namespace Brainamics.Core
             => new(position, CoordinateMode.Viewport);
 
         public static SpaceCoordinates FromObject(object o)
+            => FromObject(o, null);
+
+        public static SpaceCoordinates FromObject(object o, Func<RectTransform, Vector3> getRectTransformPos)
         {
+            getRectTransformPos ??= GetScreenCenterOfRectTransform;
             switch (o)
             {
                 case Behaviour b:
@@ -64,7 +68,7 @@ namespace Brainamics.Core
                     if (canvas == null)
                         throw new System.InvalidOperationException("Could not find the parent canvas for the RectTransform.");
 
-                    return Screen(GetScreenCenterOfRectTransform(rectTransform));
+                    return Screen(getRectTransformPos(rectTransform));
 
                 case Transform transform:
                     return World(transform.position);
