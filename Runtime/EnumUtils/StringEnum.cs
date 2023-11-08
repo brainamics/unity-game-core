@@ -12,7 +12,7 @@ namespace Brainamics.Core
 
         public IEnumerable<string> Names => _valueNameMap;
 
-        public IEnumerable<string> Values => _nameValueMap.Values;
+        public IEnumerable<int> Values => _nameValueMap.Values;
 
         public int Parse(string key)
         {
