@@ -8,7 +8,7 @@ namespace Brainamics.Core
         private readonly Dictionary<string, int> _nameValueMap = new();
         private readonly List<string> _valueNameMap = new();
 
-        public int Count => _valueNameMap.Count;
+        public int Count => _valueNameMap.Count + 1;
 
         public IEnumerable<string> Names => _valueNameMap;
 
@@ -16,6 +16,8 @@ namespace Brainamics.Core
 
         public int Parse(string key)
         {
+            if (string.IsNullOrEmpty(key) || key.ToLowerInvariant() == "none")
+                return 0;
             if (_nameValueMap.TryGetValue(key, out var val))
                 return val;
             return DefineNew(key);
@@ -23,6 +25,8 @@ namespace Brainamics.Core
 
         public string GetName(int value)
         {
+            if (value == 0)
+                return "None";
             if (value < 0 || value >= _valueNameMap.Count)
                 throw new System.ArgumentOutOfRangeException(nameof(value));
 
