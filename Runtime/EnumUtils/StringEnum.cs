@@ -25,7 +25,7 @@ namespace Brainamics.Core
 
         public string GetName(int value)
         {
-            if (value == 0)
+            if (value-- == 0)
                 return "None";
             if (value < 0 || value >= _valueNameMap.Count)
                 throw new System.ArgumentOutOfRangeException(nameof(value));
@@ -35,7 +35,7 @@ namespace Brainamics.Core
 
         private int DefineNew(string name)
         {
-            var val = _valueNameMap.Count;
+            var val = _valueNameMap.Count + 1;
             _nameValueMap.Add(name, val);
             _valueNameMap.Add(name);
             return val;
