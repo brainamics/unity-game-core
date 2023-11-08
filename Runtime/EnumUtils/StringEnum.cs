@@ -8,6 +8,12 @@ namespace Brainamics.Core
         private readonly Dictionary<string, int> _nameValueMap = new();
         private readonly List<string> _valueNameMap = new();
 
+        public int Count => _valueNameMap.Count;
+
+        public IEnumerable<string> Names => _valueNameMap;
+
+        public IEnumerable<string> Values => _nameValueMap.Values;
+
         public int Parse(string key)
         {
             if (_nameValueMap.TryGetValue(key, out var val))
