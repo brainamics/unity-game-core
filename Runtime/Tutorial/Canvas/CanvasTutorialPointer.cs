@@ -152,14 +152,14 @@ namespace Brainamics.Core
         {
             var startPos = request.StartingPosition ?? GetPosition();
 
-            if (!IsVisible || startPos == position)
+            if ((!IsVisible && request.StartingPosition == null) || startPos == position)
             {
                 SetPositionImmediate(position, request);
                 yield break;
             }
 
             var duration = request.TransitionDuration > 0 ? request.TransitionDuration : DefaultPositionTransitionDuration;
-            var curve = request.TransitionCurve != null ? request.TransitionCurve : DefaultPositionTransitionAnimation;
+            var curve = request.TransitionCurve ?? DefaultPositionTransitionAnimation;
             var startTime = Time.time;
             var diff = position - startPos;
             while (true)
