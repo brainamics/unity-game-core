@@ -25,16 +25,18 @@ namespace Brainamics.Core
 
         public override readonly int GetHashCode()
         {
-            return HashCode.Combine(Visible, TargetPosition, Immediate, TransitionDuration, TransitionCurve);
+            return HashCode.Combine(Visible, TargetPosition, TargetRotation, Immediate, TransitionDuration, TransitionCurve, StartingPosition);
         }
 
         public override readonly bool Equals(object obj)
         {
             if (obj is TutorialPointAtRequest r)
             {
+                if (StartingPosition.HasValue != r.StartingPosition.HasValue || !Equals(StartingPosition.Value, r.StartingPosition.Value))
+                    return false;
                 return Visible == r.Visible && TargetPosition == r.TargetPosition &&
                     Immediate == r.Immediate && TransitionDuration == r.TransitionDuration && TransitionCurve == r.TransitionCurve &&
-                    TargetRotation == r.TargetRotation && StartingPosition == r.StartingPosition;
+                    TargetRotation == r.TargetRotation;
             }
 
             return false;
