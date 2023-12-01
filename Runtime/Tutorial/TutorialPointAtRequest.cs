@@ -34,11 +34,11 @@ namespace Brainamics.Core
             {
                 if (StartingPosition.HasValue != r.StartingPosition.HasValue)
                     return false;
-                if (StartingPosition.HasValue && !Equals(StartingPosition.Value, r.StartingPosition.Value))
+                if (StartingPosition.HasValue && StartingPosition.Value != r.StartingPosition.Value)
                     return false;
                 return Visible == r.Visible && TargetPosition == r.TargetPosition &&
                     Immediate == r.Immediate && TransitionDuration == r.TransitionDuration && TransitionCurve == r.TransitionCurve &&
-                    TargetRotation == r.TargetRotation;
+                    Equals(TargetRotation, r.TargetRotation);
             }
 
             return false;
