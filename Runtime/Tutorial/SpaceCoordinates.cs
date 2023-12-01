@@ -52,6 +52,10 @@ namespace Brainamics.Core
         public static SpaceCoordinates FromObject(object o)
             => FromObject(o, null);
 
+        public static SpaceCoordinates ScreenCenter => Screen(new Vector2(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2));
+
+        public static SpaceCoordinates CameraCenter(Camera camera) => Screen(camera.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
+
         public static SpaceCoordinates FromObject(object o, Func<RectTransform, Vector3> getRectTransformPos)
         {
             getRectTransformPos ??= GetScreenCenterOfRectTransform;

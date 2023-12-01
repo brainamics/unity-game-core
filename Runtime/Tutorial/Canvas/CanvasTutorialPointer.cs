@@ -157,7 +157,7 @@ namespace Brainamics.Core
                 SetPositionImmediate(position, request);
                 yield break;
             }
-
+            
             var duration = request.TransitionDuration > 0 ? request.TransitionDuration : DefaultPositionTransitionDuration;
             var curve = request.TransitionCurve ?? DefaultPositionTransitionAnimation;
             var startTime = Time.time;
