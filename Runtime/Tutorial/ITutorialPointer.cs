@@ -39,7 +39,7 @@ namespace Brainamics.Core
                 var request = getRequest();
                 pointer.PointAt(request);
 
-                while (pointer.ActiveRequest.Visible)
+                while (request.Visible)
                 {
                     yield return null;
 
