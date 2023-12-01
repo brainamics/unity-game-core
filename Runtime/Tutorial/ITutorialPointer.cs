@@ -47,8 +47,12 @@ namespace Brainamics.Core
                         break;
 
                     var newRequest = getRequest();
-                    if (stopAfterNoRequestUpdates && request == newRequest)
-                        break;
+                    if (request == newRequest)
+                    {
+                        if (stopAfterNoRequestUpdates)
+                            break;
+                        continue;
+                    }
 
                     request = newRequest;
                     pointer.PointAt(request);
