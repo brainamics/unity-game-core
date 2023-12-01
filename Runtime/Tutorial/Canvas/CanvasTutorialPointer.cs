@@ -11,7 +11,7 @@ namespace Brainamics.Core
     {
         private TutorialPointAtRequest _request = TutorialPointAtRequest.InvisibleImmediate;
         private bool _visible, _down;
-        private Coroutine _visibilityCoroutine, _positionCoroutine;
+        private Coroutine _visibilityCoroutine, _transformCoroutine;
 
         [SerializeField]
         private Canvas _canvas;
@@ -79,7 +79,7 @@ namespace Brainamics.Core
 
         private void Update()
         {
-            if (RepositionOnUpdate && _positionCoroutine == null && _request.Visible)
+            if (RepositionOnUpdate && _transformCoroutine == null && _request.Visible)
                 PointAt(false, false);
         }
 
@@ -96,11 +96,11 @@ namespace Brainamics.Core
 
                 var target = request.TargetPosition.WithPosition(position).ToScreen(ResolvedCamera);
                 target += ScreenPostTranslate;
-                PointAt(target.Position, request, cancelAnimations);
+                PointAt(target.Position, request.TargetRotation, request, cancelAnimations);
             }
             else
             {
-                PointAt(Vector3.zero, request, cancelAnimations);
+                PointAt(Vector3.zero, Quaternion.identity, request, cancelAnimations);
             }
             if (invokeEvents)
                 OnPoint.Invoke(this, request);
@@ -150,7 +150,7 @@ namespace Brainamics.Core
 
         protected virtual IEnumerator AnimatePosition(Vector3 position, TutorialPointAtRequest request)
         {
-            var startPos = GetPosition();
+            var startPos = request.StartingPosition ?? GetPosition();
 
             if (!IsVisible || startPos == position)
             {
@@ -192,7 +192,7 @@ namespace Brainamics.Core
 
         protected virtual void SetClickStateInternal() { }
 
-        private void PointAt(Vector3 screenPosition, TutorialPointAtRequest request, bool cancelAnimations)
+        private void PointAt(Vector3 screenPosition, Quaternion targetRotation, TutorialPointAtRequest request, bool cancelAnimations)
         {
             InitializeCanvas();
             if (_canvas == null)
@@ -204,7 +204,7 @@ namespace Brainamics.Core
             var position = screenPosition + CanvasPostTranslate;
 
             if (request.Visible)
-                SetPosition(position, request, cancelAnimations);
+                SetPositionAndRotation(position, targetRotation, request, cancelAnimations);
             SetVisibility(request.Visible, request.Immediate, cancelAnimations);
         }
 
@@ -234,12 +234,14 @@ namespace Brainamics.Core
             StartOmniCoroutine(ref _visibilityCoroutine, AnimateVisibility(visible), () => _visibilityCoroutine = null);
         }
 
-        private void SetPosition(Vector3 position, TutorialPointAtRequest request, bool cancelAnimations = false)
+        private void SetPositionAndRotation(Vector3 position, Quaternion rotation, TutorialPointAtRequest request, bool cancelAnimations = false)
         {
+            // TODO rotation
+
             if (cancelAnimations)
             {
                 // StopCoroutine(ref _visibilityCoroutine);
-                StopCoroutine(ref _positionCoroutine);
+                StopCoroutine(ref _transformCoroutine);
             }
 
             if (request.Immediate || !IsVisible)
@@ -248,7 +250,7 @@ namespace Brainamics.Core
                 return;
             }
 
-            StartOmniCoroutine(ref _positionCoroutine, AnimatePosition(position, request), () => _positionCoroutine = null);
+            StartOmniCoroutine(ref _transformCoroutine, AnimatePosition(position, request), () => _transformCoroutine = null);
         }
     }
 }

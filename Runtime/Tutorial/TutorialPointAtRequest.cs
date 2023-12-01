@@ -17,9 +17,11 @@ namespace Brainamics.Core
 
         public bool Visible;
         public SpaceCoordinates TargetPosition;
+        public Quaternion TargetRotation;
         public bool Immediate;
         public float TransitionDuration;
         public AnimationCurve TransitionCurve;
+        public Vector3? StartingPosition;
 
         public override readonly int GetHashCode()
         {
@@ -30,7 +32,9 @@ namespace Brainamics.Core
         {
             if (obj is TutorialPointAtRequest r)
             {
-                return Visible == r.Visible && TargetPosition == r.TargetPosition && Immediate == r.Immediate && TransitionDuration == r.TransitionDuration && TransitionCurve == r.TransitionCurve;
+                return Visible == r.Visible && TargetPosition == r.TargetPosition &&
+                    Immediate == r.Immediate && TransitionDuration == r.TransitionDuration && TransitionCurve == r.TransitionCurve &&
+                    TargetRotation == r.TargetRotation && StartingPosition == r.StartingPosition;
             }
 
             return false;
