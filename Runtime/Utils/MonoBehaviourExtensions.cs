@@ -29,5 +29,19 @@ namespace Brainamics.Core
                 action();
             }
         }
+
+        public static void CancelCoroutine(this MonoBehaviour b, ref Coroutine coroutine)
+        {
+            if (coroutine ==  null)
+                return;
+            b.StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
+        public static Coroutine StartMonoCoroutine(this MonoBehaviour b, ref Coroutine coroutine, IEnumerator routine)
+        {
+            b.CancelCoroutine(ref coroutine);
+            return coroutine = b.StartCoroutine(routine);
+        }
     }
 }
