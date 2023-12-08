@@ -73,6 +73,8 @@ namespace Brainamics.Core
 
         private void UnbindFromBoundObject(Transform bo)
         {
+            if (bo == null)
+                return;
             var notifier = TransformChangeNotifier.For(bo);
             notifier.OnTransformChanged.RemoveListener(HandleTransformMoved);
         }
