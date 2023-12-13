@@ -6,6 +6,11 @@ namespace Brainamics.Core
 {
     public static class RandomUtils
     {
+        public static bool Bool()
+        {
+            return Random.value >= 0.5;
+        }
+        
         public static T Select<T>(IReadOnlyList<T> list)
         {
             return list.Count switch
