@@ -35,5 +35,30 @@ namespace Brainamics.Core
             }
 
         }
+
+        public static void Push<T>(this IList<T> list, T item)
+        {
+            list.Add(item);
+        }
+
+        public static bool TryPop<T>(this IList<T> list, out T result)
+        {
+            if (list.Count == 0)
+            {
+                result = default;
+                return false;
+            }
+
+            result = list[^1];
+            list.RemoveAt(list.Count - 1);
+            return true;
+        }
+
+        public static T Pop<T>(this List<T> list)
+        {
+            if (!TryPop(list, out var result))
+                throw new System.InvalidOperationException("The list is empty.");
+            return result;
+        }
     }
 }
