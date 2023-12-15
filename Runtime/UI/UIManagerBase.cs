@@ -12,7 +12,6 @@ namespace Brainamics.Core
         protected readonly List<IUIWindow> _windows = new();
         protected readonly HashSet<IUIPopup> _popups = new();
 
-        [Header("Events")]
         public UnityEvent<IUIWindow> OnWindowOpened, OnWindowClosed, OnWindowVisibilityChanged;
         public UnityEvent<IUIPopup> OnPopupOpened, OnPopupClosed, OnPopupVisibilityChanged;
 
