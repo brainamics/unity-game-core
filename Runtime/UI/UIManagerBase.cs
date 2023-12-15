@@ -17,7 +17,7 @@ namespace Brainamics.Core
 
         public IReadOnlyList<IUIWindow> Windows => _windows;
 
-        public IReadOnlyCollection<IUIWindow> Popups => _popups;
+        public IReadOnlyCollection<IUIPopup> Popups => _popups;
 
         protected bool AllowMultipleWindows { get; set; } = true;
 
