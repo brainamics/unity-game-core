@@ -11,6 +11,6 @@ namespace Brainamics.Core
 
         bool IsVisible { get; set; }
 
-        UnityEvent<IUIWindow> OnVisibilityChanged { get; }
+        UnityEvent<IUIPopup> OnVisibilityChanged { get; }
     }
 }
