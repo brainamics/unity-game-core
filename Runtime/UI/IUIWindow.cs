@@ -9,5 +9,7 @@ namespace Brainamics.Core
         GameObject gameObject { get; }
 
         bool CanClose { get; }
+
+        bool IsVisible { get; set; }
     }
 }
