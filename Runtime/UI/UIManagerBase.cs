@@ -39,7 +39,7 @@ namespace Brainamics.Core
 
         public virtual void SetWindowVisibility(IUIWindow window, bool visible)
         {
-            window.gameObject.SetActive(visible);
+            window.IsVisible = visible;
             OnWindowVisibilityChanged.Invoke(window);
         }
 
