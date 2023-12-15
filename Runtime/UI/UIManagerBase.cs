@@ -15,6 +15,10 @@ namespace Brainamics.Core
         public UnityEvent<IUIWindow> OnWindowOpened, OnWindowClosed, OnWindowVisibilityChanged;
         public UnityEvent<IUIPopup> OnPopupOpened, OnPopupClosed, OnPopupVisibilityChanged;
 
+        public IReadOnlyList<IUIWindow> Windows => _windows;
+
+        public IReadOnlyCollection<IUIWindow> Popups => _popups;
+
         protected bool AllowMultipleWindows { get; set; } = true;
 
         protected bool ClosePopupsBeforeOpeningWindows { get; set; } = true;
