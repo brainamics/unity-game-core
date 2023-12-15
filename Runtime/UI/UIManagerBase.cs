@@ -73,7 +73,7 @@ namespace Brainamics.Core
 
         public virtual void SetPopupVisibility(IUIPopup popup, bool visible)
         {
-            popup.gameObject.SetActive(visible);
+            popup.IsVisible = visible;
             OnPopupVisibilityChanged.Invoke(popup);
         }
 
