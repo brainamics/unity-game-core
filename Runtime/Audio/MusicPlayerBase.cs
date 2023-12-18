@@ -26,23 +26,27 @@ namespace Brainamics.Core
 
         protected abstract IAudioService AudioService { get; }
 
-        private void Start()
+        protected virtual void Awake()
+        {
+        }
+
+        protected virtual void Start()
         {
             AudioService.ConfigurationChanged.AddListener(UpdatePlayState);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             CheckForClipChanges();
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
             => UpdatePlayState();
 
-        private void OnDisable()
+        protected virtual void OnDisable()
             => UpdatePlayState();
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             AudioService.ConfigurationChanged.RemoveListener(UpdatePlayState);
         }
