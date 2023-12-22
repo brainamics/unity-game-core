@@ -40,7 +40,7 @@ namespace Brainamics.Core
         private bool TrackInternal(PersistentId id)
         {
             if (!_persistentIds.Add(id))
-                return;
+                return true;
             var success = _ids.TryAdd(id.Id, id);
             if (!success)
                 _persistentIds.Remove(id);
