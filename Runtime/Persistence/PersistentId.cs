@@ -78,7 +78,7 @@ namespace Brainamics.Core
 
         private void OnDisable()
         {
-            UpdateRegistration();
+            Unregister();
         }
 
         private void UpdateTracker()
