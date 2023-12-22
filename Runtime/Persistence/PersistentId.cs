@@ -8,6 +8,7 @@ using UnityEditor;
 namespace Brainamics.Core
 {
     [ExecuteAlways]
+    [DefaultExecutionOrder(-50)]
     public sealed class PersistentId : MonoBehaviour
     {
         private PersistentIdTracker _registeredTracker;
