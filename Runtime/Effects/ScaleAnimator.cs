@@ -9,6 +9,8 @@ namespace Brainamics.Core
     {
         private Coroutine _coroutine;
 
+        public bool Loop = false;
+
         [SerializeField]
         private bool _autoInitialScale;
 
@@ -28,7 +30,7 @@ namespace Brainamics.Core
         private Vector3 _middleScale = new(1.1f, 1.1f, 1.1f);
 
         [SerializeField]
-        private Vector3 _targetScale = Vector3.one;
+        private Vector3 _targetScale = Vector3.one; 
 
         public override void Trigger()
         {
@@ -42,24 +44,27 @@ namespace Brainamics.Core
 
         private IEnumerator PlayAnimation(Vector3 initialScale)
         {
-            var targetScale = _useInitialScaleAsTarget ? initialScale : _targetScale;
-        
-            if (_useMiddleScale)
+            do
             {
-                var bounceDuration = _middleScaleDuration / 2;
-
-                var e = ScaleTo(initialScale, _middleScale, bounceDuration);
-                while (e.MoveNext())
-                    yield return e.Current;
-
-                e = ScaleTo(_middleScale, targetScale, bounceDuration);
-                while (e.MoveNext())
-                    yield return e.Current;
-            } else {
-                var e = ScaleTo(initialScale, targetScale, _duration);
-                while (e.MoveNext())
-                    yield return e.Current;
-            }
+                var targetScale = _useInitialScaleAsTarget ? initialScale : _targetScale;
+            
+                if (_useMiddleScale)
+                {
+                    var bounceDuration = _middleScaleDuration / 2;
+    
+                    var e = ScaleTo(initialScale, _middleScale, bounceDuration);
+                    while (e.MoveNext())
+                        yield return e.Current;
+    
+                    e = ScaleTo(_middleScale, targetScale, bounceDuration);
+                    while (e.MoveNext())
+                        yield return e.Current;
+                } else {
+                    var e = ScaleTo(initialScale, targetScale, _duration);
+                    while (e.MoveNext())
+                        yield return e.Current;
+                }
+            } while (Loop);
             _coroutine = null;
         }
 
