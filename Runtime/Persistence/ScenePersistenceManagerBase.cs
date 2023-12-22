@@ -13,8 +13,18 @@ namespace Brainamics.Core
 
         public bool LoadOnStart = true;
         public bool LoadOnFirstFrame = true;
+        public bool IncludeInactiveObjects = false;
+        public bool EnumeratePersistablesDynamically = false;
 
-        public IEnumerable<IPersistentState<TState>> PersistableObjects => _persistableObjects;
+        public IEnumerable<IPersistentState<TState>> PersistableObjects
+        {
+            get
+            {
+                if (EnumeratePersistablesDynamically)
+                    RescanSceneObjects();
+                return _persistableObjects;
+            }
+        }
 
         protected abstract IPersistenceService<TState> GetPersistenceService();
 
@@ -25,7 +35,7 @@ namespace Brainamics.Core
             var rootObjects = scene.GetRootGameObjects();
             foreach (var obj in rootObjects)
             {
-                var components = obj.GetComponentsInChildren<IPersistentState<TState>>();
+                var components = obj.GetComponentsInChildren<IPersistentState<TState>>(IncludeInactiveObjects);
                 _persistableObjects.AddRange(components);
             }
         }
