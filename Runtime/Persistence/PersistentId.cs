@@ -137,6 +137,10 @@ namespace Brainamics.Core
         {
             if (IsRegistered)
                 throw new System.InvalidOperationException("Already registered.");
+#if UNITY_EDITOR
+            if (BuildPipeline.isBuildingPlayer)
+                return;
+#endif
             if (string.IsNullOrEmpty(_id))
             {
                 IsValid = false;
