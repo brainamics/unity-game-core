@@ -43,7 +43,7 @@ namespace Brainamics.Core
             _lastBoundObject = null;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (RepositionOnUpdate)
             {
