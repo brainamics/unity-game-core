@@ -70,7 +70,8 @@ namespace Brainamics.Core
 
         public async Task NewGameAsync(IProgress<float> progress, TState state)
         {
-            await _persistenceProvider.SaveStateAsync(state);
+            if (!SaveGameState(state))
+                return;
             await LoadGameState(state, progress);
         }
 
