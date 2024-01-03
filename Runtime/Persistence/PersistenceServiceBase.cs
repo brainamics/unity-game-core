@@ -71,7 +71,7 @@ namespace Brainamics.Core
         public async Task NewGameAsync(IProgress<float> progress, TState state)
         {
             UpdateStateBeforeSave(state);
-            await _provider.SaveStateAsync(state);
+            await _persistenceProvider.SaveStateAsync(state);
             await LoadGameState(state, progress);
         }
 
