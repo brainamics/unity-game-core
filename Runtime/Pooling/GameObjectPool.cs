@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [DefaultExecutionOrder(-99)]
     public class GameObjectPool : MonoBehaviour, IGameObjectPool
     {
         private ObjectPool<GameObject> _pool;
