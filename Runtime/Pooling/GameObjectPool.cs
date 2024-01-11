@@ -10,6 +10,9 @@ namespace Brainamics.Core
     {
         private ObjectPool<GameObject> _pool;
 
+        [Tooltip("Whether or not to add the PooledObject component to the pooled objects.")]
+        public bool AddPoolReferenceComponent;
+
         [SerializeField]
         private int _capacity = 50;
 
@@ -55,7 +58,13 @@ namespace Brainamics.Core
 
         protected virtual GameObject CreateNew()
         {
-            return Instantiate(_prefab, _parent);
+            var obj = Instantiate(_prefab, _parent);
+            if (AddPoolReferenceComponent)
+            {
+                var pooledObj = obj.AddComponent<PooledObject>();
+                pooledObj.Pool = this;
+            }
+            return obj;
         }
 
         protected virtual void DestroyObject(GameObject obj)
