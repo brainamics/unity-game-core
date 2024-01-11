@@ -25,6 +25,18 @@ namespace Brainamics.Core
             set => _pool.Capacity = value;
         }
 
+        public GameObject Prefab
+        {
+            get => _prefab;
+            set => _prefab = value;
+        }
+
+        public Transform Parent
+        {
+            get => _parent;
+            set => _parent = value;
+        }
+
         public void Reserve(int count)
             => _pool.Reserve(count);
 
