@@ -38,7 +38,7 @@ namespace Brainamics.Core
 
         public static PersistentId TryFind(GameObject obj)
         {
-            return obj.GetComponentInParent<PersistentId>();
+            return obj.GetComponentInParent<PersistentId>(true);
         }
 
         public static PersistentId Find(GameObject obj)
