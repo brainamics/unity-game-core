@@ -22,6 +22,8 @@ namespace Brainamics.Core
         [SerializeField]
         private string _fileName = "savedata";
 
+        public string FilePath => _filePath;
+
         public override Task<TCustomState> LoadStateAsync<TCustomState>()
         {
             return Task.FromResult(LoadStateFromFile<TCustomState>());
