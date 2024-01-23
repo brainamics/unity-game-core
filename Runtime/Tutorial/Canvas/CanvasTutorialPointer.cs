@@ -210,7 +210,7 @@ namespace Brainamics.Core
 
         private void SetVisibility(bool visible, bool immediate = false, bool cancelAnimations = false)
         {
-            if (_visible == visible || !_visiblityEverSet)
+            if (_visible == visible && _visiblityEverSet)
                 return;
             _visiblityEverSet = true;
             _visible = visible;
