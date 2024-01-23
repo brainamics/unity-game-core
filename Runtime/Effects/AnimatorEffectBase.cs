@@ -12,11 +12,15 @@ namespace Brainamics.Core
         [SerializeField]
         protected float _duration = 0.5f;
 
-        private void Start()
+        protected virtual void Awake() {}
+
+        protected virtual void OnEnable()
         {
             if (_playOnAwake)
                 Trigger();
         }
+
+        protected virtual void OnDisable() {}
 
         public abstract void Trigger();
     }
