@@ -10,7 +10,7 @@ namespace Brainamics.Core
     public class CanvasTutorialPointer : TutorialPointerBase
     {
         private TutorialPointAtRequest _request = TutorialPointAtRequest.InvisibleImmediate;
-        private bool _visible, _down;
+        private bool _visible, _down, _visiblityEverSet;
         private Coroutine _visibilityCoroutine, _transformCoroutine;
 
         [SerializeField]
@@ -210,8 +210,9 @@ namespace Brainamics.Core
 
         private void SetVisibility(bool visible, bool immediate = false, bool cancelAnimations = false)
         {
-            if (_visible == visible)
+            if (_visible == visible || !_visiblityEverSet)
                 return;
+            _visiblityEverSet = true;
             _visible = visible;
 
             if (_canvas == null)
