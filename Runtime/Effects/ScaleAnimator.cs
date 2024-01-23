@@ -37,7 +37,7 @@ namespace Brainamics.Core
             if (_coroutine != null)
                 return;
             var initialScale = _autoInitialScale ? transform.localScale : _initialScale;
-            if (initialScale == _targetScale)
+            if (initialScale == _targetScale && (!_useMiddleScale || _middleScale == _targetScale))
                 return;
             _coroutine = StartCoroutine(PlayAnimation(initialScale));
         }
