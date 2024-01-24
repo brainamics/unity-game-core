@@ -42,6 +42,11 @@ namespace Brainamics.Core
             _coroutine = StartCoroutine(PlayAnimation(initialScale));
         }
 
+        protected override void OnDisable()
+        {
+            _coroutine = null;
+        }
+
         private IEnumerator PlayAnimation(Vector3 initialScale)
         {
             do
