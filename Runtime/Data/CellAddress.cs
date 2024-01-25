@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [System.Serializable]
     public readonly struct CellAddress
     {
         public static readonly CellAddress Invalid = new(-1, -1);
