@@ -93,4 +93,14 @@ namespace Brainamics.Core
         public static implicit operator CellAddress(Vector2Int addr)
             => new(addr.y, addr.x);
     }
+
+    public static class CellAddressExtensions
+    {
+        public static bool IsValid(this CellAddress address, int rows, int columns)
+        {
+            if (!address.IsValid)
+                return false;
+            return address.Row < rows && address.Column < columns;
+        }
+    }
 }
