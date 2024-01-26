@@ -25,12 +25,13 @@ namespace Brainamics.Core
             return new CellAddress(Row - amount.y, Column + amount.x);
         }
 
-        public CellAddress MoveStep(PrimaryDirection direction)
+        public CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = true)
         {
+            var upAddition = upDeducts ? -1 : 1;
             return direction switch
             {
-                PrimaryDirection.Up => new CellAddress(Row - 1, Column),
-                PrimaryDirection.Down => new CellAddress(Row + 1, Column),
+                PrimaryDirection.Up => new CellAddress(Row + upAddition, Column),
+                PrimaryDirection.Down => new CellAddress(Row - upAddition, Column),
                 PrimaryDirection.Left => new CellAddress(Row, Column - 1),
                 PrimaryDirection.Right => new CellAddress(Row, Column + 1),
                 _ => throw new NotImplementedException($"Moving one step towards {direction} is not implemented."),
