@@ -24,6 +24,18 @@ namespace Brainamics.Core
         {
             return new CellAddress(Row - amount.y, Column + amount.x);
         }
+
+        public CellAddress MoveStep(PrimaryDirection direction)
+        {
+            return direction switch
+            {
+                PrimaryDirection.Up => new CellAddress(Row - 1, Column),
+                PrimaryDirection.Down => new CellAddress(Row + 1, Column),
+                PrimaryDirection.Left => new CellAddress(Row, Column - 1),
+                PrimaryDirection.Right => new CellAddress(Row, Column + 1),
+                _ => throw new NotImplementedException($"Moving one step towards {direction} is not implemented."),
+            };
+        }
             
         public CellAddress GetNearestInvalidAddress(int rows, int columns)
         {
