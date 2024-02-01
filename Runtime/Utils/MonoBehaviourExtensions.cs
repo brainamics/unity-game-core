@@ -18,6 +18,17 @@ namespace Brainamics.Core
                 action();
             }
         }
+
+        public static void RunAfterDelay(this MonoBehaviour b, float delay, Action action)
+        {
+            b.StartCoroutine(RunAfterDelayCo());
+
+            IEnumerator RunAfterDelayCo()
+            {
+                yield return new WaitForSeconds(delay);
+                action();
+            }
+        }
         
         public static void RunOnNextFrame(this MonoBehaviour monoBehaviour, Action action)
         {
