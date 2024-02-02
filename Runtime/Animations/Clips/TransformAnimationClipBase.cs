@@ -10,9 +10,17 @@ namespace Brainamics.Core
         [SerializeField]
         private Transform _targetTransform;
 
-        protected Transform GetTargetTransform(MonoBehaviour behaviour)
+        protected Transform TryGetTargetTransform(MonoBehaviour behaviour)
         {
             return _targetTransform == null ? behaviour.transform : _targetTransform;
+        }
+
+        protected Transform GetTargetTransform(MonoBehaviour behaviour)
+        {
+            var transform = TryGetTargetTransform(behaviour);
+            if (transform == null)
+                throw new System.InvalidOperationException("Could not find the target transform.");
+            return transform;
         }
     }
 }

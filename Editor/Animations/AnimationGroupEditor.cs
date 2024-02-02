@@ -75,7 +75,8 @@ namespace Brainamics.Core
             };
 
             var clipName = ResolveClipName(clip.GetType());
-            if (clip.Fold = EditorGUILayout.BeginFoldoutHeaderGroup(clip.Fold, clipName, guiStyle, rect =>
+
+            clip.Fold = EditorGUILayout.BeginFoldoutHeaderGroup(clip.Fold, clipName, guiStyle, rect =>
             {
                 var menu = new GenericMenu();
                 if (Application.isPlaying)
@@ -107,11 +108,12 @@ namespace Brainamics.Core
                     Target.Clips.Insert(index + 1, clip);
                 });
                 menu.DropDown(rect);
-            }))
+            });
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            if (clip.Fold)
             {
                 indexProperty.DrawAllProperties();
             }
-            EditorGUILayout.EndFoldoutHeaderGroup();
             EditorGUILayout.Space();
         }
 
