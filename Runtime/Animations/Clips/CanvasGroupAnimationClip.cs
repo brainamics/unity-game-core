@@ -10,7 +10,11 @@ namespace Brainamics.Core
     {
         public CanvasGroup Group;
         public bool AutoFromAlpha;
+
+        [Range(0, 1)]
         public float FromAlpha;
+
+        [Range(0, 1)]
         public float ToAlpha = 1f;
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
