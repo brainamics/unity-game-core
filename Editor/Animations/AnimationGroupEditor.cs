@@ -43,6 +43,18 @@ namespace Brainamics.Core
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Add Clip"))
                 ShowAddClipMenu();
+            if (!string.IsNullOrEmpty(GUIUtility.systemCopyBuffer))
+            {
+                if (GUILayout.Button("Paste Clip as New"))
+                {
+                    var clip = AnimationClipBase.DeserializeNew(GUIUtility.systemCopyBuffer);
+                    if (clip != null)
+                    {
+                        Undo.RecordObject(Target, $"Paste New Clip");
+                        Target.Clips.Add(clip);
+                    }
+                }
+            }
             if (Application.isPlaying)
             {
                 if (GUILayout.Button("Play"))
@@ -106,6 +118,38 @@ namespace Brainamics.Core
                     var json = JsonUtility.ToJson(clip);
                     clip = JsonUtility.FromJson(json, clip.GetType()) as AnimationClipBase;
                     Target.Clips.Insert(index + 1, clip);
+                });
+                menu.AddSeparator(null);
+                menu.AddItem(new GUIContent("Copy Clip"), false, () =>
+                {
+                    GUIUtility.systemCopyBuffer = clip.AsSerializedString();
+                });
+                var content = new GUIContent("Paste Clip Values");
+                if (string.IsNullOrEmpty(GUIUtility.systemCopyBuffer))
+                {
+                    menu.AddDisabledItem(content);
+                }
+                else
+                {
+                    menu.AddItem(content, false, () =>
+                    {
+                        clip.DeserializeFromString(GUIUtility.systemCopyBuffer);
+                    });
+                }
+                menu.AddSeparator(null);
+                menu.AddItem(new GUIContent("Move Up"), false, () =>
+                {
+                    Undo.RecordObject(Target, $"Move Clip Up");
+                    var index = Target.Clips.IndexOf(clip);
+                    if (index > 0)
+                        Target.Clips.Move(clip, index - 1);
+                });
+                menu.AddItem(new GUIContent("Move Down"), false, () =>
+                {
+                    Undo.RecordObject(Target, $"Move Clip Down");
+                    var index = Target.Clips.IndexOf(clip);
+                    if (index < Target.Clips.Count)
+                        Target.Clips.Move(clip, index + 1);
                 });
                 menu.DropDown(rect);
             });

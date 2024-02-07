@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,29 @@ namespace Brainamics.Core
         public bool IsPlaying => _coroutine != null;
 
         protected float Time => TimeSettings.UnscaledTime ? UnityEngine.Time.unscaledTime : UnityEngine.Time.time;
+
+        public static AnimationClipBase DeserializeNew(string content)
+        {
+            var (type, json) = DeserializeInternal(content);
+            if (type == null)
+                return null;
+            var instance = Activator.CreateInstance(type) as AnimationClipBase;
+            JsonUtility.FromJsonOverwrite(json, instance);
+            return instance;
+        }
+
+        public void DeserializeFromString(string content)
+        {
+            var (type, json) = DeserializeInternal(content);
+            if (type != GetType())
+                return; // prevent type mismatch copy
+            JsonUtility.FromJsonOverwrite(json, this);
+        }
+
+        public string AsSerializedString()
+        {
+            return $"{GetType()}," + JsonUtility.ToJson(this);
+        }
 
         public virtual void Play(MonoBehaviour behaviour)
         {
@@ -99,6 +123,17 @@ namespace Brainamics.Core
             _currentEaseFunc = TimeSettings.Ease.GetEasingFunction(TimeSettings.Curve);
             _currentEasing = TimeSettings.Ease;
             return _currentEaseFunc;
+        }
+
+        private static (Type type, string json) DeserializeInternal(string content)
+        {
+            var split = content.Split(',', 2);
+            if (split.Length < 2)
+                return (null, null);
+            var typeName = split[0];
+            var json = split[1];
+            var type = Type.GetType(typeName);
+            return (type, json);
         }
     }
 }
