@@ -1,21 +1,85 @@
+using Brainamics.Core;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+[System.Flags]
 public enum PrimaryDirection
 {
-    None,
-    Left,
-    Up,
-    Right,
-    Down,
+    None = 0,
+    Left = 1,
+    Up = 2,
+    Right = 4,
+    Down = 8,
 }
 
 public static class PrimaryDirectionUtils
 {
-    public static readonly IReadOnlyList<PrimaryDirection> Directions = new[] { PrimaryDirection.Left, PrimaryDirection.Up, PrimaryDirection.Right, PrimaryDirection.Down };
+    public static readonly IReadOnlyList<PrimaryDirection> PrimaryDirections = new[] {
+        PrimaryDirection.Left, PrimaryDirection.Up, PrimaryDirection.Right, PrimaryDirection.Down
+    };
+    public static readonly IReadOnlyList<PrimaryDirection> DiagonalDirections = new[] {
+        PrimaryDirection.Left | PrimaryDirection.Up,
+        PrimaryDirection.Right | PrimaryDirection.Up,
+        PrimaryDirection.Left | PrimaryDirection.Down,
+        PrimaryDirection.Right | PrimaryDirection.Down,
+    };
 
-    public static PrimaryDirection RandomDirection => Directions[Random.Range(0, Directions.Count)];
+    public static PrimaryDirection RandomDirection => PrimaryDirections[Random.Range(0, PrimaryDirections.Count)];
+
+    public static bool IsHorizontal(this PrimaryDirection dir)
+    {
+        return dir is PrimaryDirection.Left or PrimaryDirection.Right;
+    }
+
+    public static bool IsVertical(this PrimaryDirection dir)
+    {
+        return dir is PrimaryDirection.Up or PrimaryDirection.Down;
+    }
+
+    public static bool IsPrimary(this PrimaryDirection direction)
+    {
+        return PrimaryDirections.Contains(direction);
+    }
+
+    public static bool IsDiagonal(this PrimaryDirection direction)
+    {
+        return DiagonalDirections.Contains(direction);
+    }
+
+    public static IEnumerable<PrimaryDirection> ValidateAndDeconstruct(this PrimaryDirection direction)
+    {
+        if (direction.IsPrimary())
+        {
+            yield return direction;
+            yield break;
+        }
+
+        if (direction.IsDiagonal())
+        {
+            var (horz, vert) = direction.DeconstructDiagonal();
+            yield return horz;
+            yield return vert;
+            yield break;
+        }
+
+        throw new System.InvalidOperationException($"Invalid direction: {direction}");
+    }
+
+    public static (PrimaryDirection horz, PrimaryDirection vert) DeconstructDiagonal(this PrimaryDirection direction)
+    {
+        var horz = PrimaryDirection.None;
+        var vert = PrimaryDirection.None;
+        foreach (var flag in direction.GetFlags())
+            if (flag.IsHorizontal())
+                horz = flag;
+            else if (flag.IsVertical())
+                vert = flag;
+        if (horz == PrimaryDirection.None || vert == PrimaryDirection.None)
+            throw new System.NotSupportedException("The diagonal direction is invalid.");
+        return (horz, vert);
+    }
 
     public static PrimaryDirection Rotate90Clockwise(this PrimaryDirection dir, int times = 1)
     {
@@ -61,7 +125,7 @@ public static class PrimaryDirectionUtils
         }
         while (angle < 0f)
             angle += 360f;
-    
+
         return angle switch
         {
             (>= 0f and < 45f) or (>= 315f) => PrimaryDirection.Right,

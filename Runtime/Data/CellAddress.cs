@@ -8,24 +8,37 @@ namespace Brainamics.Core
     public readonly struct CellAddress
     {
         public static readonly CellAddress Invalid = new(-1, -1);
-    
+
         public readonly int Row;
         public readonly int Column;
-    
+
         public bool IsValid => Row >= 0 && Column >= 0;
-    
+
         public CellAddress(int row, int column)
         {
             Row = row;
             Column = column;
         }
-            
+
         public CellAddress MoveStep(Vector2Int amount)
         {
             return new CellAddress(Row - amount.y, Column + amount.x);
         }
 
+        /// <summary>
+        /// Moves the address in a primary or diagonal direction.
+        /// </summary>
         public CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = true)
+        {
+            var addr = this;
+            if (direction == PrimaryDirection.None)
+                return addr;
+            foreach (var dir in direction.ValidateAndDeconstruct())
+                addr = addr.MovePrimaryStep(dir, upDeducts);
+            return addr;
+        }
+
+        public CellAddress MovePrimaryStep(PrimaryDirection direction, bool upDeducts = true)
         {
             var upAddition = upDeducts ? -1 : 1;
             return direction switch
@@ -37,14 +50,14 @@ namespace Brainamics.Core
                 _ => throw new NotImplementedException($"Moving one step towards {direction} is not implemented."),
             };
         }
-            
+
         public CellAddress GetNearestInvalidAddress(int rows, int columns)
         {
             var row = Row;
             var column = Column;
             if (!IsValid)
                 return this;
-    
+
             var distances = new ValueTuple<int, Action>[] {
                 (Row, () => row = -1),
                 (Column, () => column = -1),
@@ -56,32 +69,32 @@ namespace Brainamics.Core
                 if (distance.Item1 < min.Item1)
                     min = distance;
             min.Item2();
-    
+
             return new CellAddress(row, column);
         }
-    
+
         public override string ToString()
         {
             return $"{Row},{Column}";
         }
-    
+
         public override bool Equals(object obj)
         {
             if (obj is CellAddress addr)
                 return Row == addr.Row && Column == addr.Column;
             return false;
         }
-    
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Row, Column);
         }
-    
+
         public static bool operator ==(CellAddress a, CellAddress b)
         {
             return a.Equals(b);
         }
-    
+
         public static bool operator !=(CellAddress a, CellAddress b)
         {
             return !a.Equals(b);
@@ -101,6 +114,30 @@ namespace Brainamics.Core
             if (!address.IsValid)
                 return false;
             return address.Row < rows && address.Column < columns;
+        }
+
+        public static IEnumerable<CellAddress> GetAdjacentAddresses(this CellAddress address, int rows, int columns, bool primary = true, bool diagonal = false)
+        {
+            CellAddress a;
+            if (primary)
+            {
+                a = address.MoveStep(PrimaryDirection.Left);
+                if (a.IsValid(rows, columns))
+                    yield return a;
+                a = address.MoveStep(PrimaryDirection.Up);
+                if (a.IsValid(rows, columns))
+                    yield return a;
+                a = address.MoveStep(PrimaryDirection.Right);
+                if (a.IsValid(rows, columns))
+                    yield return a;
+                a = address.MoveStep(PrimaryDirection.Down);
+                if (a.IsValid(rows, columns))
+                    yield return a;
+            }
+            if (diagonal)
+            {
+
+            }
         }
     }
 }

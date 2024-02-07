@@ -22,5 +22,19 @@ namespace Brainamics.Core
         {
             return Enum.GetValues(typeof(T)).OfType<T>();
         }
+
+        public static IEnumerable<T> GetFlags<T>(this T @enum)
+            where T : struct
+        {
+            var rem = Convert.ToInt64(@enum);
+            for (var i = 0; rem > 0; i++)
+            {
+                var bit = (rem & 1) > 0;
+                rem >>= 1;
+                if (!bit)
+                    continue;
+                yield return (T)Convert.ChangeType(1 << i, typeof(T));
+            }
+        }
     }
 }
