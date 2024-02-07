@@ -118,25 +118,11 @@ namespace Brainamics.Core
 
         public static IEnumerable<CellAddress> GetAdjacentAddresses(this CellAddress address, int rows, int columns, bool primary = true, bool diagonal = false)
         {
-            CellAddress a;
-            if (primary)
+            foreach (var dir in PrimaryDirectionUtils.EnumerateDirections(primary, diagonal))
             {
-                a = address.MoveStep(PrimaryDirection.Left);
-                if (a.IsValid(rows, columns))
-                    yield return a;
-                a = address.MoveStep(PrimaryDirection.Up);
-                if (a.IsValid(rows, columns))
-                    yield return a;
-                a = address.MoveStep(PrimaryDirection.Right);
-                if (a.IsValid(rows, columns))
-                    yield return a;
-                a = address.MoveStep(PrimaryDirection.Down);
-                if (a.IsValid(rows, columns))
-                    yield return a;
-            }
-            if (diagonal)
-            {
-
+                var addr = address.MoveStep(dir);
+                if (addr.IsValid(rows, columns))
+                    yield return addr;
             }
         }
     }

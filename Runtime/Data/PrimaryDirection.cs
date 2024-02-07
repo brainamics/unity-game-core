@@ -26,6 +26,16 @@ public static class PrimaryDirectionUtils
         PrimaryDirection.Right | PrimaryDirection.Down,
     };
 
+    public static IEnumerable<PrimaryDirection> EnumerateDirections(bool primary = true, bool diagonal = true)
+    {
+        var enumerable = Enumerable.Empty<PrimaryDirection>();
+        if (primary)
+            enumerable = enumerable.Concat(PrimaryDirections);
+        if (diagonal)
+            enumerable = enumerable.Concat(DiagonalDirections);
+        return enumerable;
+    }
+
     public static PrimaryDirection RandomDirection => PrimaryDirections[Random.Range(0, PrimaryDirections.Count)];
 
     public static bool IsHorizontal(this PrimaryDirection dir)
