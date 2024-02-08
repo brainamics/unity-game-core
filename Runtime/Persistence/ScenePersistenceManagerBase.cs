@@ -85,9 +85,14 @@ namespace Brainamics.Core
         {
             if (!SaveGameOnStart)
                 return;
-            if (SaveGameOnlyIfMissing && _persistenceService.LastState != null)
+            if (SaveGameOnlyIfMissing && IsSaved(_persistenceService.LastState))
                 return;
             _persistenceService.SaveGameInBackground();
+        }
+
+        protected virtual bool IsSaved(TState state)
+        {
+            return state != null;
         }
     }
 }
