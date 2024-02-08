@@ -15,6 +15,10 @@ namespace Brainamics.Core
         public bool LoadOnFirstFrame = true;
         public bool IncludeInactiveObjects = false;
         public bool EnumeratePersistablesDynamically = false;
+        public bool SaveGameOnStart = false;
+        public bool SaveGameOnlyIfMissing = false;
+
+        public float SaveGameDelay;
 
         public IEnumerable<IPersistentState<TState>> PersistableObjects
         {
@@ -52,17 +56,34 @@ namespace Brainamics.Core
         {
             if (!LoadOnStart)
                 return;
-            if (LoadOnFirstFrame)
+            try
             {
-                _persistenceService.LoadActiveSceneState();
-                return;
+                if (LoadOnFirstFrame)
+                {
+                    _persistenceService.LoadActiveSceneState();
+                    return;
+                }
+                this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
             }
-            this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
+            finally
+            {
+                if (SaveGameOnStart)
+                    this.RunAfterDelay(SaveGameDelay, SaveGameConditionally);
+            }
         }
 
         protected virtual void OnDestroy()
         {
             _persistenceService.ClearActiveScenePersistenceManager(this);
+        }
+
+        protected virtual void SaveGameConditionally()
+        {
+            if (!SaveGameOnStart)
+                return;
+            if (SaveGameOnlyIfMissing && _persistenceService.LastState != null)
+                return;
+            _persistenceService.SaveGameInBackground();
         }
     }
 }
