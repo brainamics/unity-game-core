@@ -54,27 +54,31 @@ namespace Brainamics.Core
 
         protected virtual void Start()
         {
-            if (!LoadOnStart)
-                return;
-            try
-            {
-                if (LoadOnFirstFrame)
-                {
-                    _persistenceService.LoadActiveSceneState();
-                    return;
-                }
-                this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
-            }
-            finally
-            {
-                if (SaveGameOnStart)
-                    this.RunAfterDelay(SaveGameDelay, SaveGameConditionally);
-            }
+            PerformLoadOnStart();
+            PerformSaveOnStart();
         }
 
         protected virtual void OnDestroy()
         {
             _persistenceService.ClearActiveScenePersistenceManager(this);
+        }
+
+        protected virtual void PerformLoadOnStart()
+        {
+            if (!LoadOnStart)
+                return;
+            if (LoadOnFirstFrame)
+            {
+                _persistenceService.LoadActiveSceneState();
+                return;
+            }
+            this.RunOnNextFrame(_persistenceService.LoadActiveSceneState);
+        }
+
+        protected virtual void PerformSaveOnStart()
+        {
+            if (SaveGameOnStart)
+                this.RunAfterDelay(SaveGameDelay, SaveGameConditionally);
         }
 
         protected virtual void SaveGameConditionally()
