@@ -82,6 +82,12 @@ namespace Brainamics.Core
 
         protected IEnumerator RunTimedLoop(System.Action<float> apply)
         {
+            if (TimeSettings.Immediate)
+            {
+                apply(1f);
+                yield break;
+            }
+
             var startTime = Time;
             while (true)
             {

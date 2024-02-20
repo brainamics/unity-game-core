@@ -13,6 +13,7 @@ namespace Brainamics.Core
         [Min(0)]
         public float Duration = 1f;
 
+        public bool Immediate;
         public bool UnscaledTime;
         public bool Loop;
         public bool Reverse;
