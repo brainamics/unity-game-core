@@ -14,6 +14,12 @@ namespace Brainamics.Core
 
         public bool IsValid => _maxOdds > 0;
 
+        public void Clear()
+        {
+            _odds.Clear();
+            _maxOdds = 0;
+        }
+
         public void AddOdds(T value, double odds)
         {
             var end = _maxOdds + odds;
