@@ -19,7 +19,6 @@ namespace Brainamics.Core
 
         [Header("Interactions")]
         public bool InteractWithZones = true;
-        public bool AcceptByDefault = true;
 
         [Header("Events")]
         [SerializeField]
