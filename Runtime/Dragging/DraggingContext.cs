@@ -12,13 +12,19 @@ namespace Brainamics.Core
 
         public IList<RaycastHit> RaycastHits { get; } = new List<RaycastHit>();
 
-        public IDraggable Draggable { get; set; }
+        public IDraggable Draggable { get; private set; }
 
         public GameObject DraggableObject { get; private set; }
 
         public bool PointerDragging { get; private set; }
 
         public Vector2 PointerPosition { get; set; }
+
+        public void SetDraggable(IDraggable draggable, GameObject draggableObj)
+        {
+            Draggable = draggable;
+            DraggableObject = draggableObj;
+        }
 
         public void UpdateEventData(Vector2 pointerPosition)
         {

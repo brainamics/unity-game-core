@@ -103,7 +103,7 @@ namespace Brainamics.Core
 
         private void Awake()
         {
-            _context.Draggable = this;
+            _context.SetDraggable(this, gameObject);
         }
 
         private void OnEnable()
