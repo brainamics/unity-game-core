@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
-    public interface IDraggable
+    public interface IDraggable : IBehaviour
     {
         bool IsDragging { get; }
 

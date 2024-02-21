@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
-    public interface IDropZone
+    public interface IDropZone : IBehaviour
     {
         UnityEvent<IDropZone> OnDraggingEnter { get; }
 
