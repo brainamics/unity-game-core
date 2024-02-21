@@ -107,6 +107,10 @@ namespace Brainamics.Core
             _context.Draggable = this;
         }
 
+        private void OnEnable()
+        {
+        }
+
         private void SetCurrentZone(IDropZone zone)
         {
             if (Equals(zone, _zone))
