@@ -1,5 +1,4 @@
 using Brainamics.Core;
-using Facebook.Unity.Example;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
