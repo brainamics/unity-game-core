@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
+    [AnimationClip(MenuName = "Invoke")]
     public class InvokeAnimationClip : AnimationClipBase
     {
         public UnityEvent OnInvoke;
