@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [System.Serializable]
+    [AnimationClip(MenuName = "Game Object/Destroy")]
     public class DestroyAnimationClip : TransformAnimationClipBase
     {
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
