@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -35,6 +36,11 @@ namespace Brainamics.Core
         {
             if (PlayOnEnable)
                 Play();
+        }
+
+        private void OnValidate()
+        {
+            while (_clips.Remove(null)) ;
         }
     }
 }
