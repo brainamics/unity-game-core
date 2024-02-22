@@ -20,6 +20,8 @@ namespace Brainamics.Core
 
         public AnimationClipTimeSettings TimeSettings;
 
+        public event Action<AnimationClipBase> OnPlayComplete;
+
         public bool IsPlaying => _coroutine != null;
 
         protected float Time => TimeSettings.UnscaledTime ? UnityEngine.Time.unscaledTime : UnityEngine.Time.time;
@@ -47,6 +49,23 @@ namespace Brainamics.Core
             return $"{GetType()}," + JsonUtility.ToJson(this);
         }
 
+        public virtual void PlayImmediate(MonoBehaviour behaviour)
+        {
+            var originalImmediate = TimeSettings.Immediate;
+            if (!originalImmediate)
+            {
+                TimeSettings.Immediate = true;
+                OnPlayComplete += HandlePlayComplete;
+            }
+            Play(behaviour);
+
+            void HandlePlayComplete(AnimationClipBase clip)
+            {
+                TimeSettings.Immediate = originalImmediate;
+                OnPlayComplete -= HandlePlayComplete;
+            }
+        }
+
         public virtual void Play(MonoBehaviour behaviour)
         {
             behaviour.StartMonoCoroutine(ref _coroutine, PlayCo());
@@ -64,6 +83,7 @@ namespace Brainamics.Core
                         yield return enumerator.Current;
                 } while (_keepPlaying && TimeSettings.Loop);
 
+                OnPlayComplete?.Invoke(this);
                 _coroutine = null;
             }
         }
