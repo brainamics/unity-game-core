@@ -155,6 +155,8 @@ namespace Brainamics.Core
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
+            if (!IsDragging)
+                return;
             UpdateDragging(eventData.position);
             EndDraggging(eventData.position);
         }
