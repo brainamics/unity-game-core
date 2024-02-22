@@ -20,6 +20,12 @@ namespace Brainamics.Core
                 clip.Play(this);
         }
 
+        public void PlayImmediate()
+        {
+            foreach (var clip in _clips)
+                clip.PlayImmediate(this);
+        }
+
         public void Stop()
         {
             foreach (var clip in _clips)
