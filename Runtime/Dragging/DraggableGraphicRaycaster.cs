@@ -9,13 +9,24 @@ namespace Brainamics.Core
     [DefaultExecutionOrder(-9)]
     public class DraggableGraphicRaycaster : DraggableRaycasterBase
     {
+        public enum FeedbackModes
+        {
+            Pointer,
+            TransformPosition,
+            FeedbackPoints,
+        }
+
         private readonly List<RaycastResult> _raycastResults = new();
 
+        [Header("Elements")]
         public Canvas Canvas;
         public RectTransform RectTransform;
         public GraphicRaycaster Raycaster;
         public EventSystem EventSystem;
-        public bool UseDraggableCenter;
+
+        [Header("Feedback")]
+        public FeedbackModes FeedbackMode = FeedbackModes.Pointer;
+        public Transform[] FeedbackPoints;
 
         protected override void Awake()
         {
@@ -29,19 +40,35 @@ namespace Brainamics.Core
                 EventSystem = EventSystem.current;
             if (RectTransform == null)
                 RectTransform = GetComponent<RectTransform>();
-            if (RectTransform == null && UseDraggableCenter)
+            if (RectTransform == null && FeedbackMode == FeedbackModes.TransformPosition)
                 throw new System.InvalidOperationException("Could not find a RectTransform.");
         }
 
         protected override void UpdateDrag(Ray ray, DraggingContext context)
         {
-            Vector2 pos;
+            switch (FeedbackMode)
+            {
+                case FeedbackModes.Pointer:
+                    DoRaycast(context, RaycastingCamera.WorldToScreenPoint(ray.origin));
+                    break;
 
-            if (UseDraggableCenter)
-                pos = RectTransform.position;
-            else
-                pos = RaycastingCamera.WorldToScreenPoint(ray.origin);
+                case FeedbackModes.TransformPosition:
+                    DoRaycast(context, RectTransform.position);
+                    break;
 
+                case FeedbackModes.FeedbackPoints:
+                    foreach (var point in FeedbackPoints)
+                        if (DoRaycast(context, point.position))
+                            break;
+                    break;
+
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+
+        private bool DoRaycast(DraggingContext context, Vector3 pos)
+        {
             var eventData = new PointerEventData(EventSystem)
             {
                 position = pos,
@@ -51,6 +78,7 @@ namespace Brainamics.Core
             Raycaster.Raycast(eventData, _raycastResults);
             context.RaycastResults.Clear();
             context.RaycastResults.AddRange(_raycastResults);
+            return _raycastResults.Count > 0;
         }
     }
 }
