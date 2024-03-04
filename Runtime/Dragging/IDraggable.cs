@@ -9,6 +9,8 @@ namespace Brainamics.Core
     {
         bool IsDragging { get; }
 
+        IDropZone ActiveZone { get; }
+
         DraggingContext Context { get; }
 
         UnityEvent<IDraggable> OnDraggingStart { get; }
@@ -18,6 +20,8 @@ namespace Brainamics.Core
         UnityEvent<IDraggable> OnDragging { get; }
 
         UnityEvent<IDraggable, IDropZone> OnDrop { get; }
+
+        UnityEvent<IDraggable> OnZoneChanged { get; }
 
         System.IDisposable RegisterDragHandler(DraggingUpdateDelegate handler);
 
