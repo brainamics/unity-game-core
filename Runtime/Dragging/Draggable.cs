@@ -33,6 +33,11 @@ namespace Brainamics.Core
         [SerializeField]
         public UnityEvent<IDraggable, IDropZone> _onDrop;
 
+        [SerializeField]
+        public UnityEvent<IDraggable> _onZoneChanged;
+
+        public IDropZone ActiveZone => _zone;
+
         public bool IsDragging { get; private set; }
 
         public Func<IReadOnlyList<IDropZone>, IDropZone> ZoneSelector { get; set; }
@@ -46,6 +51,8 @@ namespace Brainamics.Core
         public UnityEvent<IDraggable> OnDragging => _onDragging;
 
         public UnityEvent<IDraggable, IDropZone> OnDrop => _onDrop;
+
+        public UnityEvent<IDraggable> OnZoneChanged => _onZoneChanged;
 
         public Draggable()
         {
@@ -122,9 +129,9 @@ namespace Brainamics.Core
             }
 
             _zone = zone;
-            if (zone == null)
-                return;
-            zone.NotifyEnter(Context);
+            if (zone != null)
+                zone.NotifyEnter(Context);
+            OnZoneChanged.Invoke(this);
         }
 
         private void UpdateZone()
