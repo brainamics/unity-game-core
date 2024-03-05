@@ -4,25 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UIPopup : MonoBehaviour, IUIPopup
+namespace Brainamics.Core
 {
-    private bool _visible;
-
-    [Header("Events")]
-    [SerializeField]
-    private UnityEvent<IUIPopup> _onVisibilityChanged;
-
-    public bool IsVisible
+    public class UIPopup : MonoBehaviour, IUIPopup
     {
-        get => _visible;
-        set
+        private bool _visible;
+    
+        [Header("Events")]
+        [SerializeField]
+        private UnityEvent<IUIPopup> _onVisibilityChanged;
+    
+        public bool IsVisible
         {
-            if (_visible == value)
-                return;
-            _visible = value;
-            OnVisibilityChanged.Invoke(this);
+            get => _visible;
+            set
+            {
+                if (_visible == value)
+                    return;
+                _visible = value;
+                OnVisibilityChanged.Invoke(this);
+            }
         }
+    
+        public UnityEvent<IUIPopup> OnVisibilityChanged => _onVisibilityChanged;
     }
-
-    public UnityEvent<IUIPopup> OnVisibilityChanged => _onVisibilityChanged;
 }
