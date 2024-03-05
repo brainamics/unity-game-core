@@ -22,10 +22,15 @@ namespace Brainamics.Core
                 if (_visible == value)
                     return;
                 _visible = value;
+                HandleVisibilityChanged();
                 OnVisibilityChanged.Invoke(this);
             }
         }
     
         public UnityEvent<IUIPopup> OnVisibilityChanged => _onVisibilityChanged;
+
+        protected virtual void HandleVisibilityChanged()
+        {
+        }
     }
 }
