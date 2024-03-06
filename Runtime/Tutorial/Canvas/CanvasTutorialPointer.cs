@@ -71,6 +71,7 @@ namespace Brainamics.Core
         protected virtual void Awake()
         {
             InitializeCanvas();
+            PointAt(TutorialPointAtRequest.InvisibleImmediate);
         }
 
         protected virtual void OnEnable() { }
@@ -157,7 +158,7 @@ namespace Brainamics.Core
                 SetPositionImmediate(position, request);
                 yield break;
             }
-            
+
             var duration = request.TransitionDuration > 0 ? request.TransitionDuration : DefaultPositionTransitionDuration;
             var curve = request.TransitionCurve ?? DefaultPositionTransitionAnimation;
             var startTime = Time.time;
