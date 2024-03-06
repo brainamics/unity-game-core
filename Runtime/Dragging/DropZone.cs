@@ -94,6 +94,8 @@ namespace Brainamics.Core
 
         public bool Accepts(IDraggable draggable, DraggingContext context)
         {
+            if (!isActiveAndEnabled)
+                return false;
             if (_acceptHandlers.Count == 0)
                 return AcceptByDefault;
 
