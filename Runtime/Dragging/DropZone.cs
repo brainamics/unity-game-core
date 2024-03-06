@@ -102,5 +102,14 @@ namespace Brainamics.Core
                     return false;
             return true;
         }
+
+        // Just to make sure component can be disabled
+        protected virtual void OnEnable()
+        {
+        }
+
+        protected virtual void OnDisable()
+        {
+        }
     }
 }
