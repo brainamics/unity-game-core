@@ -8,7 +8,7 @@ namespace Brainamics.Core
 {
     public static class DOTweenExtensions
     {
-        public static T OnComplete<T>(this T t, TweenCallback action) where T : Tween
+        public static T WhenDone<T>(this T t, TweenCallback action) where T : Tween
         {
             if (t.IsComplete())
             {
