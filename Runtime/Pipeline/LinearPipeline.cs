@@ -7,11 +7,20 @@ namespace Brainamics.Core
 {
     public class LinearPipeline
     {
-        private readonly Queue<System.Action> _actionQueue = new();
+        private readonly Queue<PipelineAction> _actionQueue = new();
         private readonly HashSet<object> _feedbacks = new();
         private readonly HashSet<System.Action> _processors = new();
 
         public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
+
+        public void EnqueueAction(PipelineAction action)
+        {
+            // TODO check ID for duplicates
+            _actionQueue.Enqueue(action);
+        }
+
+        public void EnqueueAction(object id, System.Action action)
+            => EnqueueAction(new PipelineAction(id, action));
 
         public void RegisterProcessor(System.Action processor)
             => _processors.Add(processor);
@@ -52,7 +61,7 @@ namespace Brainamics.Core
             if (!_actionQueue.TryDequeue(out var action))
                 return false;
 
-            action.Invoke();
+            action.Action.Invoke();
             return true;
         }
     }
