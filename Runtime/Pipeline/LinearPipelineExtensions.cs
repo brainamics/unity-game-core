@@ -7,12 +7,12 @@ namespace Brainamics.Core
 {
     public static class LinearPipelineExtensions
     {
-        public static Coroutine StartCoroutine(this LinearPipeline pipeline, MonoBehaviour host, IEnumerator routine)
+        public static Coroutine StartCoroutine(this LinearPipeline pipeline, MonoBehaviour host, IEnumerator routine, Action doneCallback = null)
         {
             var feedbackHandle = pipeline.RegisterFeedbackHandle();
-            return host.StartCoroutine(ExecuteCo(routine, feedbackHandle));
+            return host.StartCoroutine(ExecuteCo(routine, feedbackHandle, doneCallback));
 
-            static IEnumerator ExecuteCo(IEnumerator routine, IDisposable feedbackHandle)
+            static IEnumerator ExecuteCo(IEnumerator routine, IDisposable feedbackHandle, Action doneCallback)
             {
                 try
                 {
@@ -22,6 +22,7 @@ namespace Brainamics.Core
                 finally
                 {
                     feedbackHandle.Dispose();
+                    doneCallback?.Invoke();
                 }
             }
         }
