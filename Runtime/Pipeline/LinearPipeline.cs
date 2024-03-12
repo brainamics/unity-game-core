@@ -22,6 +22,9 @@ namespace Brainamics.Core
         public void EnqueueAction(object id, System.Action action)
             => EnqueueAction(new PipelineAction(id, action));
 
+        public void EnqueueAction(System.Action action)
+            => EnqueueAction(new PipelineAction(action));
+
         public void RegisterProcessor(System.Action processor)
             => _processors.Add(processor);
 
