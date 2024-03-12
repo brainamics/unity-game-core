@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,6 +36,13 @@ namespace Brainamics.Core
         {
             RegisterFeedbackHandle(task);
             task.ContinueWith(UnregisterFeedbackHandle);
+        }
+
+        public IDisposable RegisterFeedbackHandle()
+        {
+            var handle = new object();
+            RegisterFeedbackHandle(handle);
+            return new CallbackDisposable(() => UnregisterFeedbackHandle(handle));
         }
 
         public void RegisterFeedbackHandle(object feedback)
