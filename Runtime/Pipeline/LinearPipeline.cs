@@ -53,10 +53,18 @@ namespace Brainamics.Core
             foreach (var processor in _processors)
                 processor.Invoke();
 
-            if (AnyOngoingFeedbacks)
-                return false;
+            var processed = false;
 
-            return ExecuteAction();
+            while (true)
+            {
+                if (AnyOngoingFeedbacks)
+                    return processed;
+
+                var result = ExecuteAction();
+                if (!result)
+                    return processed;
+                processed = true;
+            }
         }
 
         public bool ExecuteAction()
