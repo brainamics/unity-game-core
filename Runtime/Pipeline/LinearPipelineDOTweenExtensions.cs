@@ -13,7 +13,7 @@ namespace Brainamics.Core
             if (tween.IsComplete())
                 return;
             pipeline.RegisterFeedbackHandle(tween);
-            tween.OnComplete(() =>
+            tween.WhenDone(() =>
             {
                 pipeline.UnregisterFeedbackHandle(tween);
             });
