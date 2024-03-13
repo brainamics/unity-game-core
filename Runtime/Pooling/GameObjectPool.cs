@@ -54,6 +54,7 @@ namespace Brainamics.Core
             if (obj == null)
                 return;
             _pool.Return(obj);
+            obj.transform.SetParent(_parent, false);
         }
 
         protected virtual GameObject CreateNew()
