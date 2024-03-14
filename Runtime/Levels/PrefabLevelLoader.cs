@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Brainamics.Core
 {
@@ -26,7 +29,16 @@ namespace Brainamics.Core
                 return;
 
             UnloadLevel();
-            LoadedLevel = Instantiate(LevelPrefab, _host);
+#if UNITY_EDITOR
+            if (Application.isEditor)
+            {
+                LoadedLevel = (GameObject)PrefabUtility.InstantiatePrefab(LevelPrefab, _host);
+            }
+            else
+#endif
+            {
+                LoadedLevel = Instantiate(LevelPrefab, _host);
+            }
             OnLevelLoaded.Invoke();
         }
 
@@ -35,7 +47,10 @@ namespace Brainamics.Core
             if (LoadedLevel == null)
                 return;
 
-            Destroy(LoadedLevel);
+            if (Application.isEditor)
+                DestroyImmediate(LoadedLevel);
+            else
+                Destroy(LoadedLevel);
             LoadedLevel = null;
             LevelPrefab = null;
             OnLevelUnloaded.Invoke();
