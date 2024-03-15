@@ -23,6 +23,8 @@ namespace Brainamics.Core
 
         public GameObject LoadedLevel { get; private set; }
 
+        public bool IsLevelLoaded => LoadedLevel != null;
+
         public void LoadLevel(GameObject levelPrefab)
         {
             if (levelPrefab == LevelPrefab)
