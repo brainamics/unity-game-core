@@ -9,6 +9,7 @@ using UnityEditor;
 namespace Brainamics.Core
 {
     [ExecuteAlways]
+    [DefaultExecutionOrder(-50)]
     public class PrefabLevelLoader : MonoBehaviour
     {
         [SerializeField]
