@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Brainamics.Core
 {
     [DefaultExecutionOrder(-99)]
@@ -62,7 +66,11 @@ namespace Brainamics.Core
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying)
-                return CreateNew();
+            {
+                var obj = CreateNew();
+                Undo.RegisterCreatedObjectUndo(obj, "Create pool object");
+                return obj;
+            }
 #endif
             return _pool.Rent();
         }
@@ -72,7 +80,7 @@ namespace Brainamics.Core
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                DestroyImmediate(obj);
+                Undo.DestroyObjectImmediate(obj);
                 return;
             }
 #endif
