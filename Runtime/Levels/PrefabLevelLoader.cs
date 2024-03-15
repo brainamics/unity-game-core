@@ -27,6 +27,7 @@ namespace Brainamics.Core
         {
             if (levelPrefab == LevelPrefab)
                 return;
+            LevelPrefab = levelPrefab;
 
             UnloadLevel();
 #if UNITY_EDITOR

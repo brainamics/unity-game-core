@@ -1,0 +1,18 @@
+{
+    "name": "com.brainamics.core.editor",
+    "rootNamespace": "Brainamics.Core",
+    "references": [
+        "GUID:2dadc5bdbcaa3ad48bc62d1885ae51ed"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
