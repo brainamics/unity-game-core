@@ -70,7 +70,8 @@ namespace Brainamics.Core
 
         protected virtual void OnDisable()
         {
-            UnloadLevel();
+            if (Application.isPlaying)
+                UnloadLevel();
         }
 
         protected virtual void DetectActiveLevel()
