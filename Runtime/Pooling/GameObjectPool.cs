@@ -59,10 +59,23 @@ namespace Brainamics.Core
             => _pool.TrimExcess();
 
         public GameObject Rent()
-            => _pool.Rent();
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return CreateNew();
+#endif
+            return _pool.Rent();
+        }
 
         public void Return(GameObject obj)
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                DestroyImmediate(obj);
+                return;
+            }
+#endif
             if (obj == null)
                 return;
             _pool.Return(obj);
