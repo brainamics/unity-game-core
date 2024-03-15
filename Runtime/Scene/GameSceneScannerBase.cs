@@ -52,18 +52,23 @@ namespace Brainamics.Core
 
         protected virtual void OnDestroyInternal() { }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             SceneScannersManager.Register((TGameSceneScanner)this);
             AwakeInternal();
         }
 
-        private void Start()
+        protected virtual void OnEnable()
+        {
+            SceneScannersManager.Register((TGameSceneScanner)this);
+        }
+
+        protected virtual void Start()
         {
             StartInternal();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             OnDestroying?.Invoke((TGameSceneScanner)this);
             SceneScannersManager.Unregister((TGameSceneScanner)this);

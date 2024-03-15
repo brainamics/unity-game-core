@@ -94,12 +94,17 @@ namespace Brainamics.Core
         /// </summary>
         public static void Register<TGameSceneScanner>(TGameSceneScanner scanner)
             where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
+            => Register(scanner, false);
+
+        /// <summary>
+        /// Registers a scanner on the manager.
+        /// </summary>
+        public static void Register<TGameSceneScanner>(TGameSceneScanner scanner, bool allowOverwrite)
+            where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
         {
             var scene = scanner.gameObject.scene;
-#if DEBUG
-            if (_managers[scene] != null)
+            if (!allowOverwrite && _managers[scene] != null && _managers[scene] != scanner)
                 throw new InvalidOperationException("There is another manager associated with the current scene already.");
-#endif
             _managers[scene] = scanner;
             OnScannerCreated?.Invoke(scanner);
         }
