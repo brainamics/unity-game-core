@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    public abstract class LevelEditorWindow<TLevel> : EditorWindow
+    public abstract class LevelEditorWindowBase<TLevel> : EditorWindow
         where TLevel : Behaviour
     {
         private bool _selectionFoldout = true;
@@ -28,7 +28,7 @@ namespace Brainamics.Core
         [MenuItem("Tools/Level Editor")]
         public static void OpenWindow()
         {
-            var window = GetWindow<LevelEditorWindow<TLevel>>("Level Editor");
+            var window = GetWindow<LevelEditorWindowBase<TLevel>>("Level Editor");
             window.Show();
         }
 
