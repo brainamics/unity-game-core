@@ -20,7 +20,7 @@ namespace Brainamics.Core
         public UnityEvent OnLevelLoaded;
         public UnityEvent OnLevelUnloaded;
 
-        public GameObject LevelPrefab { get; private set; }
+        public GameObject LevelPrefab { get; protected set; }
 
         public GameObject LoadedLevel { get; private set; }
 
