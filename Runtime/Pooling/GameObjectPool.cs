@@ -19,6 +19,18 @@ namespace Brainamics.Core
         [SerializeField]
         private GameObject _prefab;
 
+        public GameObjectPool()
+        {
+            _pool = new ObjectPool<GameObject>
+            {
+                Factory = CreateNew,
+                DestroyHandler = DestroyObject,
+                SleepHandler = PutToSleep,
+                WakeHandler = WakeFromSleep,
+                Capacity = _capacity,
+            };
+        }
+
         [SerializeField]
         private Transform _parent;
 
@@ -83,18 +95,6 @@ namespace Brainamics.Core
             foreach (var recyclable in obj.GetComponents<IRecyclable>())
                 recyclable.Recycle();
             obj.SetActive(true);
-        }
-
-        private void Awake()
-        {
-            _pool = new ObjectPool<GameObject>
-            {
-                Factory = CreateNew,
-                DestroyHandler = DestroyObject,
-                SleepHandler = PutToSleep,
-                WakeHandler = WakeFromSleep,
-                Capacity = _capacity,
-            };
         }
 
         private void OnDestroy()
