@@ -25,12 +25,12 @@ namespace Brainamics.Core
 
         private bool HasUnsavedChanges => PrefabUtility.HasPrefabInstanceAnyOverrides(LevelHost.LoadedLevel, false);
 
-        [MenuItem("Tools/Level Editor")]
-        public static void OpenWindow()
-        {
-            var window = GetWindow<LevelEditorWindowBase<TLevel>>("Level Editor");
-            window.Show();
-        }
+        //[MenuItem("Tools/Level Editor")]
+        //public static void OpenWindow()
+        //{
+        //    var window = GetWindow<LevelEditorWindowBase<TLevel>>("Level Editor");
+        //    window.Show();
+        //}
 
         protected virtual void OnEnable()
         {
