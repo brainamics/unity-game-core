@@ -93,7 +93,8 @@ namespace Brainamics.Core
         protected virtual GameObject CreateNew()
         {
             var obj = Instantiate(_prefab, _parent);
-            if (AddPoolReferenceComponent)
+
+            if (AddPoolReferenceComponent && Application.isPlaying)
             {
                 var pooledObj = obj.AddComponent<PooledObject>();
                 pooledObj.Pool = this;
