@@ -128,6 +128,7 @@ namespace Brainamics.Core
         {
             var instance = LevelHost.LoadedLevel;
             PrefabUtility.ApplyPrefabInstance(instance, InteractionMode.UserAction);
+            PrefabUtility.RevertPrefabInstance(instance, InteractionMode.UserAction);
         }
 
         protected virtual void RenderLevelEditor()
