@@ -14,6 +14,7 @@ namespace Brainamics.Core
 
         public TimeScaleAnimationClip()
         {
+            TimeSettings ??= new();
             TimeSettings.UnscaledTime = true;
         }
 
