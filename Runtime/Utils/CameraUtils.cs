@@ -6,26 +6,16 @@ namespace Brainamics.Core
 {
     public static class CameraUtils
     {
-        public static void FitToBounds(Camera camera, Bounds bounds, bool adjustPosition = true)
+        public static void FitToBoundsZ(Camera camera, Bounds bounds, bool adjustPosition = true)
         {
-            var screenAspect = Screen.width / Screen.height;
-            var boundsAspect = bounds.size.x / bounds.size.y;
+            var screenAspect = (float)Screen.width / Screen.height;
+            var boundsAspect = bounds.size.x / bounds.size.z;
 
             var orthographicSize = bounds.size.y / 2;
 
-            //if (boundsAspect > screenAspect)
-            //{
-            //    orthographicSize = bounds.size.x / (2 * screenAspect);
-            //}
-
-            if (screenAspect >= boundsAspect)
+            if (boundsAspect > screenAspect)
             {
-                orthographicSize = bounds.size.y / 2;
-            }
-            else
-            {
-                var differenceInSize = boundsAspect / screenAspect;
-                orthographicSize = bounds.size.y / 2 * differenceInSize;
+                orthographicSize = bounds.size.x / (2 * screenAspect);
             }
 
             camera.orthographicSize = orthographicSize;
