@@ -39,7 +39,7 @@ namespace Brainamics.Core
 
             UnloadLevel();
 #if UNITY_EDITOR
-            if (Application.isEditor)
+            if (!Application.isPlaying)
             {
                 LoadedLevel = (GameObject)PrefabUtility.InstantiatePrefab(LevelPrefab, _host);
             }
@@ -56,10 +56,14 @@ namespace Brainamics.Core
             if (LoadedLevel == null)
                 return;
 
+#if UNITY_EDITOR
             if (Application.isPlaying)
                 Destroy(LoadedLevel);
             else
                 DestroyImmediate(LoadedLevel);
+#else
+            Destroy(LoadedLevel);
+#endif
             LoadedLevel = null;
             LevelPrefab = null;
             OnLevelUnloaded.Invoke();
