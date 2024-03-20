@@ -56,10 +56,10 @@ namespace Brainamics.Core
             if (LoadedLevel == null)
                 return;
 
-            if (Application.isEditor)
-                DestroyImmediate(LoadedLevel);
-            else
+            if (Application.isPlaying)
                 Destroy(LoadedLevel);
+            else
+                DestroyImmediate(LoadedLevel);
             LoadedLevel = null;
             LevelPrefab = null;
             OnLevelUnloaded.Invoke();
