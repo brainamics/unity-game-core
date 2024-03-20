@@ -8,6 +8,11 @@ namespace Brainamics.Core
 {
     public static class DOTweenExtensions
     {
+        public static bool IsKilled<T>(this T t) where T : Tween
+        {
+            return !t.IsActive() && !t.IsComplete();
+        }
+
         public static T WhenDone<T>(this T t, TweenCallback action) where T : Tween
         {
             if (t.IsComplete())
