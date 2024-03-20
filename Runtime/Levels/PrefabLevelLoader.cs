@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor.SceneManagement;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -42,6 +44,7 @@ namespace Brainamics.Core
             if (!Application.isPlaying)
             {
                 LoadedLevel = (GameObject)PrefabUtility.InstantiatePrefab(LevelPrefab, _host);
+                EditorSceneManager.MarkSceneDirty(LoadedLevel.scene);
             }
             else
 #endif
@@ -60,7 +63,10 @@ namespace Brainamics.Core
             if (Application.isPlaying)
                 Destroy(LoadedLevel);
             else
+            {
+                EditorSceneManager.MarkSceneDirty(LoadedLevel.scene);
                 DestroyImmediate(LoadedLevel);
+            }
 #else
             Destroy(LoadedLevel);
 #endif
