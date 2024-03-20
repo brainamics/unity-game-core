@@ -15,6 +15,8 @@ namespace Brainamics.Core
         [SerializeField]
         private Transform _host;
 
+        public bool AllowLevelReloading = true;
+
         [Header("Events")]
         public UnityEvent OnLevelChanged;
         public UnityEvent OnLevelLoaded;
@@ -27,8 +29,11 @@ namespace Brainamics.Core
         public bool IsLevelLoaded => LoadedLevel != null;
 
         public void LoadLevel(GameObject levelPrefab)
+            => LoadLevel(levelPrefab, AllowLevelReloading);
+
+        public void LoadLevel(GameObject levelPrefab, bool allowLevelReloading)
         {
-            if (levelPrefab == LevelPrefab)
+            if (levelPrefab == LevelPrefab && !allowLevelReloading)
                 return;
             LevelPrefab = levelPrefab;
 
