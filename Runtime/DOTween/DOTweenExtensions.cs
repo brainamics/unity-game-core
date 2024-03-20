@@ -19,6 +19,18 @@ namespace Brainamics.Core
             t.onComplete += action;
             return t;
         }
+
+        public static T WhenKilled<T>(this T t, TweenCallback action) where T : Tween
+        {
+            if (t.IsKilled())
+            {
+                action.Invoke();
+                return t;
+            }
+
+            t.onKill += action;
+            return t;
+        }
     }
 }
 #endif
