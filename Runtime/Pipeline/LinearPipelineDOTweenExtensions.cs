@@ -17,6 +17,10 @@ namespace Brainamics.Core
             {
                 pipeline.UnregisterFeedbackHandle(tween);
             });
+            tween.WhenKilled(() =>
+            {
+                pipeline.UnregisterFeedbackHandle(tween);
+            });
         }
     }
 }
