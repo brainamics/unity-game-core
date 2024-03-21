@@ -14,6 +14,12 @@ namespace Brainamics.Core
 
         public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
 
+        public void Clear()
+        {
+            _actionQueue.Clear();
+            _feedbacks.Clear();
+        }
+
         public void EnqueueAction(PipelineAction action)
         {
             // TODO check ID for duplicates
