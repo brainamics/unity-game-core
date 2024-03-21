@@ -21,45 +21,38 @@ namespace Brainamics.Core
             };
         }
 
-        public static float Get(Vector2 range, AnimationCurve curve, int samples = 1000)
+        public static float Get(Vector2 range, AnimationCurve curve, int steps, OddsRandomizer<float> randomizer)
         {
-            return Get(range.x, range.y, curve, samples);
+            if (steps <= 0)
+                throw new System.ArgumentOutOfRangeException(nameof(steps));
+            if (curve.keys.Length == 0)
+                return range.x;
+            var minKey = curve.keys[0];
+            var maxKey = curve.keys[^1];
+
+            // 1. Get the overall integral (sum)
+            var integral = MathUtils.IntegrateCurve(curve, minKey.time, maxKey.time, steps);
+
+            // 2. Iterate through samples and create an odds randomizer out of it
+            var stepSize = (maxKey.time - minKey.time) / steps;
+            randomizer.Clear();
+            for (var i = 0; i < steps; i++)
+            {
+                var time = minKey.time + (i * stepSize) + stepSize / 2f;
+                var rawOdds = curve.Evaluate(time);
+                var relativeOdds = rawOdds / integral;
+                randomizer.AddOdds(time, relativeOdds);
+            }
+
+            // 3. Execute the randomizer
+            var randomVal = randomizer.Randomize();
+            return MathUtils.Remap(randomVal, minKey.time, maxKey.time, range.x, range.y);
         }
 
-        public static float Get(float min, float max, AnimationCurve curve, int samples = 1000)
+        public static float Get(Vector2 range, AnimationCurve curve, int steps)
         {
-            // 1. Sample the curve to build a cumulative distribution function (CDF)
-            var cdf = new float[samples];
-            var totalArea = 0f;
-            var stepSize = (max - min) / (samples - 1);
-
-            for (var i = 0; i < samples; i++)
-            {
-                var x = min + stepSize * i;
-                var y = curve.Evaluate(x);
-                totalArea += y;
-                cdf[i] = totalArea;
-            }
-
-            // 2. Normalize the CDF
-            for (var i = 0; i < samples; i++)
-            {
-                cdf[i] /= totalArea;
-            }
-
-            // 3. Use a random value to select a position in the CDF
-            var randomValue = Random.value;
-            for (var i = 0; i < samples; i++)
-            {
-                if (randomValue <= cdf[i])
-                {
-                    // Return the corresponding x value
-                    return min + stepSize * i;
-                }
-            }
-
-            // In case of an error or edge case, return the max value
-            return max;
+            var randomizer = new OddsRandomizer<float>();
+            return Get(range, curve, steps, randomizer);
         }
     }
 }
