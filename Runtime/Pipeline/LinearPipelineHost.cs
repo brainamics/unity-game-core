@@ -8,7 +8,19 @@ namespace Brainamics.Core
     {
         public LinearPipeline Pipeline { get; } = new();
 
-        private void Update()
+        protected virtual void Awake()
+        {
+        }
+
+        protected virtual void OnEnable()
+        {
+        }
+
+        protected virtual void OnDisable()
+        {
+        }
+
+        protected virtual void Update()
         {
             Pipeline.TriggerProcess();
         }
