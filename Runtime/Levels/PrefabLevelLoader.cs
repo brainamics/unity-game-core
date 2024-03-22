@@ -61,14 +61,16 @@ namespace Brainamics.Core
 
 #if UNITY_EDITOR
             if (Application.isPlaying)
-                Destroy(LoadedLevel);
+            {
+                DestroyImmediate(LoadedLevel);
+            }
             else
             {
                 EditorSceneManager.MarkSceneDirty(LoadedLevel.scene);
                 DestroyImmediate(LoadedLevel);
             }
 #else
-            Destroy(LoadedLevel);
+            DestroyImmediate(LoadedLevel);
 #endif
             LoadedLevel = null;
             LevelPrefab = null;
