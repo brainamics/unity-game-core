@@ -8,9 +8,10 @@ namespace Brainamics.Core
 {
     public class LinearPipeline
     {
-        private readonly Queue<PipelineAction> _actionQueue = new();
+        private readonly PriorityQueue<PipelineAction, PipelinePriority> _actionQueue = new();
         private readonly HashSet<object> _feedbacks = new();
         private readonly HashSet<System.Action> _processors = new();
+        private int _queueIndex = int.MinValue;
 
         public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
 
@@ -20,10 +21,11 @@ namespace Brainamics.Core
             _feedbacks.Clear();
         }
 
-        public void EnqueueAction(PipelineAction action)
+        public void EnqueueAction(PipelineAction action, int priority = 0)
         {
             // TODO check ID for duplicates
-            _actionQueue.Enqueue(action);
+            var pipelinePriority = CreatePriority(priority);
+            _actionQueue.Enqueue(action, pipelinePriority);
         }
 
         public void EnqueueAction(object id, System.Action action)
@@ -83,11 +85,19 @@ namespace Brainamics.Core
 
         public bool ExecuteAction()
         {
-            if (!_actionQueue.TryDequeue(out var action))
+            if (!_actionQueue.TryDequeue(out var action, out _))
                 return false;
 
             action.Action.Invoke();
             return true;
+        }
+
+        private PipelinePriority CreatePriority(int priority = 0)
+        {
+            unchecked
+            {
+                return new PipelinePriority(priority, _queueIndex++);
+            }
         }
     }
 }
