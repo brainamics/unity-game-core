@@ -28,11 +28,11 @@ namespace Brainamics.Core
             _actionQueue.Enqueue(action, pipelinePriority);
         }
 
-        public void EnqueueAction(object id, System.Action action)
-            => EnqueueAction(new PipelineAction(id, action));
+        public void EnqueueAction(object id, System.Action action, int priority= 0)
+            => EnqueueAction(new PipelineAction(id, action), priority);
 
-        public void EnqueueAction(System.Action action)
-            => EnqueueAction(new PipelineAction(action));
+        public void EnqueueAction(System.Action action, int priority= 0)
+            => EnqueueAction(new PipelineAction(action), priority);
 
         public void RegisterProcessor(System.Action processor)
             => _processors.Add(processor);
