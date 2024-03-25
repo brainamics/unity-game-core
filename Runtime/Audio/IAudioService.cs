@@ -67,7 +67,7 @@ namespace Brainamics.Core
         {
             const float SafetyDuration = 0.5f;
             audioService.PlayOneShot(AudioKind.Effect, audio, clip);
-            DG.Tweening.DOVirtual.DelayedCall(SafetyDuration, audio.gameObject.Destroy);
+            DG.Tweening.DOVirtual.DelayedCall(clip.length + SafetyDuration, audio.gameObject.Destroy);
         }
 #endif
     }
