@@ -40,7 +40,13 @@ namespace Brainamics.Core
             audioService.Play(AudioKind.Music, source);
         }
 
+        [System.Obsolete("Use PlayOneShot overload instead")]
         public static void PlayEffectOneShot(this IAudioService audioService, AudioSource audio, AudioClip clip)
+        {
+            audioService.PlayOneShot(AudioKind.Effect, audio, clip);
+        }
+
+        public static void PlayOneShot(this IAudioService audioService, AudioSource audio, AudioClip clip)
         {
             audioService.PlayOneShot(AudioKind.Effect, audio, clip);
         }
@@ -49,11 +55,20 @@ namespace Brainamics.Core
         {
             AudioClip clip = clips.Count switch
             {
-                    0 => null,
-                    1 => clips[0],
-                    _ => clips[Random.Range(0, clips.Count)],
+                0 => null,
+                1 => clips[0],
+                _ => clips[Random.Range(0, clips.Count)],
             };
-            audioService.PlayEffectOneShot(audio, clip);
+            audioService.PlayOneShot(audio, clip);
         }
+
+#if DOTWEEN
+        public static void PlayOneShotAndDestroy(this IAudioService audioService, AudioSource audio, AudioClip clip)
+        {
+            const float SafetyDuration = 0.5f;
+            audioService.PlayOneShot(AudioKind.Effect, audio, clip);
+            DOVirtual.DelayedCall(SafetyDuration, audio.gameObject.Destroy);
+        }
+#endif
     }
 }
