@@ -77,6 +77,12 @@ namespace Brainamics.Core
 
         public void Return(GameObject obj)
         {
+            if (obj == null)
+            {
+                Debug.LogWarning("Prevented returning null (or destroyed) object into the pool.");
+                return;
+            }
+            
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
@@ -84,8 +90,6 @@ namespace Brainamics.Core
                 return;
             }
 #endif
-            if (obj == null)
-                return;
             _pool.Return(obj);
             obj.transform.SetParent(_parent, false);
         }
