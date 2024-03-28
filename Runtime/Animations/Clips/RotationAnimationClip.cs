@@ -11,7 +11,7 @@ namespace Brainamics.Core
         public bool LocalTransform = true;
         public bool AutoFromRotation;
         public Vector3 FromRotation;
-        public Vector3 ToRotation = Vector3.one;
+        public Vector3 ToRotation = new(0, 180, 0);
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
