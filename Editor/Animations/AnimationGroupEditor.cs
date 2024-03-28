@@ -13,7 +13,7 @@ namespace Brainamics.Core
     public class AnimationGroupEditor : Editor
     {
         private readonly List<Type> _clipTypes = new();
-        private SerializedProperty _clipsProperty, _playOnEnableProperty;
+        private SerializedProperty _clipsProperty, _playOnEnableProperty, _loopProperty;
 
         private AnimationGroup Target => target as AnimationGroup;
 
@@ -21,6 +21,7 @@ namespace Brainamics.Core
         {
             _clipsProperty = serializedObject.FindProperty("_clips");
             _playOnEnableProperty = serializedObject.FindProperty(nameof(AnimationGroup.PlayOnEnable));
+            _loopProperty = serializedObject.FindProperty(nameof(AnimationGroup.Loop));
 
             InitializeClipTypes();
         }
@@ -30,6 +31,7 @@ namespace Brainamics.Core
             serializedObject.Update();
 
             EditorGUILayout.PropertyField(_playOnEnableProperty);
+            EditorGUILayout.PropertyField(_loopProperty);
 
             EditorGUILayout.Space();
             GUILayout.Label("Clips", EditorStyles.boldLabel);
