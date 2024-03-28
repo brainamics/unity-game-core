@@ -8,10 +8,15 @@ namespace Brainamics.Core
     [AnimationClip(MenuName = "Game Object/Destroy")]
     public class DestroyAnimationClip : TransformAnimationClipBase
     {
+        public bool SupportPooling = true;
+
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var transform = GetTargetTransform(behaviour);
-            Object.Destroy(transform.gameObject);
+            if (SupportPooling)
+                transform.gameObject.Destroy();
+            else
+                Object.Destroy(transform.gameObject);
             yield break;
         }
     }
