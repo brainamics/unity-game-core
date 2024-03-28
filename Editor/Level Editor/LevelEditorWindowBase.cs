@@ -10,8 +10,8 @@ namespace Brainamics.Core
     public abstract class LevelEditorWindowBase<TLevel> : EditorWindow
         where TLevel : Behaviour
     {
-        private bool _selectionFoldout = true;
-        private bool _viewFoldout = true;
+        //private bool _selectionFoldout = true;
+        //private bool _viewFoldout = true;
 
         public virtual string EditorSceneName => "Editor Scene";
 

@@ -10,7 +10,7 @@ namespace Brainamics.Core
         {
             return Random.value >= 0.5;
         }
-        
+
         public static T Select<T>(IReadOnlyList<T> list)
         {
             return list.Count switch
@@ -53,6 +53,21 @@ namespace Brainamics.Core
         {
             var randomizer = new OddsRandomizer<float>();
             return Get(range, curve, steps, randomizer);
+        }
+
+        public static Vector3 Get(Vector3 min, Vector3 max)
+        {
+            return new Vector3(
+                Random.Range(min.x, max.x),
+                Random.Range(min.y, max.y),
+                Random.Range(min.z, max.z));
+        }
+
+        public static Vector2 Get(Vector2 min, Vector2 max)
+        {
+            return new Vector2(
+                Random.Range(min.x, max.x),
+                Random.Range(min.y, max.y));
         }
     }
 }
