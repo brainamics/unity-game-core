@@ -25,7 +25,8 @@ namespace Brainamics.Core
             foreach (var clip in _clips)
             {
                 clip.Play(this);
-                _activeClips.Add(clip);
+                if (Loop)
+                    _activeClips.Add(clip);
             }
         }
 
@@ -70,10 +71,9 @@ namespace Brainamics.Core
 
         private void HandleClipComplete(AnimationClipBase clip)
         {
-            if (!_activeClips.Remove(clip))
+            if (!Loop || !_playing || !_activeClips.Remove(clip))
                 return;
-            if (_activeClips.Count == 0 && Loop && _playing)
-                Play();
+            Play();
         }
     }
 }
