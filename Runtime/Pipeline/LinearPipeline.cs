@@ -15,7 +15,7 @@ namespace Brainamics.Core
 
 		public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
 
-		public void Clear()
+		public void ExecuteActionsAndClear()
 		{
 			while (_actionQueue.TryDequeue(out var a, out _))
 			{
@@ -28,6 +28,12 @@ namespace Brainamics.Core
 					Debug.LogError(exception);
 				}
 			}
+			Clear();
+		}
+
+		public void Clear()
+		{
+			_actionQueue.Clear();
 			_feedbacks.Clear();
 		}
 
