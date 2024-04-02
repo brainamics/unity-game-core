@@ -6,6 +6,11 @@ namespace Brainamics.Core
 {
     public static class ListExtensions
     {
+        public static IEnumerable<T> Yield<T>(this T val)
+        {
+            yield return val;
+        }
+        
         public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             foreach (var item in items)
