@@ -69,5 +69,10 @@ namespace Brainamics.Core
                 Random.Range(min.x, max.x),
                 Random.Range(min.y, max.y));
         }
+
+        public static float Get(Vector2 range)
+        {
+            return Random.Range(range.x, range.y);
+        }
     }
 }
