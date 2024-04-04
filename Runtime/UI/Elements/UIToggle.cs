@@ -21,7 +21,7 @@ namespace Brinamics.Core
         private void OnEnable()
         {
             _toggle.onValueChanged.AddListener(HandleValueChanged);
-            UpdateState();
+            UpdateState(true);
         }
 
         private void OnDisable()
@@ -34,9 +34,9 @@ namespace Brinamics.Core
             UpdateState();
         }
 
-        private void UpdateState()
+        private void UpdateState(bool force = false)
         {
-            if (_checked == _toggle.isOn)
+            if (!force && _checked == _toggle.isOn)
                 return;
             _checked = _toggle.isOn;
 
