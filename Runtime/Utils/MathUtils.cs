@@ -27,5 +27,11 @@ namespace Brainamics.Core
             }
             return h * res;
         }
+
+        public static Vector2 OscillationRange(float number, float oscillation)
+        {
+            oscillation = Mathf.Abs(oscillation);
+            return new(number - oscillation, number + oscillation);
+        }
     }
 }
