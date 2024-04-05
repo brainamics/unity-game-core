@@ -18,6 +18,16 @@ namespace Brainamics.Core
 
         public IList<AnimationClipBase> Clips => _clips;
 
+        public void Play(bool immediate)
+        {
+            if (immediate)
+            {
+                PlayImmediate();
+                return;
+            }
+            Play();
+        }
+
         public void Play()
         {
             _playing = true;
