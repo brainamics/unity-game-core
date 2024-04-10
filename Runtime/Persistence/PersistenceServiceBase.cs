@@ -32,6 +32,9 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _reloadActiveScene;
 
+        [Tooltip("Whether to ignore errors when loading scene objects.")]
+        public bool SceneObjectsLoadResilience = false;
+
         public UnityEvent OnGameSaved => _onGameSaved;
 
         public UnityEvent OnGameLoaded => _onGameLoaded;
@@ -197,7 +200,15 @@ namespace Brainamics.Core
             _state ??= NewState();
             foreach (var obj in EnumeratePersistableObjects(statefulObjects))
             {
-                obj.LoadState(_state);
+                try
+                {
+                    obj.LoadState(_state);
+                } catch (Exception exception) {
+                    if (!SceneObjectsLoadResilience)
+                        throw;
+                    Debug.LogError($"Error while loading scene object state '{obj}'; reporting and ignoring.");
+                    Debug.LogError(exception);
+                }
             }
         }
 
