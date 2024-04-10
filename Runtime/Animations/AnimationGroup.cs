@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [DefaultExecutionOrder(-1000)]
     public class AnimationGroup : MonoBehaviour
     {
         private readonly HashSet<AnimationClipBase> _activeClips = new();
