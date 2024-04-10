@@ -68,6 +68,8 @@ namespace Brainamics.Core
 
         public virtual void Play(MonoBehaviour behaviour)
         {
+            if (!behaviour.isActiveAndEnabled)
+                return;
             behaviour.StartMonoCoroutine(ref _coroutine, PlayCo());
 
             IEnumerator PlayCo()
