@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -34,6 +35,10 @@ namespace Brainamics.Core
             var info = GetInfo(currency);
             var oldValue = info.Balance;
             if (oldValue == value)
+                return;
+            var cancel = false;
+            HandleSettingBalance(info, value, ref cancel);
+            if (cancel)
                 return;
             info.Balance = value;
             OnCurrencyChanged?.Invoke(this, currency, oldValue, value);
@@ -80,7 +85,11 @@ namespace Brainamics.Core
         private CurrencyInfo GetInfo(TCurrency currency)
             => (CurrencyInfo)(_infoMap[currency] ??= new CurrencyInfo(currency));
 
-        private sealed class CurrencyInfo
+        protected virtual void HandleSettingBalance(CurrencyInfo info, BigInteger value, ref bool cancel)
+        {
+        }
+
+        protected sealed class CurrencyInfo
         {
             public TCurrency Currency;
             public BigInteger Balance;
