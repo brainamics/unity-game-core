@@ -82,7 +82,7 @@ namespace Brainamics.Core
                 Debug.LogWarning("Prevented returning null (or destroyed) object into the pool.");
                 return;
             }
-            
+
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {

@@ -6,6 +6,8 @@ namespace Brainamics.Core
 {
     public class LinearPipelineHost : MonoBehaviour
     {
+        public bool RespectGamePause = true;
+
         public LinearPipeline Pipeline { get; } = new();
 
         protected virtual void Awake()
@@ -22,6 +24,8 @@ namespace Brainamics.Core
 
         protected virtual void Update()
         {
+            if (RespectGamePause && Time.timeScale == 0)
+                return;
             Pipeline.TriggerProcess();
         }
     }
