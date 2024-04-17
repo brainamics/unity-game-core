@@ -29,6 +29,11 @@ namespace Brinamics.Core
             _toggle.onValueChanged.RemoveListener(HandleValueChanged);
         }
 
+        private void Start()
+        {
+            UpdateState(true);
+        }
+
         private void HandleValueChanged(bool _)
         {
             UpdateState();
