@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Brainamics.Core
 {
@@ -16,6 +17,8 @@ namespace Brainamics.Core
 
         [SerializeField]
         private bool _enablePhysicsSimulation = true;
+
+        public UnityEvent OnInitialize;
 
         public bool IsPaused { get; private set; }
 
@@ -57,6 +60,7 @@ namespace Brainamics.Core
         {
             DontDestroyOnLoad(this);
             Initialize();
+            OnInitialize.Invoke();
         }
 
         private void OnApplicationPause(bool pause)
