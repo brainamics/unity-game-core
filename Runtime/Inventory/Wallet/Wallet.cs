@@ -22,6 +22,9 @@ namespace Brainamics.Core
             set => SetBalance(currency, value);
         }
 
+        public void Clear()
+            => _infoMap.Clear();
+
         public BigInteger GetBalance(TCurrency currency)
             => GetInfo(currency).Balance;
 

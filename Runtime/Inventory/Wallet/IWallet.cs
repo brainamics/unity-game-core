@@ -16,6 +16,11 @@ namespace Brainamics.Core
         /// </summary>
         BigInteger this[TCurrency currency] { get; set; }
 
+        /// <summary>
+        /// Clears the wallet.
+        /// </summary>
+        void Clear();
+
         BigInteger GetBalance(TCurrency currency);
 
         void SetBalance(TCurrency currency, BigInteger value);
