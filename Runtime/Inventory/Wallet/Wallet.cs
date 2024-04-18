@@ -75,6 +75,8 @@ namespace Brainamics.Core
             foreach (var currency in _infoMap)
             {
                 var info = (CurrencyInfo)_infoMap[currency];
+                if (info == null)
+                    continue;
                 yield return (info.Currency, info.Balance);
             }
         }
