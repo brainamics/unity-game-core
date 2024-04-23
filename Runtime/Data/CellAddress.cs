@@ -105,6 +105,12 @@ namespace Brainamics.Core
 
         public static implicit operator CellAddress(Vector2Int addr)
             => new(addr.y, addr.x);
+
+        public static implicit operator ValueTuple<int, int>(CellAddress addr)
+            => new(addr.Row, addr.Column);
+
+        public static implicit operator CellAddress(ValueTuple<int, int> addr)
+            => new(addr.Item1, addr.Item2);
     }
 
     public static class CellAddressExtensions
