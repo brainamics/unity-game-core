@@ -13,6 +13,10 @@ namespace Brainamics.Core
         public AudioSource Source;
         public AudioClip[] RandomClips;
 
+        public override void PlayImmediate(MonoBehaviour behaviour)
+        {
+        }
+
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             if (AudioService == null)
