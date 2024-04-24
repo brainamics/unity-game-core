@@ -25,7 +25,7 @@ namespace Brainamics.Core
             get => _capacity;
             set
             {
-                if (value <= 0)
+                if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 _capacity = value;
             }
