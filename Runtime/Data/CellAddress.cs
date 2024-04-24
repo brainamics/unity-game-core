@@ -20,9 +20,11 @@ namespace Brainamics.Core
             Column = column;
         }
 
-        public CellAddress MoveStep(Vector2Int amount)
+        public CellAddress MoveStep(Vector2Int amount, bool upDeducts = true)
         {
-            return new CellAddress(Row - amount.y, Column + amount.x);
+            if (upDeducts)
+                amount.y *= -1;
+            return new CellAddress(Row + amount.y, Column + amount.x);
         }
 
         /// <summary>
@@ -71,6 +73,36 @@ namespace Brainamics.Core
             min.Item2();
 
             return new CellAddress(row, column);
+        }
+
+        public static bool TryParse(string str, out CellAddress address)
+        {
+            address = Invalid;
+            if (string.IsNullOrEmpty(str))
+                return false;
+
+            var parts = str.Split(',');
+            if (parts.Length != 2)
+                return false;
+
+            if (int.TryParse(parts[0], out var row) && int.TryParse(parts[1], out var column))
+            {
+                address = new CellAddress(row, column);
+                return true;
+            }
+            return false;
+        }
+
+        public static CellAddress TryParse(string str)
+        {
+            return TryParse(str, out var address) ? address : Invalid;
+        }
+
+        public static CellAddress Parse(string str)
+        {
+            if (TryParse(str, out var address))
+                return address;
+            throw new FormatException($"The string '{str}' is not a valid cell address.");
         }
 
         public override string ToString()
