@@ -26,6 +26,11 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _logging = true;
 
+#if UNITY_EDITOR
+        [SerializeField]
+        private bool _allowInEditor;
+#endif
+
         public UnityEvent<bool> OnAdAvailabilityChanged => _onAdAvailabilityChanged;
 
         public UnityEvent<AdHookParameters, object> OnAdStart => _onAdStart;
@@ -44,6 +49,11 @@ namespace Brainamics.Core
 
         public bool IsExclusiveAdActive => _exclusiveAdHooked;
 
+
+#if UNITY_EDITOR
+        protected bool AllowInEditor => _allowInEditor;
+#endif
+
         public bool StartAd(AdHookParameters @params, Action<bool> callback, out object outHandle)
         {
             if (@params == null)
@@ -57,18 +67,30 @@ namespace Brainamics.Core
 
             var presentationMode = GetPresentationMode(@params);
 
-            bool success;
+            var success = false;
             handle = null;
-            switch (presentationMode)
+#if UNITY_EDITOR
+            if (AllowInEditor)
             {
-                case AdPresentationMode.Exclusive:
-                    success = ShowExclusiveAd(@params, HandleResult, out handle);
-                    break;
-                case AdPresentationMode.Concurrent:
-                    success = ShowConcurrentAd(@params, HandleResult, out handle);
-                    break;
-                default:
-                    throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
+                Log("[AdService] Allowed ad in the editor.");
+                handle = null;
+                success = true;
+                HandleResult(true);
+            }
+#endif
+            if (!success)
+            {
+                switch (presentationMode)
+                {
+                    case AdPresentationMode.Exclusive:
+                        success = ShowExclusiveAd(@params, HandleResult, out handle);
+                        break;
+                    case AdPresentationMode.Concurrent:
+                        success = ShowConcurrentAd(@params, HandleResult, out handle);
+                        break;
+                    default:
+                        throw new NotImplementedException($"Starting an ad in the presentation mode '{presentationMode}' is not implemented.");
+                }
             }
             outHandle = handle;
             DispatchStartEvent();
