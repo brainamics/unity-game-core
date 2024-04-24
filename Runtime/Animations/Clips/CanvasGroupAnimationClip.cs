@@ -17,13 +17,21 @@ namespace Brainamics.Core
         [Range(0, 1)]
         public float ToAlpha = 1f;
 
+        public bool ControlObjectActivation;
+
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var group = Group == null ? behaviour.GetComponent<CanvasGroup>() : Group;
             if (group == null)
                 throw new System.InvalidOperationException("Could not find the target canvas group.");
             var fromAlpha = AutoFromAlpha ? group.alpha : FromAlpha;
-            return RunTimedLoop(lerp => group.alpha = Mathf.Lerp(fromAlpha, ToAlpha, lerp));
+            return RunTimedLoop(lerp =>
+            {
+                var alpha = Mathf.Lerp(fromAlpha, ToAlpha, lerp);
+                if (ControlObjectActivation)
+                    group.gameObject.SetActive(alpha > 0);
+                group.alpha = alpha;
+            });
         }
     }
 }
