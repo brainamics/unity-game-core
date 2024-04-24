@@ -73,9 +73,10 @@ namespace Brainamics.Core
             if (AllowInEditor)
             {
                 Log("[AdService] Allowed ad in the editor.");
-                handle = null;
+                outHandle = null;
                 success = true;
                 HandleResult(true);
+                return true;
             }
 #endif
             if (!success)
