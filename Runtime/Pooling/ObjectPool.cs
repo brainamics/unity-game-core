@@ -68,7 +68,7 @@ namespace Brainamics.Core
 
         public void Return(T obj)
         {
-            if (_pool.Count >= Capacity)
+            if (_pool.Count >= Capacity || Capacity == 0)
             {
                 DestroyHandler.Invoke(obj);
                 return;
