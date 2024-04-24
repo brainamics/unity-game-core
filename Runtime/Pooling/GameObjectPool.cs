@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace Brainamics.Core
 {
-    [DefaultExecutionOrder(-99)]
+    [DefaultExecutionOrder(-1000)]
     public class GameObjectPool : MonoBehaviour, IGameObjectPool
     {
         private ObjectPool<GameObject> _pool;
@@ -23,25 +23,13 @@ namespace Brainamics.Core
         [SerializeField]
         private GameObject _prefab;
 
-        public GameObjectPool()
-        {
-            _pool = new ObjectPool<GameObject>
-            {
-                Factory = CreateNew,
-                DestroyHandler = DestroyObject,
-                SleepHandler = PutToSleep,
-                WakeHandler = WakeFromSleep,
-                Capacity = _capacity,
-            };
-        }
-
         [SerializeField]
         private Transform _parent;
 
         public int Capacity
         {
             get => _pool.Capacity;
-            set => _pool.Capacity = value;
+            set => _pool.Capacity = _capacity = value;
         }
 
         public GameObject Prefab
@@ -121,6 +109,18 @@ namespace Brainamics.Core
             foreach (var recyclable in obj.GetComponents<IRecyclable>())
                 recyclable.Recycle();
             obj.SetActive(true);
+        }
+
+        private void Awake()
+        {
+            _pool = new ObjectPool<GameObject>
+            {
+                Factory = CreateNew,
+                DestroyHandler = DestroyObject,
+                SleepHandler = PutToSleep,
+                WakeHandler = WakeFromSleep,
+                Capacity = _capacity,
+            };
         }
 
         private void OnDestroy()
