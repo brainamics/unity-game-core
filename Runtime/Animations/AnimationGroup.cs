@@ -18,33 +18,38 @@ namespace Brainamics.Core
 
         public IList<AnimationClipBase> Clips => _clips;
 
-        public void Play(bool immediate)
+        public void Play(bool immediate, MonoBehaviour behaviour = null)
         {
             if (immediate)
             {
-                PlayImmediate();
+                PlayImmediate(behaviour);
                 return;
             }
-            Play();
+            Play(behaviour);
         }
 
         public void Play()
+            => Play(this);
+
+        public void Play(MonoBehaviour behaviour)
         {
+            if (behaviour == null)
+                behaviour = this;
             _playing = true;
             _activeClips.Clear();
             foreach (var clip in _clips)
             {
-                clip.Play(this);
+                clip.Play(behaviour);
                 if (Loop)
                     _activeClips.Add(clip);
             }
         }
 
-        public void PlayImmediate()
+        public void PlayImmediate(MonoBehaviour behaviour)
         {
             _playing = false;
             foreach (var clip in _clips)
-                clip.PlayImmediate(this);
+                clip.PlayImmediate(behaviour);
         }
 
         public void Stop()
