@@ -4,12 +4,27 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    public class ManualGameTime : IGameTime
+    public class ManualGameTime : MonoBehaviour, IGameTime
     {
         private double _unscaledTime, _time;
         private float _unscaledDeltaTime, _deltaTime;
 
-        public float TimeScale { get; set; } = 1f;
+        [SerializeField]
+        [Range(0, 1)]
+        private float _timeScale = 1f;
+
+        public float TimeScale
+        {
+            get => _timeScale;
+            set
+            {
+                if (float.IsNaN(value))
+                    throw new System.ArgumentOutOfRangeException(nameof(value), "TimeScale cannot be NaN");
+                if (value < 0 || value > 1)
+                    throw new System.ArgumentOutOfRangeException(nameof(value), "TimeScale must be between 0 and 1");
+                _timeScale = value;
+            }
+        }
 
         public float Time => (float)_time;
 
