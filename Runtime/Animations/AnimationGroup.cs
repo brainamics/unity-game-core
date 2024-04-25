@@ -47,6 +47,8 @@ namespace Brainamics.Core
 
         public void PlayImmediate(MonoBehaviour behaviour = null)
         {
+            if (behaviour == null)
+                behaviour = this;
             _playing = false;
             foreach (var clip in _clips)
                 clip.PlayImmediate(behaviour);
