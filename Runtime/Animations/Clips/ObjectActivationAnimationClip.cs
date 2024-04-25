@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [System.Serializable]
-    [AnimationClip(MenuName = "Game Object/Activation")]
+    [AnimationClip(MenuName = "Game Object/GameObject Activation")]
     public class ObjectActivationAnimationClip : TransformAnimationClipBase
     {
         public bool AutoFrom;
