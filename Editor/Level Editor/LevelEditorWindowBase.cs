@@ -148,6 +148,11 @@ namespace Brainamics.Core
             EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(300));
             if (GUILayout.Button("Save Level" + (HasUnsavedChanges ? '*' : null)))
                 SaveLevel();
+            if (GUILayout.Button("Select", GUILayout.Width(50)))
+            {
+                Selection.activeObject = host.LevelPrefab;
+                EditorGUIUtility.PingObject(host.LevelPrefab);
+            }
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
