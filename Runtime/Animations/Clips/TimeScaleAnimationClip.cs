@@ -21,7 +21,17 @@ namespace Brainamics.Core
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var fromScale = AutoFrom ? UnityEngine.Time.timeScale : FromScale;
-            return RunTimedLoop(lerp => UnityEngine.Time.timeScale = Mathf.Lerp(fromScale, ToScale, lerp));
+            return RunTimedLoop(lerp =>
+            {
+                var scale = ToScale;
+                if (fromScale != ToScale)
+                {
+                    scale = Mathf.Lerp(fromScale, ToScale, lerp);
+                    if (float.IsNaN(scale))
+                        scale = ToScale;
+                }
+                UnityEngine.Time.timeScale = scale;
+            });
         }
     }
 }
