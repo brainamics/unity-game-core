@@ -6,6 +6,8 @@ namespace Brainamics.Core
 {
     public interface IGameTime
     {
+        bool IsUnscaled { get; }
+
         float TimeScale { get; set; }
 
         float Time { get; }

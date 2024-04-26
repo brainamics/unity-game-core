@@ -26,6 +26,8 @@ namespace Brainamics.Core
             }
         }
 
+        public bool IsUnscaled => false;
+
         public float TimeScale
         {
             get => UnityEngine.Time.timeScale;

@@ -13,6 +13,9 @@ namespace Brainamics.Core
         [Range(0, 1)]
         private float _timeScale = 1f;
 
+        [SerializeField]
+        private bool _unscaled;
+
         public float TimeScale
         {
             get => _timeScale;
@@ -24,6 +27,12 @@ namespace Brainamics.Core
                     throw new System.ArgumentOutOfRangeException(nameof(value), "TimeScale must be between 0 and 1");
                 _timeScale = value;
             }
+        }
+
+        public bool IsUnscaled
+        {
+            get => _unscaled;
+            set => _unscaled = value;
         }
 
         public float Time => (float)_time;
