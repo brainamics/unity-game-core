@@ -7,12 +7,15 @@ namespace Brainamics.Core
 {
     public static class LinearPipelineExtensions
     {
-        public static Coroutine StartCoroutine(this LinearPipeline pipeline, MonoBehaviour host, IEnumerator routine, Action doneCallback = null)
+        public static Coroutine StartCoroutine(this LinearPipeline pipeline, MonoBehaviour host,
+            IEnumerator routine, Action doneCallback = null, ISet<IDisposable> handlesSet = null)
         {
             var feedbackHandle = pipeline.RegisterFeedbackHandle();
-            return host.StartCoroutine(ExecuteCo(routine, feedbackHandle, doneCallback));
+            handlesSet?.Add(feedbackHandle);
+            return host.StartCoroutine(ExecuteCo(routine, feedbackHandle, doneCallback, handlesSet));
 
-            static IEnumerator ExecuteCo(IEnumerator routine, IDisposable feedbackHandle, Action doneCallback)
+            static IEnumerator ExecuteCo(IEnumerator routine, IDisposable feedbackHandle, Action doneCallback,
+                ISet<IDisposable> handlesSet)
             {
                 try
                 {
@@ -23,8 +26,16 @@ namespace Brainamics.Core
                 {
                     feedbackHandle.Dispose();
                     doneCallback?.Invoke();
+                    handlesSet?.Remove(feedbackHandle);
                 }
             }
+        }
+
+        public static void OnDisable(this LinearPipeline pipeline, ISet<IDisposable> handlesSet)
+        {
+            foreach (var handle in handlesSet)
+                handle.Dispose();
+            handlesSet.Clear();
         }
     }
 }
