@@ -71,7 +71,7 @@ namespace Brainamics.Core
 
         public IDisposable RegisterFeedbackHandle()
         {
-            var handle = new object();
+            var handle = new FeedbackObject();
             RegisterFeedbackHandle(handle);
             return new CallbackDisposable(() => UnregisterFeedbackHandle(handle));
         }
