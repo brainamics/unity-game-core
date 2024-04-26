@@ -13,5 +13,10 @@ namespace Brainamics.Core
                 gameTime = DefaultGameTime.Instance;
             return gameTime;
         }
+
+        public static bool IsUnscaled(this IGameTime time)
+        {
+            return Mathf.Approximately(time.TimeScale, 1);
+        }
     }
 }
