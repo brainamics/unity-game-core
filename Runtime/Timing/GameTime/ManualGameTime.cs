@@ -18,7 +18,12 @@ namespace Brainamics.Core
 
         public float TimeScale
         {
-            get => _timeScale;
+            get
+            {
+                if (IsUnscaled)
+                    return 1f;
+                return _timeScale;
+            }
             set
             {
                 if (float.IsNaN(value))

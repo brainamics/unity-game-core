@@ -13,5 +13,12 @@ namespace Brainamics.Core
                 gameTime = DefaultGameTime.Instance;
             return gameTime;
         }
+
+        public static object WaitForSeconds(this IGameTime time, float duration)
+        {
+            if (time.IsUnscaled)
+                return new WaitForSecondsRealtime(duration);
+            return new WaitForSeconds(duration);
+        }
     }
 }
