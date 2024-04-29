@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -17,6 +18,7 @@ namespace Brainamics.Core
         public bool EnumeratePersistablesDynamically = false;
         public bool SaveGameOnStart = false;
         public bool SaveGameOnlyIfMissing = false;
+        public bool OrderPersistablesByExecutionOrder = false;
 
         public float SaveGameDelay;
 
@@ -34,14 +36,24 @@ namespace Brainamics.Core
 
         public void RescanSceneObjects()
         {
+            var persistableObjects = Enumerable.Empty<IPersistentState<TState>>();
             _persistableObjects.Clear();
             var scene = gameObject.scene;
             var rootObjects = scene.GetRootGameObjects();
             foreach (var obj in rootObjects)
             {
                 var components = obj.GetComponentsInChildren<IPersistentState<TState>>(IncludeInactiveObjects);
-                _persistableObjects.AddRange(components);
+                persistableObjects = persistableObjects.Concat(components);
             }
+            if (OrderPersistablesByExecutionOrder)
+                persistableObjects = persistableObjects
+                        .OrderBy(o =>
+                        {
+                            var t = o.GetType();
+                            var order = t.GetCustomAttribute<DefaultExecutionOrder>();
+                            return order?.order ?? 0;
+                        });
+            _persistableObjects.AddRange(persistableObjects);
         }
 
         protected virtual void Awake()
