@@ -8,6 +8,7 @@ namespace Brainamics.Core
     public readonly struct CellAddress
     {
         public static readonly CellAddress Invalid = new(-1, -1);
+        public static readonly CellAddress Zero = new(0, 0);
 
         public readonly int Row;
         public readonly int Column;
