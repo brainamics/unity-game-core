@@ -30,7 +30,12 @@ namespace Brainamics.Core
         private Vector3 _middleScale = new(1.1f, 1.1f, 1.1f);
 
         [SerializeField]
-        private Vector3 _targetScale = Vector3.one; 
+        private Vector3 _targetScale = Vector3.one;
+
+        [SerializeField]
+        private bool _unscaled;
+
+        private float CurrentTime => _unscaled ? Time.unscaledTime : Time.time;
 
         public override void Trigger()
         {
@@ -75,11 +80,11 @@ namespace Brainamics.Core
 
         private IEnumerator ScaleTo(Vector3 initialScale, Vector3 targetScale, float duration)
         {
-            var start = Time.time;
+            var start = CurrentTime;
             var scaleDiff = targetScale - initialScale;
             while (true)
             {
-                var passedTime = Time.time - start;
+                var passedTime = CurrentTime - start;
                 if (passedTime >= duration)
                     break;
                 transform.localScale = initialScale + scaleDiff * (passedTime / duration);
