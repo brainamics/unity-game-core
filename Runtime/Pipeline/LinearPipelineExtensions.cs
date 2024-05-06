@@ -7,6 +7,14 @@ namespace Brainamics.Core
 {
     public static class LinearPipelineExtensions
     {
+#if DOTWEEN
+        public static void RegisterFeedback(this LinearPipeline pipeline, float duration)
+        {
+            var handle = pipeline.RegisterFeedbackHandle();
+            DOVirtual.DelayedCall(CollectionDuration, handle.Dispose, false);
+        }
+#endif
+
         public static Coroutine StartCoroutine(this LinearPipeline pipeline, MonoBehaviour host,
             IEnumerator routine, Action doneCallback = null, ISet<IDisposable> handlesSet = null)
         {
