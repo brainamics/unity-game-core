@@ -14,7 +14,7 @@ namespace Brainamics.Core
         public static void RegisterFeedback(this LinearPipeline pipeline, float duration)
         {
             var handle = pipeline.RegisterFeedbackHandle();
-            DOVirtual.DelayedCall(CollectionDuration, handle.Dispose, false);
+            DOVirtual.DelayedCall(duration, handle.Dispose, false);
         }
 #endif
 
