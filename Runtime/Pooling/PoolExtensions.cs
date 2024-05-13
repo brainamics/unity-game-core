@@ -8,6 +8,8 @@ namespace Brainamics.Core
     {
         public static void Destroy(this GameObject obj)
         {
+            if (obj == null)
+                return;
             if (obj.TryGetComponent<IDestroyable>(out var destroyable))
             {
                 destroyable.Destroy();
@@ -23,7 +25,8 @@ namespace Brainamics.Core
 
         public static void DestroyObject(this MonoBehaviour behaviour)
         {
-            behaviour.gameObject.Destroy();
+            if (behaviour != null)
+                behaviour.gameObject.Destroy();
         }
     }
 }
