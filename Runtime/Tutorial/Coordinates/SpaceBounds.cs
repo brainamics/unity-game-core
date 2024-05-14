@@ -30,6 +30,16 @@ namespace Brainamics.Core
             Bounds.SetMinMax(min, max);
         }
 
+        public static SpaceBounds World(Bounds b)
+        {
+            return new(CoordinateMode.World, b);
+        }
+
+        public static SpaceBounds Rect(Rect r)
+        {
+            return new(CoordinateMode.Screen, r);
+        }
+
         public override string ToString()
         {
             return $"Bounds[{Mode}] {(Mode == CoordinateMode.Screen ? Rect : Bounds)}";
