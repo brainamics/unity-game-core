@@ -35,7 +35,7 @@ namespace Brainamics.Core
             return new(CoordinateMode.World, b);
         }
 
-        public static SpaceBounds Rect(Rect r)
+        public static SpaceBounds Screen(Rect r)
         {
             return new(CoordinateMode.Screen, r);
         }
