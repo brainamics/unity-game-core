@@ -30,6 +30,7 @@ namespace Brainamics.Core
         {
             Step.OnActivated.RemoveListener(HandleStepActivated);
             Step.OnDeactivated.RemoveListener(HandleStepDeactivated);
+            Activate(false);
         }
 
         protected abstract void OnActivate();
