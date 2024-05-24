@@ -6,8 +6,17 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    internal static class EditorUtils
+    public static class EditorUtils
     {
+        public static void HorizontalLine(float height = 1, Color lineColor = default)
+        {
+            if (lineColor == default)
+                lineColor = new Color(0.5f, 0.5f, 0.5f, 1);
+            var rect = EditorGUILayout.GetControlRect(false, height);
+            rect.height = height;
+            EditorGUI.DrawRect(rect, lineColor);
+        }
+
         public static string GetRelativeAssetPath(string path)
         {
             return path.Replace(Application.dataPath, "Assets");
