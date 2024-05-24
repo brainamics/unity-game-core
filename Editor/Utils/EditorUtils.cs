@@ -8,6 +8,14 @@ namespace Brainamics.Core
 {
     public static class EditorUtils
     {
+        public static Texture2D ColorTex(Color color)
+        {
+            var texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+            return texture;
+        }
+
         public static void HorizontalLine(float height = 1, Color lineColor = default)
         {
             if (lineColor == default)
