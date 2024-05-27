@@ -40,11 +40,17 @@ namespace Brainamics.Core
 
         public PersistentIdTracker Tracker { get; private set; }
 
+#if UNITY_EDITOR
         public static void FixIds(IEnumerable<PersistentId> ids)
         {
+            var count = 0;
             foreach (var id in ids)
                 if (!id.IsValid)
+                {
                     id.GenerateNewId();
+                    count++;
+                }
+            Debug.Log($"Fixed {count} persistent identifier(s).");
         }
 
         public static void FixIds(Scene scene)
@@ -52,6 +58,7 @@ namespace Brainamics.Core
 
         public static void FixSceneIds()
             => FixIds(SceneManager.GetActiveScene());
+#endif
 
         public static PersistentId TryFind(GameObject obj)
         {
