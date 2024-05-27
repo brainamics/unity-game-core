@@ -48,7 +48,7 @@ namespace Brainamics.Core
         }
 
         public static void FixIds(Scene scene)
-            => FixIds(scene.GetRootGameObjects().Select(go => go.GetComponentInChildren<PersistentId>()));
+            => FixIds(scene.GetRootGameObjects().SelectMany(go => go.GetComponentsInChildren<PersistentId>()));
 
         public static void FixSceneIds()
             => FixIds(SceneManager.GetActiveScene());
