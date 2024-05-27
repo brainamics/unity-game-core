@@ -99,8 +99,8 @@ namespace Brainamics.Core
                 return;
             _id = System.Guid.NewGuid().ToString();
 #if UNITY_EDITOR
-            Undo.RecordObject(gameObject, "Generate Persistent ID");
             EditorUtility.SetDirty(this);
+            Undo.RecordObject(this, "Generate Persistent ID");
 #endif
             UpdateRegistration();
         }
