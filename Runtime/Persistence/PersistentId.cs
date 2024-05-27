@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
+
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -35,6 +39,19 @@ namespace Brainamics.Core
         private bool IsRegistered => _registeredTracker != null;
 
         public PersistentIdTracker Tracker { get; private set; }
+
+        public static void FixIds(IEnumerable<PersistentId> ids)
+        {
+            foreach (var id in ids)
+                if (!id.IsValid)
+                    id.GenerateNewId();
+        }
+
+        public static void FixIds(Scene scene)
+            => FixIds(scene.GetRootGameObjects().Select(go => go.GetComponentInChildren<PersistentId>()));
+
+        public static void FixSceneIds()
+            => FixIds(SceneManager.GetActiveScene());
 
         public static PersistentId TryFind(GameObject obj)
         {
