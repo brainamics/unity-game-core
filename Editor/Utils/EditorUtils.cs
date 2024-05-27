@@ -16,6 +16,20 @@ namespace Brainamics.Core
             return texture;
         }
 
+        public static Texture2D ColorTex(int width, int height, Color32 col)
+        {
+            var pix = new Color32[width * height];
+
+            for (int i = 0; i < pix.Length; i++)
+                pix[i] = col;
+
+            var result = new Texture2D(width, height);
+            result.SetPixels32(pix);
+            result.Apply();
+
+            return result;
+        }
+
         public static void HorizontalLine(float height = 1, Color lineColor = default)
         {
             if (lineColor == default)
