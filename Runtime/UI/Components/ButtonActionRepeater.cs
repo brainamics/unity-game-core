@@ -32,6 +32,8 @@ namespace Brainamics.Core
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (_button != null && !_button.interactable)
+                return;
             if (_repeaterCoroutine != null)
                 StopCoroutine(_repeaterCoroutine);
             _repeaterCoroutine = null;
