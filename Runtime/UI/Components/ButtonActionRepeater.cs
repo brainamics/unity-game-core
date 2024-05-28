@@ -9,6 +9,7 @@ namespace Brainamics.Core
     {
         private int _repetitionCount;
         private Coroutine _repeaterCoroutine;
+        private Button _button;
 
         public float RepetitionStartupDelay = 0.5f;
         public float RepetitionInterval = 0.2f;
@@ -16,6 +17,8 @@ namespace Brainamics.Core
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (_button != null && !_button.interactable)
+                return;
             _repetitionCount = 0;
 
             if (_repeaterCoroutine != null)
@@ -46,6 +49,11 @@ namespace Brainamics.Core
                 OnPerformed.Invoke(_repetitionCount++);
                 yield return new WaitForSeconds(RepetitionInterval);
             }
+        }
+
+        private void Awake()
+        {
+            _button = GetComponent<Button>();
         }
     }
 }
