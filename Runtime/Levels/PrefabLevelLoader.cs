@@ -15,6 +15,10 @@ namespace Brainamics.Core
     public class PrefabLevelLoader : MonoBehaviour
     {
         [SerializeField]
+        [HideInInspector]
+        private GameObject _levelPrefab;
+    
+        [SerializeField]
         private Transform _host;
 
         public bool AllowLevelReloading = true;
@@ -24,7 +28,11 @@ namespace Brainamics.Core
         public UnityEvent OnLevelLoaded;
         public UnityEvent OnLevelUnloaded;
 
-        public GameObject LevelPrefab { get; protected set; }
+        public GameObject LevelPrefab
+        {
+            get => _levelPrefab;
+            protected set => _levelPrefab = value;
+        }
 
         public GameObject LoadedLevel { get; private set; }
 
