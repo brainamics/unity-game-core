@@ -12,5 +12,16 @@ namespace Brainamics.Core
         Transform transform { get; }
 
         GameObject gameObject { get; }
+
+        bool isActiveAndEnabled { get; }
+    }
+
+    public static class BehaviourExtensions
+    {
+        public static Behaviour AsBehaviour(this IBehaviour b)
+            => (Behaviour)b;
+
+        public static MonoBehaviour AsMonoBehaviour(this IBehaviour b)
+            => (MonoBehaviour)b;
     }
 }
