@@ -1,12 +1,19 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Brainamics.Core
 {
     public static class TransformExtensions
     {
+	public static IEnumerable<Transform> EnumerateObjects(this Scene scene)
+	{
+		return scene.GetRootGameObjects().SelectMany(o => o.transform.EnumerateChildren());
+	}
+	    
         public static IEnumerable<Transform> EnumerateChildren(this Transform transform)
         {
             for (var i = 0; i < transform.childCount; i++)
