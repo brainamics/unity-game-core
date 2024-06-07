@@ -20,10 +20,20 @@ namespace Brainamics.Core
         /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TGameSceneScanner Locate<TGameSceneScanner>(GameObject go)
+            where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
+        {
+            return LocateByScene<TGameSceneScanner>(go.scene);
+        }
+
+        /// <summary>
+        /// Locates the game scene manager for the scene associated with <paramref name="component"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner Locate<TGameSceneScanner>(MonoBehaviour component)
             where TGameSceneScanner : GameSceneScannerBase<TGameSceneScanner>
         {
-            return LocateByScene<TGameSceneScanner>(component.gameObject.scene);
+            return Locate<TGameSceneScanner>(component.gameObject);
         }
 
         /// <summary>
