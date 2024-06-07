@@ -45,5 +45,30 @@ namespace Brainamics.Core
         private void HandleActivationChanged()
         {
         }
+
+        [ContextMenu("Stop")]
+        private void ForceStop()
+        {
+            State = TutorialStepState.NotStarted;
+        }
+
+        
+        [ContextMenu("Activate")]
+        private void ForceActivate()
+        {
+            State = TutorialStepState.Active;
+        }
+
+        [ContextMenu("Complete")]
+        private void ForceComplete()
+        {
+            State = TutorialStepState.Completed;
+        }
+
+        [ContextMenu("Fail")]
+        private void ForceFail()
+        {
+            State = TutorialStepState.Failed;
+        }
     }
 }
