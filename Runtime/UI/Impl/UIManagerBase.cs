@@ -31,6 +31,8 @@ namespace Brainamics.Core
 
         public bool OpenWindow(IUIWindow window)
         {
+            if (_windows.Contains(window))
+                return false;
             if (!PushWindowPreprocess(window))
                 return false;
             if (ClosePopupsBeforeOpeningWindows)
