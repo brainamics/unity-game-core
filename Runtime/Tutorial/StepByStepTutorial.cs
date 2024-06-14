@@ -58,8 +58,7 @@ namespace Brainamics.Core
 
         protected virtual void OnEnable()
         {
-            _steps = GetComponentsInChildren<TutorialStep>();
-            BindSteps();
+            ScanSteps();
             if (ActivateOnEnable)
                 UpdateActiveStep();
         }
@@ -73,6 +72,13 @@ namespace Brainamics.Core
         protected virtual void HandleStepStateChanged(TutorialStep step)
         {
             UpdateActiveStep();
+        }
+
+        protected void ScanSteps()
+        {
+            UnbindSteps();
+            _steps = GetComponentsInChildren<TutorialStep>();
+            BindSteps();
         }
 
         private bool IsPriorStep(TutorialStep step, TutorialStep priorToStep)
@@ -91,8 +97,9 @@ namespace Brainamics.Core
         private void UnbindSteps()
         {
             DeactivateCurrentStep();
-            foreach (var step in _steps)
-                step.OnStateChanged.RemoveListener(HandleStepStateChanged);
+            if (_steps != null)
+                foreach (var step in _steps)
+                    step.OnStateChanged.RemoveListener(HandleStepStateChanged);
         }
 
         private void DeactivateCurrentStep()
