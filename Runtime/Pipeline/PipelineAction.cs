@@ -7,12 +7,12 @@ namespace Brainamics.Core
 {
     public readonly struct PipelineAction
     {
-        public readonly object Key;
+        public readonly object Id;
         public readonly Action Action;
 
         public PipelineAction(object key, Action action)
         {
-            Key = key;
+            Id = key;
             Action = action;
         }
 

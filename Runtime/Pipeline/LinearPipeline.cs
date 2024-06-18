@@ -11,6 +11,7 @@ namespace Brainamics.Core
         private readonly PriorityQueue<PipelineAction, PipelinePriority> _actionQueue = new();
         private readonly HashSet<object> _feedbacks = new();
         private readonly HashSet<System.Action> _processors = new();
+        private readonly Dictionary<object, PipelineAction> _actionsById = new();
         private int _queueIndex = int.MinValue;
 
         public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
@@ -42,12 +43,17 @@ namespace Brainamics.Core
         {
             _actionQueue.Clear();
             _feedbacks.Clear();
+            _actionsById.Clear();
         }
 
         public void EnqueueAction(PipelineAction action, int priority = 0)
         {
-            // TODO check ID for duplicates
+            if (action.Id != null && _actionsById.ContainsKey(action.Id))
+                return;
+
             var pipelinePriority = CreatePriority(priority);
+            if (action.Id != null)
+                _actionsById[action.Id] = action;
             _actionQueue.Enqueue(action, pipelinePriority);
         }
 
@@ -111,6 +117,8 @@ namespace Brainamics.Core
             if (!_actionQueue.TryDequeue(out var action, out _))
                 return false;
 
+            if (action.Id != null)
+                _actionsById.Remove(action.Id);
             action.Action.Invoke();
             return true;
         }
