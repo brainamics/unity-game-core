@@ -70,6 +70,10 @@ namespace Brainamics.Core
             SceneScannersManager.Register((TGameSceneScanner)this);
         }
 
+        protected virtual void OnDisable()
+        {
+        }
+
         protected virtual void Start()
         {
             StartInternal();
