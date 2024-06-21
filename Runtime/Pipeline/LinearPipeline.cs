@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,9 +28,9 @@ namespace Brainamics.Core
             {
                 try
                 {
-                    a.Action.Invoke();
+                    a.InvokeAction();
                 }
-                catch (Exception exception)
+                catch (System.Exception exception)
                 {
                     Debug.LogError(exception);
                 }
@@ -46,21 +45,47 @@ namespace Brainamics.Core
             _actionsById.Clear();
         }
 
-        public void EnqueueAction(PipelineAction action, int priority = 0)
+        public void CancelAction(object id)
         {
-            if (action.Id != null && _actionsById.ContainsKey(action.Id))
+            if (_actionsById.TryGetValue(id, out var action))
                 return;
+            CancelAction(action);
+        }
+
+        public void CancelAction(PipelineAction action)
+        {
+            if (action == null)
+                throw new System.ArgumentNullException(nameof(action));
+            action.Cancel();
+            _actionsById.Remove(action.Id);
+        }
+
+        public PipelineAction EnqueueAction(PipelineAction action, int priority = 0, bool replace = false)
+        {
+            var duplicateId = action.Id != null && _actionsById.TryGetValue(action.Id, out _);
+            if (duplicateId)
+            {
+                if (replace)
+                {
+                    CancelAction(action);
+                }
+                else
+                {
+                    return null;
+                }
+            }
 
             var pipelinePriority = CreatePriority(priority);
             if (action.Id != null)
                 _actionsById[action.Id] = action;
             _actionQueue.Enqueue(action, pipelinePriority);
+            return action;
         }
 
-        public void EnqueueAction(object id, System.Action action, int priority = 0)
-            => EnqueueAction(new PipelineAction(id, action), priority);
+        public PipelineAction EnqueueAction(object id, System.Action action, int priority = 0, bool replace = false)
+            => EnqueueAction(new PipelineAction(id, action), priority, replace: replace);
 
-        public void EnqueueAction(System.Action action, int priority = 0)
+        public PipelineAction EnqueueAction(System.Action action, int priority = 0)
             => EnqueueAction(new PipelineAction(action), priority);
 
         public void RegisterProcessor(System.Action processor)
@@ -75,7 +100,7 @@ namespace Brainamics.Core
             task.ContinueWith(UnregisterFeedbackHandle);
         }
 
-        public IDisposable RegisterFeedbackHandle()
+        public System.IDisposable RegisterFeedbackHandle()
         {
             var handle = new FeedbackObject();
             RegisterFeedbackHandle(handle);
@@ -119,7 +144,7 @@ namespace Brainamics.Core
 
             if (action.Id != null)
                 _actionsById.Remove(action.Id);
-            action.Action.Invoke();
+            action.InvokeAction();
             return true;
         }
 
