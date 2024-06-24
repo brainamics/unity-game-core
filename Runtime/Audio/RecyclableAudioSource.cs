@@ -11,6 +11,7 @@ namespace Brainamics.Core
         public void Recycle()
         {
             _audioSource.Stop();
+            _audioSource.priority = 128;
             _audioSource.volume = 1f;
             _audioSource.pitch = 1f;
             _audioSource.loop = false;
