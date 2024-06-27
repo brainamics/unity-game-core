@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    [CreateAssetMenu(menuName = "Game/Services/Persistence/Newtonsoft Json")]
+    [CreateAssetMenu(menuName = "Game/Services/Persistence/Newtonsoft Json Serializer")]
     public class NewtonsoftPersistenceSerializer : PersistenceSerializerBase
     {
         public override object Deserialize(string serializedString, Type type)
