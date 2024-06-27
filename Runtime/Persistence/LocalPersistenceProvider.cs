@@ -20,6 +20,9 @@ namespace Brainamics.Core
         private PersistenceServiceBase<TState> _persistenceService;
 
         [SerializeField]
+        private PersistenceSerializerBase _serializer;
+
+        [SerializeField]
         private string _fileName = "savedata";
 
         public string FilePath => _filePath;
@@ -52,7 +55,10 @@ namespace Brainamics.Core
             {
                 if (!File.Exists(_filePath))
                     return default;
-                return JsonConvert.DeserializeObject<TCustomState>(File.ReadAllText(_filePath));
+                var data = File.ReadAllText(_filePath);
+                if (_serializer == null)
+                    return JsonConvert.DeserializeObject<TCustomState>(data);
+                return _serializer.Deserialize<TCustomState>(data);
             }
             catch (Exception)
             {
@@ -70,7 +76,12 @@ namespace Brainamics.Core
         private void SaveStateToFile(TState state)
         {
             EnsureDirectory();
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(state));
+            string data;
+            if (_serializer == null)
+                data = JsonConvert.SerializeObject(state);
+            else
+                data = _serializer.Serialize(state);
+            File.WriteAllText(_filePath, data);
         }
 
         private void EnsureDirectory()

@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +13,9 @@ namespace Brainamics.Core
     {
         [SerializeField]
         private PersistenceServiceBase<TState> _persistenceService;
+
+        [SerializeField]
+        private PersistenceSerializerBase _serializer;
 
 
         [SerializeField]
@@ -45,7 +47,7 @@ namespace Brainamics.Core
                     return default;
                 }
 
-                return JsonConvert.DeserializeObject<TCustomState>(data);
+                return _serializer.Deserialize<TCustomState>(data);
             }
             catch (Exception)
             {
@@ -60,7 +62,7 @@ namespace Brainamics.Core
 
         private void SaveStateToPrefs(TState state)
         {
-            PlayerPrefs.SetString(_key, JsonConvert.SerializeObject(state));
+            PlayerPrefs.SetString(_key, _serializer.Serialize(state));
         }
     }
 }
