@@ -5,10 +5,13 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     public static class RandomUtils
-    {
+    {   
         public static bool Bool()
+            => Bool(0.5f);
+        
+        public static bool Bool(float trueProbability)
         {
-            return Random.value >= 0.5;
+            return Random.value <= trueProbability;
         }
 
         public static T Select<T>(IReadOnlyList<T> list)
