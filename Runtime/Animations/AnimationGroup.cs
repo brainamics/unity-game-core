@@ -61,12 +61,14 @@ namespace Brainamics.Core
                 clip.Stop();
         }
 
-        public void Kill()
+        public void Kill(MonoBehaviour behaviour = null)
         {
+            if (behaviour == null)
+                behaviour = this;
             _playing = false;
             _activeClips.Clear();
             foreach (var clip in _clips)
-                clip.Kill(this);
+                clip.Kill(behaviour);
         }
 
         private void Awake()
