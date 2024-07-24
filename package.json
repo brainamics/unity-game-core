@@ -10,8 +10,7 @@
   "licensesUrl": "https://brainamics.de/",
   "dependencies": {
     "com.unity.nuget.newtonsoft-json": "3.1.0",
-    "com.unity.ads.ios-support": "1.0.0",
-    "com.kyrylokuzyk.primetween": "1.1.19"
+    "com.unity.ads.ios-support": "1.0.0"
   },
   "keywords": [
     "brainamics",
