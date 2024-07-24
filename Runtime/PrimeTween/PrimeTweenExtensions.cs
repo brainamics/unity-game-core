@@ -2,11 +2,11 @@ using Brainamics.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if PRIMETWEEN
+#if PRIMETWEEN_INSTALLED
 using PrimeTween;
 #endif
 
-#if PRIMETWEEN
+#if PRIMETWEEN_INSTALLED
 public static class PrimeTweenExtensions
 {
     public static void RegisterFeedback(this LinearPipeline pipeline, Tween tween)
