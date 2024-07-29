@@ -47,7 +47,7 @@ namespace Brainamics.Core
 
         public void CancelAction(object id)
         {
-            if (_actionsById.TryGetValue(id, out var action))
+            if (!_actionsById.TryGetValue(id, out var action))
                 return;
             CancelAction(action);
         }
