@@ -64,9 +64,13 @@ namespace Brainamics.Core
             while (true)
             {
                 if (!_pool.TryDequeue(out obj))
+                {
                     obj = Factory();
-                if (obj is GameObject o && o != null)
                     break;
+                }
+                if (obj is GameObject o && o == null)
+                    continue;
+                break;
             }
             if (obj == null)
                 return obj;
