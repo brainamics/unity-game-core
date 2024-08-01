@@ -60,7 +60,7 @@ namespace Brainamics.Core
 
         public T Rent()
         {
-            GameObject obj = null;
+            T obj = default;
             while (true)
             {
                 if (!_pool.TryDequeue(out obj))
