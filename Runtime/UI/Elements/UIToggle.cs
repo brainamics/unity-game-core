@@ -1,8 +1,7 @@
-using Brainamics.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Brinamics.Core
+namespace Brainamics.Core
 {
     [RequireComponent(typeof(Toggle))]
     public class UIToggle : MonoBehaviour
