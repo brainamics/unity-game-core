@@ -10,14 +10,14 @@ namespace Brainamics.Core
     public class AnchoredMoveAnimationClip : TransformAnimationClipBase
     {
         public bool AutoFromPosition;
-        public Vector3 FromPosition;
-        public Vector3 ToPosition;
+        public Vector2 FromPosition;
+        public Vector2 ToPosition;
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var transform = (RectTransform)GetTargetTransform(behaviour);
             var fromPosition = AutoFromPosition ? transform.anchoredPosition : FromPosition;
-            return RunTimedLoop(lerp => transform.anchoredPosition = Vector3.LerpUnclamped(fromPosition, ToPosition, lerp));
+            return RunTimedLoop(lerp => transform.anchoredPosition = Vector2.LerpUnclamped(fromPosition, ToPosition, lerp));
         }
     }
 }
