@@ -104,5 +104,10 @@ namespace Brainamics.Core
         {
             return HashCode.Combine(Mode, Position);
         }
+
+        public override string ToString()
+        {
+            return $"{Position}@{Mode}";
+        }
     }
 }
