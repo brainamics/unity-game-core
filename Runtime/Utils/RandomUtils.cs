@@ -75,6 +75,8 @@ namespace Brainamics.Core
 
         public static float Get(Vector2 range)
         {
+            if (range.x == range.y)
+                return range.x;
             return Random.Range(range.x, range.y);
         }
     }
