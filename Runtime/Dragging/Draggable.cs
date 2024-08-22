@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace Brainamics.Core
 {
     [DefaultExecutionOrder(-10)]
-    public class Draggable : MonoBehaviour, IDraggable, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
+    public class Draggable : MonoBehaviour, IDraggable, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler, IPointerDownHandler
     {
         private readonly DraggingContext _context = new();
         private readonly List<DraggingUpdateDelegate> _handlers = new();
@@ -18,6 +18,7 @@ namespace Brainamics.Core
 
         [Header("Interactions")]
         public bool InteractWithZones = true;
+        public bool PointerDownStartsDragging;
 
         [Header("Events")]
         [SerializeField]
@@ -151,7 +152,8 @@ namespace Brainamics.Core
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            StartDragging(eventData.position);
+            if (!IsDragging)
+                StartDragging(eventData.position);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -170,6 +172,12 @@ namespace Brainamics.Core
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
             UpdateDragging(eventData.position);
+        }
+
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        {
+            if (PointerDownStartsDragging)
+                StartDragging(eventData.position);
         }
     }
 }
