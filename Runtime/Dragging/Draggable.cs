@@ -20,6 +20,9 @@ namespace Brainamics.Core
         public bool InteractWithZones = true;
         public bool PointerDownStartsDragging;
 
+        [SerializeField]
+        private bool _canDrag = true;
+
         [Header("Events")]
         [SerializeField]
         public UnityEvent<IDraggable> _onDraggingStart;
@@ -37,6 +40,23 @@ namespace Brainamics.Core
         public UnityEvent<IDraggable> _onZoneChanged;
 
         public IDropZone ActiveZone => _zone;
+
+        public bool CanDrag
+        {
+            get => _canDrag;
+            set
+            {
+                if (_canDrag == value)
+                    return;
+
+                _canDrag = value;
+                
+                if (!value && IsDragging)
+                {
+                    EndDraggging(Context.PointerPosition);
+                }
+            }
+        }
 
         public bool IsDragging { get; private set; }
 
@@ -69,6 +89,8 @@ namespace Brainamics.Core
         {
             if (IsDragging)
                 throw new InvalidOperationException("The draggable is already being dragged.");
+            if (!CanDrag)
+                return;
             IsDragging = true;
             _context.UpdateEventData(position);
             OnDraggingStart.Invoke(this);
