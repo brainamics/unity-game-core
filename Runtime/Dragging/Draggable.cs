@@ -180,7 +180,8 @@ namespace Brainamics.Core
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            EndDraggging(eventData.position);
+            if (IsDragging)
+                EndDraggging(eventData.position);
         }
 
         void IDropHandler.OnDrop(PointerEventData eventData)
@@ -193,7 +194,8 @@ namespace Brainamics.Core
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            UpdateDragging(eventData.position);
+            if (IsDragging)
+                UpdateDragging(eventData.position);
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
