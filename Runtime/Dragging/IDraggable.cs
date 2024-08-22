@@ -9,6 +9,8 @@ namespace Brainamics.Core
     {
         bool IsDragging { get; }
 
+        bool CanDrag { get; set; }
+
         IDropZone ActiveZone { get; }
 
         DraggingContext Context { get; }
