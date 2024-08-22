@@ -136,6 +136,9 @@ namespace Brainamics.Core
         public static CellAddress operator +(CellAddress a, CellAddress b)
             => new(a.Row + b.Row, a.Column + b.Column);
 
+        public static CellAddress operator -(CellAddress a, CellAddress b)
+            => new(a.Row - b.Row, a.Column - b.Column);
+
         public static implicit operator Vector2Int(CellAddress addr)
             => new(addr.Column, addr.Row);
 
