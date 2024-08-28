@@ -59,6 +59,9 @@ namespace Brainamics.Core
 			while (ExecuteStep())
 			{
 				any = true;
+
+				if (LinearPipeline.AnyOngoingFeedbacks)
+					break;
 			}
 
 			if (any)
