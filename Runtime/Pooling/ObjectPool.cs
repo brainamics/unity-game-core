@@ -20,6 +20,8 @@ namespace Brainamics.Core
             Capacity = capacity;
         }
 
+        public static readonly ObjectPool<T> SharedInstance = new();
+
         public int Capacity
         {
             get => _capacity;
