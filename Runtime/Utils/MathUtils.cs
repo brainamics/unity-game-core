@@ -11,6 +11,11 @@ namespace Brainamics.Core
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
+        public static float RemapTo01(float value, float from, float to)
+        {
+            return Remap(value, from, to, 0, 1);
+        }
+
         public static float IntegrateCurve(AnimationCurve curve, float startTime, float endTime, int steps)
         {
             return Integrate(curve.Evaluate, startTime, endTime, steps);
