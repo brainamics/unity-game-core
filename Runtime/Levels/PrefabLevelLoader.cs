@@ -45,24 +45,10 @@ namespace Brainamics.Core
         {
             if (levelPrefab == LevelPrefab && !allowLevelReloading)
                 return;
-            UnloadLevel();
-            LevelPrefab = levelPrefab;
-
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                LoadedLevel = (GameObject)PrefabUtility.InstantiatePrefab(LevelPrefab, _host);
-                EditorSceneManager.MarkSceneDirty(LoadedLevel.scene);
-            }
-            else
-#endif
-            {
-                LoadedLevel = Instantiate(LevelPrefab, _host);
-            }
-            OnLevelLoaded.Invoke();
+            LoadLevelInternal(levelPrefab, allowLevelReloading);
         }
 
-        public void UnloadLevel()
+        public virtual void UnloadLevel()
         {
             if (LoadedLevel == null)
                 return;
@@ -112,6 +98,25 @@ namespace Brainamics.Core
                 throw new System.InvalidOperationException($"The level loader cannot detect the current level if the host transform has more than a single child ({_host.childCount}).");
 
             LoadedLevel = _host.GetChild(0).gameObject;
+        }
+
+        protected virtual void LoadLevelInternal(GameObject levelPrefab, bool allowLevelReloading)
+        {
+            UnloadLevel();
+            LevelPrefab = levelPrefab;
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                LoadedLevel = (GameObject)PrefabUtility.InstantiatePrefab(LevelPrefab, _host);
+                EditorSceneManager.MarkSceneDirty(LoadedLevel.scene);
+            }
+            else
+#endif
+            {
+                LoadedLevel = Instantiate(LevelPrefab, _host);
+            }
+            OnLevelLoaded.Invoke();
         }
     }
 }
