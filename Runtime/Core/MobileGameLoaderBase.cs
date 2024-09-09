@@ -45,7 +45,7 @@ namespace Brainamics.Core
         {
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (_targetFrameRate > 0)
                 Application.targetFrameRate = _targetFrameRate;
@@ -56,19 +56,23 @@ namespace Brainamics.Core
             Instance = this;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             DontDestroyOnLoad(this);
             Initialize();
             OnInitialize.Invoke();
         }
 
-        private void OnApplicationPause(bool pause)
+        protected virtual void OnDestroy()
+        {
+        }
+
+        protected virtual void OnApplicationPause(bool pause)
         {
             SetPause(pause);
         }
 
-        private void OnApplicationFocus(bool focus)
+        protected virtual void OnApplicationFocus(bool focus)
         {
             SetPause(!focus);
         }
