@@ -21,6 +21,8 @@ namespace Brainamics.Core
 
         protected abstract GameObject LevelBasePrefab { get; }
 
+        protected virtual bool RenderUnloadButton => true;
+
         private bool HasUnsavedChanges => PrefabUtility.HasPrefabInstanceAnyOverrides(LevelHost.LoadedLevel, false);
 
         protected virtual void OnEnable()
@@ -167,6 +169,11 @@ namespace Brainamics.Core
             if (GUILayout.Button(new GUIContent(" Open Level", EditorGUIUtility.IconContent("Folder Icon").image), GUILayout.Width(buttonWidth), GUILayout.Height(20)))
             {
                 OpenLevel();
+            }
+
+            if (RenderUnloadButton && LevelHost.IsLevelLoaded && GUILayout.Button(new GUIContent(" Unload Level"), GUILayout.Width(buttonWidth), GUILayout.Height(20)))
+            {
+                UnloadLevel();
             }
 
             EditorGUILayout.EndHorizontal();
