@@ -185,9 +185,10 @@ namespace Brainamics.Core
 
             if (GUILayout.Button(new GUIContent(" Global Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
             {
-                var levelsConfig = DesignerManager.Instance.LevelService.Config;
-                Selection.activeObject = levelsConfig;
-                EditorGUIUtility.PingObject(levelsConfig);
+                // var levelsConfig = DesignerManager.Instance.LevelService.Config;
+                // Selection.activeObject = levelsConfig;
+                // EditorGUIUtility.PingObject(levelsConfig);
+                Debug.LogWarning("This button is not implemented yet :P");
             }
 
             EditorGUILayout.EndHorizontal();
