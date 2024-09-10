@@ -156,10 +156,8 @@ namespace Brainamics.Core
             RenderFooter();
         }
 
-        private void RenderLevelButtons()
-        {
-            var rect = GUILayoutUtility.GetLastRect();
-        
+        private void RenderLevelButtons(Rect rect)
+        {       
             EditorGUILayout.BeginHorizontal();
             var buttonWidth = (rect.width - 10) / 3;
 
@@ -183,7 +181,7 @@ namespace Brainamics.Core
 
         private void RenderConfigButtons()
         {
-            var rect = GUILayoutUtility.GetLastRect();
+            var rect = position;
         
             EditorGUILayout.BeginHorizontal();
             float buttonWidth = (rect.width - 10) / 2;
@@ -212,7 +210,7 @@ namespace Brainamics.Core
 
         private void RenderScrollableLevelEditor()
         {
-            var rect = GUILayoutUtility.GetLastRect();
+            var rect = position;
             EditorGUILayout.BeginVertical();
             float scrollViewHeight = rect.height - 85 - FooterExtraHeight;
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(scrollViewHeight));
@@ -230,7 +228,7 @@ namespace Brainamics.Core
             if (Application.isPlaying)
                 return;
 
-            var rect = GUILayoutUtility.GetLastRect();
+            var rect = position;
             EditorGUILayout.BeginHorizontal();
             float buttonWidth = (rect.width - 10) / 2;
 
