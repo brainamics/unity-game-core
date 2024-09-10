@@ -158,6 +158,8 @@ namespace Brainamics.Core
 
         private void RenderLevelButtons()
         {       
+            var rect = position;
+        
             EditorGUILayout.BeginHorizontal();
             var buttonWidth = (rect.width - 10) / 3;
 
