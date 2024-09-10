@@ -159,7 +159,7 @@ namespace Brainamics.Core
         private void RenderLevelButtons()
         {
             EditorGUILayout.BeginHorizontal();
-            var buttonWidth = (position.width - 10) / 3;
+            var buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 3;
 
             if (GUILayout.Button(new GUIContent(" New Level", EditorGUIUtility.IconContent("d_CreateAddNew").image), GUILayout.Width(buttonWidth)))
             {
@@ -182,7 +182,7 @@ namespace Brainamics.Core
         private void RenderConfigButtons()
         {
             EditorGUILayout.BeginHorizontal();
-            float buttonWidth = (position.width - 10) / 2;
+            float buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 2;
 
             if (GUILayout.Button(new GUIContent(" Level Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
             {
@@ -209,7 +209,7 @@ namespace Brainamics.Core
         private void RenderScrollableLevelEditor()
         {
             EditorGUILayout.BeginVertical();
-            float scrollViewHeight = position.height - 85 - FooterExtraHeight;
+            float scrollViewHeight = GUILayoutUtility.GetLastRect().height - 85 - FooterExtraHeight;
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(scrollViewHeight));
 
             RenderLevelEditor();
@@ -226,7 +226,7 @@ namespace Brainamics.Core
                 return;
 
             EditorGUILayout.BeginHorizontal();
-            float buttonWidth = (position.width - 10) / 2;
+            float buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 2;
 
             if (GUILayout.Button(new GUIContent(" Save Level" + (HasUnsavedChanges ? " *" : ""), EditorGUIUtility.IconContent("SaveAs").image), GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
