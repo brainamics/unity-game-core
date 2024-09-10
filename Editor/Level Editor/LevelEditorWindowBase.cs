@@ -159,7 +159,7 @@ namespace Brainamics.Core
         private void RenderLevelButtons()
         {
             EditorGUILayout.BeginHorizontal();
-            float buttonWidth = (position.width - 10) / 2;
+            var buttonWidth = (position.width - 10) / 3;
 
             if (GUILayout.Button(new GUIContent(" New Level", EditorGUIUtility.IconContent("d_CreateAddNew").image), GUILayout.Width(buttonWidth)))
             {
