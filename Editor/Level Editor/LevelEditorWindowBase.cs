@@ -158,8 +158,10 @@ namespace Brainamics.Core
 
         private void RenderLevelButtons()
         {
+            var rect = GUILayoutUtility.GetLastRect();
+        
             EditorGUILayout.BeginHorizontal();
-            var buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 3;
+            var buttonWidth = (rect.width - 10) / 3;
 
             if (GUILayout.Button(new GUIContent(" New Level", EditorGUIUtility.IconContent("d_CreateAddNew").image), GUILayout.Width(buttonWidth)))
             {
@@ -181,8 +183,10 @@ namespace Brainamics.Core
 
         private void RenderConfigButtons()
         {
+            var rect = GUILayoutUtility.GetLastRect();
+        
             EditorGUILayout.BeginHorizontal();
-            float buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 2;
+            float buttonWidth = (rect.width - 10) / 2;
 
             if (GUILayout.Button(new GUIContent(" Level Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
             {
@@ -208,8 +212,9 @@ namespace Brainamics.Core
 
         private void RenderScrollableLevelEditor()
         {
+            var rect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.BeginVertical();
-            float scrollViewHeight = GUILayoutUtility.GetLastRect().height - 85 - FooterExtraHeight;
+            float scrollViewHeight = rect.height - 85 - FooterExtraHeight;
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(scrollViewHeight));
 
             RenderLevelEditor();
@@ -225,8 +230,9 @@ namespace Brainamics.Core
             if (Application.isPlaying)
                 return;
 
+            var rect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.BeginHorizontal();
-            float buttonWidth = (GUILayoutUtility.GetLastRect().width - 10) / 2;
+            float buttonWidth = (rect.width - 10) / 2;
 
             if (GUILayout.Button(new GUIContent(" Save Level" + (HasUnsavedChanges ? " *" : ""), EditorGUIUtility.IconContent("SaveAs").image), GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
