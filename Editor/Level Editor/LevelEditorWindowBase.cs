@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor.SceneManagement;
 using UnityEditor;
 using UnityEngine;
@@ -10,8 +7,9 @@ namespace Brainamics.Core
     public abstract class LevelEditorWindowBase<TLevel> : EditorWindow
         where TLevel : Behaviour
     {
-        //private bool _selectionFoldout = true;
-        //private bool _viewFoldout = true;
+        private Vector2 _scrollPosition;
+
+        protected virtual int FooterExtraHeight => 0;
 
         public virtual string EditorSceneName => "Editor Scene";
 
@@ -25,60 +23,48 @@ namespace Brainamics.Core
 
         private bool HasUnsavedChanges => PrefabUtility.HasPrefabInstanceAnyOverrides(LevelHost.LoadedLevel, false);
 
-        //[MenuItem("Tools/Level Editor")]
-        //public static void OpenWindow()
-        //{
-        //    var window = GetWindow<LevelEditorWindowBase<TLevel>>("Level Editor");
-        //    window.Show();
-        //}
-
         protected virtual void OnEnable()
         {
             Selection.selectionChanged += Repaint;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         protected virtual void OnDisable()
         {
             Selection.selectionChanged -= Repaint;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        protected virtual void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+            if (stateChange == PlayModeStateChange.ExitingEditMode)
+            {
+                SaveAndPlayLevel();
+            }
         }
 
         protected virtual void OnGUI()
         {
-            var margin = 10f;
-            var marginRect = new Rect(margin, margin, position.width - 2 * margin, position.height - 2 * margin);
-            GUILayout.BeginArea(marginRect);
-
             if (!IsOnEditorScene())
             {
-                GUILayout.Box("Not on the editor scene.");
-                if (!string.IsNullOrEmpty(EditorSceneName) && GUILayout.Button("Open Editor"))
-                    EditorSceneManager.OpenScene(EditorScenePath);
-                GUILayout.EndArea();
+                RenderNotOnEditorScene();
                 return;
             }
 
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(300));
-            if (GUILayout.Button("Create Level"))
-            {
-                CreateLevel();
-            }
-            if (GUILayout.Button("Open Level"))
-            {
-                OpenLevel();
-            }
-            if (LevelHost.IsLevelLoaded && GUILayout.Button("Unload Level"))
-            {
-                UnloadLevel();
-            }
-            EditorGUILayout.EndHorizontal();
-
+            RenderLevelButtons();
             RenderLevelTools();
+        }
 
-            GUILayout.EndArea();
+        private void RenderNotOnEditorScene()
+        {
+            GUILayout.Box("Not on the editor scene.");
+            if (!string.IsNullOrEmpty(EditorSceneName) && GUILayout.Button("Open Editor"))
+            {
+                EditorSceneManager.OpenScene(EditorScenePath);
+            }
         }
 
         protected abstract bool IsOnEditorScene();
-
         protected abstract void InitializeLevelPrefab(GameObject root);
 
         protected virtual void CreateLevel()
@@ -86,13 +72,16 @@ namespace Brainamics.Core
             var outputPath = EditorUtility.SaveFilePanelInProject("Save Level Prefab", null, "prefab", null, LevelsAssetPath);
             if (string.IsNullOrEmpty(outputPath))
                 return;
+
             var root = (GameObject)PrefabUtility.InstantiatePrefab(LevelBasePrefab);
             InitializeLevelPrefab(root);
             var newLevelPrefab = PrefabUtility.SaveAsPrefabAssetAndConnect(root, outputPath, InteractionMode.UserAction);
             DestroyImmediate(root);
 
             if (EditorUtility.DisplayDialog("New Level", "Open the new level?", "Open Level", "No"))
+            {
                 OpenLevel(newLevelPrefab);
+            }
         }
 
         protected virtual void OpenLevel()
@@ -100,6 +89,7 @@ namespace Brainamics.Core
             var path = EditorUtility.OpenFilePanel("Open Level Prefab", LevelsAssetPath, "prefab");
             if (string.IsNullOrEmpty(path))
                 return;
+
             path = EditorUtils.GetRelativeAssetPath(path);
             var prefab = AssetDatabase.LoadAssetAtPath<TLevel>(path);
             OpenLevel(prefab.gameObject);
@@ -110,7 +100,9 @@ namespace Brainamics.Core
             UnloadLevel();
             if (LevelHost.IsLevelLoaded)
                 return;
+
             LevelHost.LoadLevel(prefab);
+            titleContent = new GUIContent($"Level Editor ({prefab.name})");
         }
 
         protected virtual void UnloadLevel()
@@ -118,10 +110,12 @@ namespace Brainamics.Core
             var host = LevelHost;
             if (!host.IsLevelLoaded)
                 return;
-            if (HasUnsavedChanges &&
-                !EditorUtility.DisplayDialog("Unload level", "Are you sure you wanna lose the changes made on the prefab?", "Yes", "No"))
+
+            if (HasUnsavedChanges && !EditorUtility.DisplayDialog("Unload level", "Are you sure you wanna lose the changes made on the prefab?", "Yes", "No"))
                 return;
+
             LevelHost.UnloadLevel();
+            titleContent = new GUIContent("Level Editor");
         }
 
         protected virtual void SaveLevel()
@@ -129,9 +123,19 @@ namespace Brainamics.Core
             var instance = LevelHost.LoadedLevel;
             PrefabUtility.ApplyPrefabInstance(instance, InteractionMode.UserAction);
             PrefabUtility.RevertPrefabInstance(instance, InteractionMode.UserAction);
+            EditorSceneManager.SaveOpenScenes();
+        }
+
+        protected virtual void SaveAndPlayLevel()
+        {
+            Debug.LogWarning("This button is not implemented yet :P");
         }
 
         protected virtual void RenderLevelEditor()
+        {
+        }
+
+        protected virtual void RenderLevelEditorFooter()
         {
         }
 
@@ -140,23 +144,91 @@ namespace Brainamics.Core
             var host = LevelHost;
             if (!host.IsLevelLoaded)
                 return;
-            var level = host.LoadedLevel;
 
-            EditorGUILayout.Space();
-            GUILayout.Label($"Editing: {level.name}", EditorStyles.boldLabel);
+            RenderConfigButtons();
+            EditorGUILayout.Space(3);
 
-            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(300));
-            if (GUILayout.Button("Save Level" + (HasUnsavedChanges ? '*' : null)))
-                SaveLevel();
-            if (GUILayout.Button("Select", GUILayout.Width(50)))
+            RenderScrollableLevelEditor();
+            GUILayout.FlexibleSpace();
+
+            RenderFooter();
+        }
+
+        private void RenderLevelButtons()
+        {
+            EditorGUILayout.BeginHorizontal();
+            float buttonWidth = (position.width - 10) / 2;
+
+            if (GUILayout.Button(new GUIContent(" New Level", EditorGUIUtility.IconContent("d_CreateAddNew").image), GUILayout.Width(buttonWidth)))
             {
-                Selection.activeObject = host.LevelPrefab;
-                EditorGUIUtility.PingObject(host.LevelPrefab);
+                CreateLevel();
             }
-            EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space();
+            if (GUILayout.Button(new GUIContent(" Open Level", EditorGUIUtility.IconContent("Folder Icon").image), GUILayout.Width(buttonWidth), GUILayout.Height(20)))
+            {
+                OpenLevel();
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void RenderConfigButtons()
+        {
+            EditorGUILayout.BeginHorizontal();
+            float buttonWidth = (position.width - 10) / 2;
+
+            if (GUILayout.Button(new GUIContent(" Level Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
+            {
+                Selection.activeObject = LevelHost.LevelPrefab;
+                EditorGUIUtility.PingObject(LevelHost.LevelPrefab);
+            }
+
+            if (GUILayout.Button(new GUIContent(" Global Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
+            {
+                var levelsConfig = DesignerManager.Instance.LevelService.Config;
+                Selection.activeObject = levelsConfig;
+                EditorGUIUtility.PingObject(levelsConfig);
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void RenderScrollableLevelEditor()
+        {
+            EditorGUILayout.BeginVertical();
+            float scrollViewHeight = position.height - 85 - FooterExtraHeight;
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(scrollViewHeight));
+
             RenderLevelEditor();
+
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+        }
+
+        private void RenderFooter()
+        {
+            RenderLevelEditorFooter();
+
+            EditorGUILayout.BeginHorizontal();
+            float buttonWidth = (position.width - 10) / 2;
+
+            if (GUILayout.Button(new GUIContent(" Save Level" + (HasUnsavedChanges ? " *" : ""), EditorGUIUtility.IconContent("SaveAs").image), GUILayout.Width(buttonWidth), GUILayout.Height(30)))
+            {
+                SaveLevel();
+            }
+
+            if (HasUnsavedChanges)
+            {
+                GUI.enabled = false;
+            }
+
+            if (GUILayout.Button(new GUIContent(" Play Level", EditorGUIUtility.IconContent("PlayButton").image), GUILayout.Width(buttonWidth), GUILayout.Height(30)))
+            {
+                SaveAndPlayLevel();
+            }
+
+            GUI.enabled = true;
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
