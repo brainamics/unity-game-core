@@ -192,13 +192,18 @@ namespace Brainamics.Core
 
             if (GUILayout.Button(new GUIContent(" Global Config", EditorGUIUtility.IconContent("_Popup").image), GUILayout.Width(buttonWidth)))
             {
-                // var levelsConfig = DesignerManager.Instance.LevelService.Config;
-                // Selection.activeObject = levelsConfig;
-                // EditorGUIUtility.PingObject(levelsConfig);
-                Debug.LogWarning("This button is not implemented yet :P");
+                SelectGlobalConfig();
             }
 
             EditorGUILayout.EndHorizontal();
+        }
+
+        protected virtual void SelectGlobalConfig()
+        {
+            // var levelsConfig = DesignerManager.Instance.LevelService.Config;
+            // Selection.activeObject = levelsConfig;
+            // EditorGUIUtility.PingObject(levelsConfig);
+            Debug.LogWarning("This button is not implemented yet :P");
         }
 
         private void RenderScrollableLevelEditor()
@@ -216,6 +221,9 @@ namespace Brainamics.Core
         private void RenderFooter()
         {
             RenderLevelEditorFooter();
+
+            if (Application.isPlaying)
+                return;
 
             EditorGUILayout.BeginHorizontal();
             float buttonWidth = (position.width - 10) / 2;
