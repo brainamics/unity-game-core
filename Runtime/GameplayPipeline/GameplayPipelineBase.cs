@@ -53,6 +53,9 @@ namespace Brainamics.Core
 
 		public bool Execute()
 		{
+			if (!CanExecute())
+   				return false;
+  
 			Assert.IsFalse(LinearPipeline.AnyOngoingFeedbacks);
 			var any = false;
 
@@ -87,5 +90,8 @@ namespace Brainamics.Core
 		{
 			LinearPipeline.CancelAction(PipelineActionId);
 		}
+
+		protected virtual bool CanExecute()
+  			=> true;
 	}
 }
