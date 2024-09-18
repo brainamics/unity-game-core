@@ -203,7 +203,9 @@ namespace Brainamics.Core
                 try
                 {
                     obj.LoadState(_state);
-                } catch (Exception exception) {
+                }
+                catch (Exception exception)
+                {
                     if (!SceneObjectsLoadResilience)
                         throw;
                     Debug.LogError($"Error while loading scene object state '{obj}'; reporting and ignoring.");
