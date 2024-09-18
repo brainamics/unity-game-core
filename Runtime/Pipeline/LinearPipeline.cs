@@ -15,6 +15,12 @@ namespace Brainamics.Core
 
         public bool AnyOngoingFeedbacks => _feedbacks.Count > 0;
 
+        public int FeedbacksCount => _feedbacks.Count;
+
+#if UNITY_EDITOR
+        public IEnumerable<object> Feedbacks => _feedbacks;
+#endif
+
         private sealed class FeedbackObject
         {
 #if UNITY_EDITOR
