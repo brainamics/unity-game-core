@@ -11,10 +11,10 @@ namespace Brainamics.Core
         private bool _playing;
 
         [SerializeField]
-        private AudioSource _musicAudioSource;
+        protected AudioSource _musicAudioSource;
 
         [SerializeField]
-        private AudioClip _musicClip;
+        protected AudioClip _musicClip;
 
         public AudioClip MusicClip
         {
