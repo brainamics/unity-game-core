@@ -28,6 +28,8 @@ namespace Brainamics.Core
 
         protected virtual void Awake()
         {
+            if (!_musicAudioSource)
+                _musicAudioSource = GetComponentInChildren<AudioSource>();
         }
 
         protected virtual void Start()
