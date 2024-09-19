@@ -28,6 +28,11 @@ namespace Brainamics.Core
             GUILayout.Label("Active Feedbacks:");
             GUILayout.Label(Target.Pipeline.FeedbacksCount.ToString());
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Enqueued Actions:");
+            GUILayout.Label(Target.Pipeline.InQueueActionsCount.ToString());
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
