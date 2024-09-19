@@ -17,6 +17,8 @@ namespace Brainamics.Core
 
         public int FeedbacksCount => _feedbacks.Count;
 
+        public int InQueueActionsCount => _actionQueue.Count;
+
 #if UNITY_EDITOR
         public IEnumerable<object> Feedbacks => _feedbacks;
 #endif
@@ -68,7 +70,7 @@ namespace Brainamics.Core
 
         public PipelineAction EnqueueAction(PipelineAction action, int priority = 0, bool replace = false)
         {
-            var duplicateId = action.Id != null && _actionsById.TryGetValue(action.Id, out _);
+            var duplicateId = action.Id != null && _actionsById.TryGetValue(action.Id, out var prevAction) && !prevAction.IsCanceled;
             if (duplicateId)
             {
                 if (replace)
