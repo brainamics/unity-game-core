@@ -77,7 +77,16 @@ namespace Brainamics.Core
         {
             if (range.x == range.y)
                 return range.x;
-            return Random.Range(range.x, range.y);
+            return Random .Range(range.x, range.y);
+        }
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            for (var n = list.Count - 1; n > 0; n--)
+            {
+                var k = UnityEngine.Random.Range(0, n);
+                (list[k], list[n]) = (list[n], list[k]);
+            }
         }
     }
 }
