@@ -17,7 +17,7 @@ namespace Brainamics.Core
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var transform = GetTargetTransform(behaviour);
-            var fromPosition = AutoFromPosition ? transform.position : FromPosition;
+            var fromPosition = AutoFromPosition ? GetCurrentValue(transform) : FromPosition;
             return RunTimedLoop(lerp => SetCurrentValue(transform, Vector3.LerpUnclamped(fromPosition, ToPosition, lerp)));
         }
 
