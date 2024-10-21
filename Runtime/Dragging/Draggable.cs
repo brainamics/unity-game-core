@@ -18,6 +18,7 @@ namespace Brainamics.Core
 
         [Header("Interactions")]
         public bool InteractWithZones = true;
+        
         public bool PointerDownStartsDragging;
 
         [SerializeField]
@@ -25,25 +26,40 @@ namespace Brainamics.Core
 
         [Header("Events")]
         [SerializeField]
-        public UnityEvent<IDraggable> _onDraggingStart;
+        private UnityEvent<IDraggable> _onDraggingStart;
 
         [SerializeField]
-        public UnityEvent<IDraggable> _onDraggingEnd;
+        private UnityEvent<IDraggable> _onDraggingEnd;
 
         [SerializeField]
-        public UnityEvent<IDraggable> _onDragging;
+        private UnityEvent<IDraggable> _onDragging;
 
         [SerializeField]
-        public UnityEvent<IDraggable, IDropZone> _onDrop;
+        private UnityEvent<IDraggable, IDropZone> _onDrop;
 
         [SerializeField]
-        public UnityEvent<IDraggable> _onZoneChanged;
+        private UnityEvent<IDraggable> _onZoneChanged;
+
+        public event Func<Draggable, bool> OnCanDragTest; 
 
         public IDropZone ActiveZone => _zone;
 
         public bool CanDrag
         {
-            get => _canDrag;
+            get
+            {
+                if (!_canDrag)
+                    return false;
+                if (OnCanDragText != null)
+                {
+                    foreach (var handler in OnCanDragText.GetInvocationList())
+                    {
+                        if (!handler.Invoke(this))
+                            return false;
+                    }
+                }
+                return true;
+            }
             set
             {
                 if (_canDrag == value)
