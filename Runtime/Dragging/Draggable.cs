@@ -54,7 +54,7 @@ namespace Brainamics.Core
                 {
                     foreach (var handler in OnCanDragTest.GetInvocationList())
                     {
-                        if (!handler.Invoke(this))
+                        if (!handler.DynamicInvoke(this))
                             return false;
                     }
                 }
