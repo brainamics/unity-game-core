@@ -50,7 +50,7 @@ namespace Brainamics.Core
             {
                 if (!_canDrag)
                     return false;
-                if (OnCanDragText != null)
+                if (OnCanDragTest != null)
                 {
                     foreach (var handler in OnCanDragTest.GetInvocationList())
                     {
