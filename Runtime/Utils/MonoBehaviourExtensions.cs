@@ -58,7 +58,7 @@ namespace Brainamics.Core
         public static void RunWhile(this MonoBehaviour b, float duration, Action action)
         {
             var startTime = Time.time;
-            b.RunWhile(action, () => Time.time - startTime >= duration);
+            b.RunWhile(action, () => Time.time - startTime < duration);
         }
 
         public static void CancelCoroutine(this MonoBehaviour b, ref Coroutine coroutine)
