@@ -43,7 +43,7 @@ namespace Brainamics.Core
 
         public static void RunWhile(this MonoBehaviour b, Action action, Func<bool> test)
         {
-            monoBehaviour.StartCoroutine(Co());
+            b.StartCoroutine(Co());
 
             IEnumerator Co()
             {
