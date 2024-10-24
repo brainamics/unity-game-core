@@ -73,7 +73,7 @@ namespace Brainamics.Core
 		}
 
 		[ContextMenu("Schedule")]
-		public void Schedule()
+		public virtual void Schedule()
 		{
 			LinearPipeline.EnqueueAction(PipelineActionId, () => Execute(), priority: PipelinePriority);
 		}
