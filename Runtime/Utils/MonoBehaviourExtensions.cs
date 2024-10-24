@@ -41,6 +41,26 @@ namespace Brainamics.Core
             }
         }
 
+        public static void RunWhile(this MonoBehaviour b, Action action, Func<bool> test)
+        {
+            monoBehaviour.StartCoroutine(Co());
+
+            IEnumerator Co()
+            {
+                while (test())
+                {
+                    action();
+                    yield return null;
+                }
+            }
+        }
+
+        public static void RunWhile(this MonoBehaviour b, float duration, Action action)
+        {
+            var startTime = Time.time;
+            b.RunWhile(action, () => Time.time - startTime >= duration);
+        }
+
         public static void CancelCoroutine(this MonoBehaviour b, ref Coroutine coroutine)
         {
             if (coroutine ==  null)
