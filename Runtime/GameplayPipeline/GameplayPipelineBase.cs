@@ -84,6 +84,7 @@ namespace Brainamics.Core
 
 		protected virtual void OnEnable()
 		{
+  			Schedule();
 		}
 
 		protected virtual void OnDisable()
