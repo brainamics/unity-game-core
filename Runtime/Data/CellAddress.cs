@@ -183,5 +183,11 @@ namespace Brainamics.Core
                     yield return addr;
             }
         }
+
+        public static void ThrowIfInvalid(this CellAddress address)
+        {
+            if (!address.IsValid)
+                throw new System.InvalidOperationException("Invalid cell address.");
+        }
     }
 }
