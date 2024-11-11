@@ -157,6 +157,16 @@ namespace Brainamics.Core
 
     public static class CellAddressExtensions
     {
+        public static CellAddress WithRow(this CellAddress address, int row)
+        {
+            return new CellAddress(row, address.Column);
+        }
+
+        public static CellAddress WithColumn(this CellAddress address, int column)
+        {
+            return new CellAddress(address.Row, column);
+        }
+        
         public static bool IsValid(this CellAddress address, int rows, int columns)
         {
             if (!address.IsValid)
