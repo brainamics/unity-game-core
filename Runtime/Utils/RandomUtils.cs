@@ -60,7 +60,7 @@ namespace Brainamics.Core
 
         public static int Get(Vector2Int range, AnimationCurve curve, int steps)
         {
-            return Mathf.RoundToInt(Get(range, curve, steps));
+            return Mathf.RoundToInt(Get((Vector2)range, curve, steps));
         }
 
         public static Vector3 Get(Vector3 min, Vector3 max)
