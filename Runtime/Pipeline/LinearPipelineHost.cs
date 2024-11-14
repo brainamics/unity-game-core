@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
+    [DefaultExecutionOrder(500)]
     public class LinearPipelineHost : MonoBehaviour
     {
         public bool RespectGamePause = true;
