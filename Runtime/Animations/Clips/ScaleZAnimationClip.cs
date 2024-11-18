@@ -9,6 +9,7 @@ namespace Brainamics.Core
     public class ScaleZAnimationClip : TransformAnimationClipBase
     {
         public bool AutoFromScale;
+        public bool AutoToScale;
         public float FromScale;
         public float ToScale = 1;
 
@@ -16,10 +17,11 @@ namespace Brainamics.Core
         {
             var transform = GetTargetTransform(behaviour);
             var fromScale = AutoFromScale ? transform.localScale.z : FromScale;
+            var toScale = AutoToScale ? transform.localScale.z : ToScale;
             return RunTimedLoop(lerp =>
             {
                 var scale = transform.localScale;
-                scale.z = Mathf.LerpUnclamped(fromScale, ToScale, lerp);
+                scale.z = Mathf.LerpUnclamped(fromScale, toScale, lerp);
                 transform.localScale = scale;
             });
         }
