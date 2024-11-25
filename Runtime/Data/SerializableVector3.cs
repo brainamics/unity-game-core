@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     public struct SerializableVector3
-    {
+    {        
         public SerializableVector3(float x, float y, float z)
         {
             X = x;
@@ -20,11 +20,9 @@ namespace Brainamics.Core
             Z = value.z;
         }
     
-        public float X { get; set; }
-    
-        public float Y { get; set; }
-    
-        public float Z { get; set; }
+        public float X;
+        public float Y;
+        public float Z;
     
         public static implicit operator Vector3(SerializableVector3 value)
         {
