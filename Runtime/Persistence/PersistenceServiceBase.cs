@@ -32,6 +32,9 @@ namespace Brainamics.Core
         [SerializeField]
         private bool _reloadActiveScene;
 
+        [SerializeField]
+        private bool _autoLoadPersistenceManager = true;
+
         [Tooltip("Whether to ignore errors when loading scene objects.")]
         public bool SceneObjectsLoadResilience = false;
 
@@ -124,7 +127,7 @@ namespace Brainamics.Core
                 _state = await MigrateAndLoadStateFromProviderAsync();
                 Log($"loading game: {_state}");
                 await LoadGameState(_state, progress);
-                if (_activeScenePersistenceManager != null)
+                if (_activeScenePersistenceManager && _autoLoadPersistenceManager)
                     LoadSceneState(_activeScenePersistenceManager.PersistableObjects);
             });
         }
