@@ -33,7 +33,7 @@ namespace Brainamics.Core
         private bool _reloadActiveScene;
 
         [SerializeField]
-        private bool _autoLoadPersistenceManager = true;
+        private bool _autoLoadPersistenceManager;
 
         [Tooltip("Whether to ignore errors when loading scene objects.")]
         public bool SceneObjectsLoadResilience = false;
