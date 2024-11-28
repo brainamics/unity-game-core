@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,3 +50,4 @@ namespace Brainamics.Core
         }
     }
 }
+#endif
