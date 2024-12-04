@@ -17,5 +17,16 @@ public static class PrimeTweenExtensions
         var handle = pipeline.RegisterFeedbackHandle();
         tween.OnComplete(handle.Dispose);
     }
+
+    public static async void SetBusy(this AsyncCounterFlag flag, Tween tween)
+    {
+        flag.Counter++;
+        try
+        {
+            await tween;
+        } finally {
+            flag.Counter--;
+        }
+    }
 }
 #endif
