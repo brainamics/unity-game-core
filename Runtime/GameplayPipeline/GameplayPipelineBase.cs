@@ -15,6 +15,8 @@ namespace Brainamics.Core
 
 		public IReadOnlyList<GameplayPipelineMechanicDelegate> Mechanics => _mechanics;
 
+  		public virtual int MaxLoopExecutionTimes => 10000;
+
 		protected abstract object PipelineActionId { get; }
 
 		protected virtual int PipelinePriority => 0;
@@ -59,12 +61,19 @@ namespace Brainamics.Core
 			Assert.IsFalse(LinearPipeline.AnyOngoingFeedbacks);
 			var any = false;
 
+			var times = 0;
 			while (ExecuteStep())
 			{
 				any = true;
 
 				if (LinearPipeline.AnyOngoingFeedbacks)
 					break;
+
+     				if (++times > MaxLoopExecutionTimes)
+	 			{
+     					_mechanics.Clear();
+	 				throw new System.InvalidOperationException($"Gameplay pipeline executed in a loop {times} times. This could be an indicator of a possible infinite loop in the pipeline. To prevent this problem from happening in the same play session, all mechanics have been removed from the pipeline.");
+      				}
 			}
 
 			if (any)
