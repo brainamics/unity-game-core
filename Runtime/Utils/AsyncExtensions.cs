@@ -24,5 +24,23 @@ namespace Brainamics.Core
                 taskSource.SetResult(true);
             }
         }
+
+        public static void Bind(this GameplayPipelineBase pipeline, AsyncCounterFlag flag)
+        {
+            flag.OnValueChanged += flag =>
+            {
+                if (!flag.IsSet)
+                    pipeline.Schedule();
+            };
+        }
+
+        public static void Bind(this GameplayPipelineBase pipeline, AsyncFlag flag)
+        {
+            flag.OnValueChanged += flag =>
+            {
+                if (!flag.IsSet)
+                    pipeline.Schedule();
+            };
+        }
     }
 }
