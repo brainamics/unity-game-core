@@ -50,6 +50,11 @@ namespace Brainamics.Core
             }
         }
 
+        public override string ToString()
+        {
+            return $"[{GetType().Name}] Set={IsSet}, Counter={Counter}";
+        }
+
         private UniTask WaitForNextValue()
         {
             var taskSource = AutoResetUniTaskCompletionSource.Create();
