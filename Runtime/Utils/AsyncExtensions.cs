@@ -25,22 +25,28 @@ namespace Brainamics.Core
             }
         }
 
-        public static void Bind(this GameplayPipelineBase pipeline, AsyncCounterFlag flag)
+        public static IDisposable Bind(this GameplayPipelineBase pipeline, AsyncCounterFlag flag)
         {
-            flag.OnValueChanged += flag =>
+            flag.OnValueChanged += OnFlagValueChanged;
+            return new CallbackDisposable(() => flag.OnValueChanged -= OnFlagValueChanged);
+
+            void OnFlagValueChanged(AsyncCounterFlag flag)
             {
                 if (!flag.IsSet)
                     pipeline.Schedule();
-            };
+            }
         }
 
-        public static void Bind(this GameplayPipelineBase pipeline, AsyncFlag flag)
+        public static IDisposable Bind(this GameplayPipelineBase pipeline, AsyncFlag flag)
         {
-            flag.OnValueChanged += flag =>
+            flag.OnValueChanged += OnFlagValueChanged;
+            return new CallbackDisposable(() => flag.OnValueChanged -= OnFlagValueChanged);
+
+            void OnFlagValueChanged(AsyncFlag flag)
             {
                 if (!flag.IsSet)
                     pipeline.Schedule();
-            };
+            }
         }
     }
 }
