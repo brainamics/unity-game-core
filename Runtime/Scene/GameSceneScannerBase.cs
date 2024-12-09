@@ -53,6 +53,13 @@ namespace Brainamics.Core
         public static TGameSceneScanner TryLocateByScene(Scene scene)
             => SceneScannersManager.TryLocateByScene<TGameSceneScanner>(scene);
 
+        /// <summary>
+        /// Locates the game scene manager for the active scene.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TGameSceneScanner LocateByActiveScene()
+            => LocaoteByScene(SceneManager.GetActiveScene());
+
         protected virtual void AwakeInternal() { }
 
         protected virtual void StartInternal() { }
