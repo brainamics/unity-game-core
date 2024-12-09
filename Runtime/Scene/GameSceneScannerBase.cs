@@ -58,7 +58,7 @@ namespace Brainamics.Core
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TGameSceneScanner LocateByActiveScene()
-            => LocaoteByScene(SceneManager.GetActiveScene());
+            => LocateByScene(SceneManager.GetActiveScene());
 
         protected virtual void AwakeInternal() { }
 
