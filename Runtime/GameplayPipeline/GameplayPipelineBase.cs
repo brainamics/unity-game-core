@@ -33,6 +33,12 @@ namespace Brainamics.Core
 			_mechanics.Remove(mechanic);
 		}
 
+		public T GetMechanic<T>()
+  			where T : GameplayPipelineMechanic
+		{
+		    return _mechanicsObject.GetComponentInChildren<T>();
+		}
+
 		public bool ExecuteStep()
 		{
 			_context.Reset();
