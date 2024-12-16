@@ -33,10 +33,10 @@ namespace Brainamics.Core
 			_mechanics.Remove(mechanic);
 		}
 
-		public T GetMechanic<T>()
+		public virtual T GetMechanic<T>()
   			where T : GameplayPipelineMechanic
 		{
-		    return _mechanicsObject.GetComponentInChildren<T>();
+		    return gameObject.GetComponentInChildren<T>();
 		}
 
 		public bool ExecuteStep()
