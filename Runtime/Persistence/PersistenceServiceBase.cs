@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -136,6 +136,21 @@ namespace Brainamics.Core
         {
             LoadGameAsync(progress).RunInBackground();
         }
+        
+        public void LoadActiveSceneState()
+        {
+            if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
+            {
+                LoadGameInBackground(null);
+                return;
+            }
+            StartSaveLoadOperation(() =>
+            {
+                if (_activeScenePersistenceManager == null)
+                    throw new InvalidOperationException("No active scene persistence manager is set.");
+                LoadSceneState(_activeScenePersistenceManager.PersistableObjects);
+            });
+        }
 
         protected abstract TState NewState();
 
@@ -162,20 +177,10 @@ namespace Brainamics.Core
         {
             throw new NotSupportedException($"Migrating save file from version {fromVersion} to {toVersion} is not supported.");
         }
-
-        public void LoadActiveSceneState()
+        
+        protected virtual bool CanSave(TState state)
         {
-            if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
-            {
-                LoadGameInBackground(null);
-                return;
-            }
-            StartSaveLoadOperation(() =>
-            {
-                if (_activeScenePersistenceManager == null)
-                    throw new InvalidOperationException("No active scene persistence manager is set.");
-                LoadSceneState(_activeScenePersistenceManager.PersistableObjects);
-            });
+            return true;
         }
 
         private async Task<TState> MigrateAndLoadStateFromProviderAsync()
@@ -243,6 +248,11 @@ namespace Brainamics.Core
             foreach (var obj in persistableObjects)
             {
                 obj.SaveState(state);
+            }
+            if (!CanSave(state))
+            {
+                LogWarning("Blocked save of the game state because of CanSave returning false.");
+                return false;
             }
             _state = state;
             Log($"saving game: {state}");
