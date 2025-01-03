@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using Particle = UnityEngine.ParticleSystem.Particle;
 
 namespace Brainamics.Core
@@ -8,40 +9,22 @@ namespace Brainamics.Core
     public class ParticleLifetimeEvents : MonoBehaviour
     {
         private readonly List<float> _aliveParticlesRemainingTime = new List<float>();
+        private readonly List<Particle> _youngestParticles = new();
+        
         private Particle[] _particles;
         private float _shortestTimeAlive = float.MaxValue;
 
         [SerializeField]
         private ParticleSystem _particleSystem;
 
-        private event System.Action<Particle> _particleWasBorn;
-
-        public event System.Action<Particle> ParticleWasBorn
-        {
-            add => _particleWasBorn += value;
-            remove => _particleWasBorn -= value;
-        }
-        private void RaiseParticleWasBorn(Particle particle)
-        {
-            _particleWasBorn?.Invoke(particle);
-        }
-
-        private event System.Action _particleDied;
-        public event System.Action ParticleDied
-        {
-            add => _particleDied += value;
-            remove => _particleDied -= value;
-        }
-        private void RaiseParticleDied()
-        {
-            _particleDied?.Invoke();
-        }
+        public UnityEvent<Particle> OnParticleBorn;
+        public UnityEvent OnParticleDied;
 
         private void Awake()
         {
             _particles = new Particle[_particleSystem.main.maxParticles];
         }
-
+        
         private void LateUpdate()
         {
             TryBroadcastParticleDeath();
@@ -63,6 +46,11 @@ namespace Brainamics.Core
             }
             _shortestTimeAlive = youngestParticleTimeAlive;
         }
+        
+        private void Reset()
+        {
+            _particleSystem = GetComponent<ParticleSystem>();
+        }
 
         private void TryBroadcastParticleDeath()
         {
@@ -76,9 +64,9 @@ namespace Brainamics.Core
             }
         }
 
-        private Particle[] GetYoungestParticles(int numPartAlive, Particle[] particles, ref float youngestParticleTimeAlive)
+        private List<Particle> GetYoungestParticles(int numPartAlive, Particle[] particles, ref float youngestParticleTimeAlive)
         {
-            var youngestParticles = new List<Particle>();
+            _youngestParticles.Clear();
             for (var i = 0; i < numPartAlive; i++)
             {
                 var timeAlive = particles[i].startLifetime - particles[i].remainingLifetime;
@@ -92,15 +80,20 @@ namespace Brainamics.Core
                 var timeAlive = particles[i].startLifetime - particles[i].remainingLifetime;
                 if (Mathf.Approximately(timeAlive, youngestParticleTimeAlive))
                 {
-                    youngestParticles.Add(particles[i]);
+                    _youngestParticles.Add(particles[i]);
                 }
             }
-            return youngestParticles.ToArray();
+            return _youngestParticles;
+        }
+        
+        private void RaiseParticleWasBorn(Particle particle)
+        {
+            OnParticleBorn.Invoke(particle);
         }
 
-        private void Reset()
+        private void RaiseParticleDied()
         {
-            _particleSystem = GetComponent<ParticleSystem>();
+            OnParticleDied.Invoke();
         }
     }
 }
