@@ -38,10 +38,10 @@ namespace Brainamics.Core
             var youngestParticles = GetYoungestParticles(numParticlesAlive, _particles, ref youngestParticleTimeAlive);
             if (_shortestTimeAlive > youngestParticleTimeAlive)
             {
-                for (var i = 0; i < youngestParticles.Length; i++)
+                foreach (var yougestParticle in youngestParticles)
                 {
-                    RaiseParticleWasBorn(youngestParticles[i]);
-                    _aliveParticlesRemainingTime.Add(youngestParticles[i].remainingLifetime);
+                    RaiseParticleWasBorn(yougestParticle);
+                    _aliveParticlesRemainingTime.Add(yougestParticle.remainingLifetime);
                 }
             }
             _shortestTimeAlive = youngestParticleTimeAlive;
