@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Brainamics.Core
 {
-    public readonly struct CellAddress
+    [Serializable]
+    public struct CellAddress
     {
         public static readonly CellAddress Invalid = new(-1, -1);
         public static readonly CellAddress Zero = new(0, 0);
@@ -13,8 +14,8 @@ namespace Brainamics.Core
         public static readonly CellAddress MinValue = new(int.MinValue, int.MinValue);
         public static readonly CellAddress MaxValue = new(int.MaxValue, int.MaxValue);
 
-        public readonly int Row;
-        public readonly int Column;
+        public int Row;
+        public int Column;
 
         public bool IsValid => Row >= 0 && Column >= 0;
 
@@ -24,7 +25,7 @@ namespace Brainamics.Core
             Column = column;
         }
 
-        public CellAddress MoveStep(Vector2Int amount, bool upDeducts = true)
+        public readonly CellAddress MoveStep(Vector2Int amount, bool upDeducts = true)
         {
             if (upDeducts)
                 amount.y *= -1;
@@ -34,7 +35,7 @@ namespace Brainamics.Core
         /// <summary>
         /// Moves the address in a primary or diagonal direction.
         /// </summary>
-        public CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = true)
+        public readonly CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = true)
         {
             var addr = this;
             if (direction == PrimaryDirection.None)
@@ -44,7 +45,7 @@ namespace Brainamics.Core
             return addr;
         }
 
-        public CellAddress MovePrimaryStep(PrimaryDirection direction, bool upDeducts = true)
+        public readonly CellAddress MovePrimaryStep(PrimaryDirection direction, bool upDeducts = true)
         {
             var upAddition = upDeducts ? -1 : 1;
             return direction switch
@@ -57,7 +58,7 @@ namespace Brainamics.Core
             };
         }
 
-        public CellAddress GetNearestInvalidAddress(int rows, int columns)
+        public readonly CellAddress GetNearestInvalidAddress(int rows, int columns)
         {
             var row = Row;
             var column = Column;
@@ -109,19 +110,19 @@ namespace Brainamics.Core
             throw new FormatException($"The string '{str}' is not a valid cell address.");
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"{Row},{Column}";
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj is CellAddress addr)
                 return Row == addr.Row && Column == addr.Column;
             return false;
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashCode.Combine(Row, Column);
         }
