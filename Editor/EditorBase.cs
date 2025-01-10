@@ -14,11 +14,20 @@ namespace Brainamics.Core
 
         public IEnumerable<T> Targets => targets.Cast<T>();
 
+        protected virtual void Awake()
+        {
+            Initialize();
+        }
+
         protected virtual void OnEnable()
         {
         }
 
         protected virtual void OnDisable()
+        {
+        }
+
+        protected virtual void Initialize()
         {
         }
     }
