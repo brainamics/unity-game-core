@@ -8,6 +8,8 @@ namespace Brainamics.Core
     public interface ILoggingService<TEventType>
     {
         UnityEvent<LogRecord<TEventType>> OnLog { get; }
+        
+        UnityEvent<LogRecord<TEventType>> OnPreviewLog { get; }
 
         TEventType UnknownEventType { get; }
 
