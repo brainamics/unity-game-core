@@ -9,6 +9,9 @@ namespace Brainamics.Core
     {
         [SerializeField]
         private UnityEvent<LogRecord<TEventType>> _onLog = new();
+        
+        [SerializeField]
+        private UnityEvent<LogRecord<TEventType>> _onPreviewLog = new();
 
         [SerializeField]
         private LogLevel _unityLogTypes = LogLevel.Everything;
@@ -17,6 +20,8 @@ namespace Brainamics.Core
         private LogLevel _eventMinimumLogType = LogLevel.Event;
 
         public UnityEvent<LogRecord<TEventType>> OnLog => _onLog;
+        
+        public UnityEvent<LogRecord<TEventType>> OnPreviewLog => _onPreviewLog;
 
         /// <summary>
         /// Gets the log type that represents a generic unknown event.
