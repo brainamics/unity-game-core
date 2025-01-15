@@ -102,7 +102,8 @@ namespace Brainamics.Core
                 return;
             try
             {
-                _onLog?.Invoke(record);
+                OnPreviewLog?.Invoke(record);
+                OnLog?.Invoke(record);
             }
             catch (System.Exception exception)
             {
