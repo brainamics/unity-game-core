@@ -13,10 +13,7 @@ namespace Brainamics.Core
         public TextMeshProUGUI Text;
         public bool AutoFromColor;
 
-        [Range(0, 1)]
         public Color FromColor = Color.white;
-
-        [Range(0, 1)]
         public Color ToColor = Color.black;
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
