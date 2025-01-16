@@ -58,6 +58,12 @@ namespace Brainamics.Core
 
         public virtual bool SetIntVersion(TMinimalState state, int version) => false;
 
+        [ContextMenu("Reset State")]
+        public virtual void ResetState()
+        {
+            _operating = false;
+        }
+
         public virtual void SetActiveScenePersistenceManager(ScenePersistenceManagerBase<TState> manager)
         {
             if (_state == null)
