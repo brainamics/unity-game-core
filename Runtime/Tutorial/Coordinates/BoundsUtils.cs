@@ -7,59 +7,105 @@ namespace Brainamics.Core
 {
     public static class BoundsUtils
     {
-        public static Bounds FillBounds(Bounds bounds, Bounds containerBounds, bool allowScaleUp = true)
+        public static Bounds FillBoundsXY(Bounds bounds, Bounds containerBounds, bool allowScaleUp = true)
         {
             // Ensure the container bounds are valid
-            if (containerBounds.size.x <= 0 || containerBounds.size.y <= 0 || containerBounds.size.z <= 0)
+            if (containerBounds.size.x <= 0 || containerBounds.size.y <= 0)
             {
-                Debug.LogError("Container bounds must have positive size in all dimensions.");
+                Debug.LogError("Container bounds must have positive size in x and y dimensions.");
                 return bounds;
             }
-    
-            // Calculate the scale factors for each axis
+
+            // Calculate the scale factors for the x and y axes
             var scaleFactors = new Vector3(
                 containerBounds.size.x / bounds.size.x,
                 containerBounds.size.y / bounds.size.y,
-                containerBounds.size.z / bounds.size.z
+                1.0f // Z axis is ignored
             );
-    
+
             // Choose the smallest scale factor to ensure bounds fit within containerBounds
-            var scaleFactor = Mathf.Min(scaleFactors.x, scaleFactors.y, scaleFactors.z);
-    
+            var scaleFactor = Mathf.Min(scaleFactors.x, scaleFactors.y);
+
             // If scaling up is not allowed, clamp the scale factor to 1.0
             if (!allowScaleUp)
             {
                 scaleFactor = Mathf.Min(scaleFactor, 1.0f);
             }
-    
+
             // Calculate the new size for bounds
-            var newSize = bounds.size * scaleFactor;
-    
+            var newSize = new Vector3(bounds.size.x * scaleFactor, bounds.size.y * scaleFactor, bounds.size.z);
+
             // Create the new bounds with the resized size, keeping the same center
             var scaledBounds = new Bounds(bounds.center, newSize);
-    
+
             // Ensure the new bounds are fully contained within containerBounds
             var newCenter = scaledBounds.center;
-    
-            // Adjust the center to ensure containment
+
+            // Adjust the center to ensure containment (only for x and y axes)
             if (scaledBounds.min.x < containerBounds.min.x)
                 newCenter.x += containerBounds.min.x - scaledBounds.min.x;
             if (scaledBounds.max.x > containerBounds.max.x)
                 newCenter.x -= scaledBounds.max.x - containerBounds.max.x;
-    
+
             if (scaledBounds.min.y < containerBounds.min.y)
                 newCenter.y += containerBounds.min.y - scaledBounds.min.y;
             if (scaledBounds.max.y > containerBounds.max.y)
                 newCenter.y -= scaledBounds.max.y - containerBounds.max.y;
-    
+
+            // Set the adjusted center (z-axis remains unchanged)
+            scaledBounds.center = newCenter;
+
+            return scaledBounds;
+        }
+        
+        public static Bounds FillBoundsXZ(Bounds bounds, Bounds containerBounds, bool allowScaleUp = true)
+        {
+            // Ensure the container bounds are valid
+            if (containerBounds.size.x <= 0 || containerBounds.size.z <= 0)
+            {
+                Debug.LogError("Container bounds must have positive size in x and z dimensions.");
+                return bounds;
+            }
+
+            // Calculate the scale factors for the x and z axes
+            var scaleFactors = new Vector3(
+                containerBounds.size.x / bounds.size.x,
+                1.0f, // Y axis is ignored
+                containerBounds.size.z / bounds.size.z
+            );
+
+            // Choose the smallest scale factor to ensure bounds fit within containerBounds
+            var scaleFactor = Mathf.Min(scaleFactors.x, scaleFactors.z);
+
+            // If scaling up is not allowed, clamp the scale factor to 1.0
+            if (!allowScaleUp)
+            {
+                scaleFactor = Mathf.Min(scaleFactor, 1.0f);
+            }
+
+            // Calculate the new size for bounds
+            var newSize = new Vector3(bounds.size.x * scaleFactor, bounds.size.y, bounds.size.z * scaleFactor);
+
+            // Create the new bounds with the resized size, keeping the same center
+            var scaledBounds = new Bounds(bounds.center, newSize);
+
+            // Ensure the new bounds are fully contained within containerBounds
+            var newCenter = scaledBounds.center;
+
+            // Adjust the center to ensure containment (only for x and z axes)
+            if (scaledBounds.min.x < containerBounds.min.x)
+                newCenter.x += containerBounds.min.x - scaledBounds.min.x;
+            if (scaledBounds.max.x > containerBounds.max.x)
+                newCenter.x -= scaledBounds.max.x - containerBounds.max.x;
+
             if (scaledBounds.min.z < containerBounds.min.z)
                 newCenter.z += containerBounds.min.z - scaledBounds.min.z;
             if (scaledBounds.max.z > containerBounds.max.z)
                 newCenter.z -= scaledBounds.max.z - containerBounds.max.z;
-    
-            // Set the adjusted center
+
+            // Set the adjusted center (y-axis remains unchanged)
             scaledBounds.center = newCenter;
-    
+
             return scaledBounds;
         }
         
