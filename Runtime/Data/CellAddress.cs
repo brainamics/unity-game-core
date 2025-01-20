@@ -25,6 +25,17 @@ namespace Brainamics.Core
             Column = column;
         }
 
+        public static IEnumerable<CellAddress> Enumerate(CellAddress from, CellAddress to)
+        {
+            for (var row = from.Row; row <= to.Row; row++)
+            {
+                for (var column = from.Column; column <= to.Column; column++)
+                {
+                    yield return new CellAddress(row, column);
+                }
+            }
+        }
+
         public readonly CellAddress MoveStep(Vector2Int amount, bool upDeducts = true)
         {
             if (upDeducts)
