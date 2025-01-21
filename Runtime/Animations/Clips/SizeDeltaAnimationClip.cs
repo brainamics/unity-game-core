@@ -17,8 +17,8 @@ namespace Brainamics.Core
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             var transform = (RectTransform)GetTargetTransform(behaviour);
-            var fromSize = AutoFromSize ? transform.anchoredPosition : FromSize;
-            var toSize = AutoToSize ? transform.anchoredPosition : ToSize;
+            var fromSize = AutoFromSize ? transform.sizeDelta : FromSize;
+            var toSize = AutoToSize ? transform.sizeDelta : ToSize;
             return RunTimedLoop(lerp =>
                 transform.sizeDelta = Vector2.LerpUnclamped(fromSize, toSize, lerp));
         }
