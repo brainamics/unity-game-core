@@ -13,5 +13,11 @@ namespace Brainamics.Core
                 collection.Add(item);
             }
         }
+
+        public static T AnyItem<T>(HashSet<T> set, T defaultValue = default)
+        {
+            var enumerator = set.GetEnumerator();
+            return enumerator.MoveNext() ? enumerator.Current : defaultValue;
+        }
     }
 }
