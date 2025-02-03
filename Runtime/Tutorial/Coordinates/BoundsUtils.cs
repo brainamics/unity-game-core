@@ -255,6 +255,20 @@ namespace Brainamics.Core
             return false;
         }
 
+        public static Bounds LocalToWorld(Bounds bounds, Transform transform)
+        {
+            var center = transform.TransformPoint(bounds.center);
+            var size = transform.TransformVector(bounds.size);
+            return new Bounds(center, size);
+        }
+    
+        public static Bounds WorldToLocal(Bounds bounds, Transform transform)
+        {
+            var center = transform.InverseTransformPoint(bounds.center);
+            var size = transform.InverseTransformVector(bounds.size);
+            return new Bounds(center, size);
+        }
+
         private static bool TryGetHintBounds(GameObject obj, out SpaceBounds bounds)
         {
             if (!obj.TryGetComponent<IBoundsProvider>(out var hint))
