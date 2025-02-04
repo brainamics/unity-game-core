@@ -16,7 +16,9 @@ namespace Brainamics.Core
             set => _pipeline = value;
         }
 
-        public abstract void Execute(GameplayPipelineContext context);
+        public virtual void Execute(GameplayPipelineContext context)
+        {
+        }
 
         protected virtual void Awake()
         {
