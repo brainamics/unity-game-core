@@ -33,7 +33,9 @@ namespace Brainamics.Core
 
         public void Play(MonoBehaviour behaviour)
         {
-            if (behaviour == null)
+            if (!this)
+                return;
+            if (!behaviour)
                 behaviour = this;
             _playing = true;
             _activeClips.Clear();
