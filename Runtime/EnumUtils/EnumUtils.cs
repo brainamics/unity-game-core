@@ -33,7 +33,8 @@ namespace Brainamics.Core
                 rem >>= 1;
                 if (!bit)
                     continue;
-                yield return (T)Convert.ChangeType(1 << i, typeof(T));
+                yield return (T)Enum.ToObject(typeof(T), 1 << i);
+                // yield return (T)Convert.ChangeType(1 << i, typeof(T));
             }
         }
     }
