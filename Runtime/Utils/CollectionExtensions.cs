@@ -23,7 +23,7 @@ namespace Brainamics.Core
             }
         }
 
-        public static void CopyFrom(this Stack<T> stack, Stack<T> source)
+        public static void CopyFrom<T>(this Stack<T> stack, Stack<T> source)
         {
             stack.Clear();
             stack.PushRange(source.Reverse());
