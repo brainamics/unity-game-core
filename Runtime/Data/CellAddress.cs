@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [Serializable]
-    public struct CellAddress : IEquatable<TrayEdgeDescriptor>
+    public struct CellAddress : IEquatable<CellAddress>
     {
         public static readonly CellAddress Invalid = new(-1, -1);
         public static readonly CellAddress Zero = new(0, 0);
