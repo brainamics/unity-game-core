@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -20,6 +21,12 @@ namespace Brainamics.Core
             {
                 collection.Push(item);
             }
+        }
+
+        public static void CopyFrom(this Stack<T> stack, Stack<T> source)
+        {
+            stack.Clear();
+            stack.PushRange(source.Reverse());
         }
 
         public static T AnyItem<T>(this HashSet<T> set, T defaultValue = default)
