@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [Serializable]
-    public struct CellAddress
+    public struct CellAddress : IEquatable<TrayEdgeDescriptor>
     {
         public static readonly CellAddress Invalid = new(-1, -1);
         public static readonly CellAddress Zero = new(0, 0);
@@ -126,10 +126,15 @@ namespace Brainamics.Core
             return $"{Row},{Column}";
         }
 
+        public readonly bool Equals(CellAddress address)
+        {
+            return Row == address.Row && Column == address.Column;
+        }
+
         public override readonly bool Equals(object obj)
         {
             if (obj is CellAddress addr)
-                return Row == addr.Row && Column == addr.Column;
+                return Equals(addr);
             return false;
         }
 
