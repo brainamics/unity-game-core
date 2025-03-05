@@ -105,6 +105,22 @@ public static class PrimaryDirectionUtils
             };
         }
         return dir;
+    }    
+
+    public static PrimaryDirection Rotate90CounterClockwise(this PrimaryDirection dir, int times = 1)
+    {
+        for (; times > 0; times--)
+        {
+            dir = dir switch
+            {
+                PrimaryDirection.Up => PrimaryDirection.Left,
+                PrimaryDirection.Right => PrimaryDirection.Up,
+                PrimaryDirection.Down => PrimaryDirection.Right,
+                PrimaryDirection.Left => PrimaryDirection.Down,
+                _ => throw new System.NotImplementedException($"Primary direction not implemented: {dir}"),
+            };
+        }
+        return dir;
     }
 
     public static PrimaryDirection Rotate180(this PrimaryDirection dir)
