@@ -13,6 +13,14 @@ namespace Brainamics.Core
                 collection.Add(item);
             }
         }
+        
+        public static void PushRange<T>(this Stack<T> collection, IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                collection.Push(item);
+            }
+        }
 
         public static T AnyItem<T>(this HashSet<T> set, T defaultValue = default)
         {
