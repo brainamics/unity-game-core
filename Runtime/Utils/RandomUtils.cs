@@ -24,6 +24,30 @@ namespace Brainamics.Core
             };
         }
 
+        public static T SelectAndRemove<T>(IList<T> list)
+        {
+            switch (list.Count)
+            {
+                case 0:
+                    return default;
+                case 1:
+                    var item = list[0];
+                    list.Clear();
+                    return item;
+                default:
+                    var index = Random.Range(0, list.Count)];
+                    var result = list[index];
+                    list.RemoveAt(index);
+                    return result;
+            }
+            return list.Count switch
+            {
+                0 => default,
+                1 => list[0],
+                _ => list[Random.Range(0, list.Count)],
+            };
+        }
+
         public static float Get(Vector2 range, AnimationCurve curve, int steps, OddsRandomizer<float> randomizer)
         {
             if (steps <= 0)
