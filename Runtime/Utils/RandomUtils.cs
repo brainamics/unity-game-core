@@ -35,7 +35,7 @@ namespace Brainamics.Core
                     list.Clear();
                     return item;
                 default:
-                    var index = Random.Range(0, list.Count)];
+                    var index = Random.Range(0, list.Count);
                     var result = list[index];
                     list.RemoveAt(index);
                     return result;
