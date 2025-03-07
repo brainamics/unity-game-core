@@ -121,6 +121,16 @@ namespace Brainamics.Core
             throw new FormatException($"The string '{str}' is not a valid cell address.");
         }
 
+        public static CellAddress Min(CellAddress a, CellAddress b)
+        {
+            return new CellAddress(Mathf.Min(a.Row, b.Row), Mathf.Min(a.Column, b.Column));
+        }
+
+        public static CellAddress Max(CellAddress a, CellAddress b)
+        {
+            return new CellAddress(Mathf.Max(a.Row, b.Row), Mathf.Max(a.Column, b.Column));
+        }
+
         public override readonly string ToString()
         {
             return $"{Row},{Column}";
