@@ -11,6 +11,10 @@ namespace Brainamics.Core
         
         public static bool Bool(float trueProbability)
         {
+            if (trueProbability <= 0)
+                return false;
+            if (trueProbability >= 1)
+                return true;
             return Random.value <= trueProbability;
         }
 
