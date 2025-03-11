@@ -31,8 +31,12 @@ namespace Brainamics.Core
 
         public static T AnyItem<T>(this HashSet<T> set, T defaultValue = default)
         {
-            var enumerator = set.GetEnumerator();
-            return enumerator.MoveNext() ? enumerator.Current : defaultValue;
+            if (set.Count == 0)
+            {
+                return defaultValue;
+            }
+            using var enumerator = set.GetEnumerator();
+            return enumerator.MoveNext();
         }
     }
 }
