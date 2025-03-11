@@ -36,7 +36,8 @@ namespace Brainamics.Core
                 return defaultValue;
             }
             using var enumerator = set.GetEnumerator();
-            return enumerator.MoveNext();
+            enumerator.MoveNext();
+            return enumerator.Current;
         }
     }
 }
