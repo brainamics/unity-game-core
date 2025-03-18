@@ -6,6 +6,11 @@ namespace Brainamics.Core
 {
     public static class GameObjectUtils
     {
+        public static int GetLayer(this LayerMask mask)
+        {
+            return (int)Mathf.Log(mask.value, 2);
+        }
+        
         public static GameObject GetGameObject(object o)
         {
             if (o == null)
