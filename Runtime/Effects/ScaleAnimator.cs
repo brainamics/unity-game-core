@@ -44,12 +44,12 @@ namespace Brainamics.Core
             var initialScale = _autoInitialScale ? transform.localScale : _initialScale;
             if (initialScale == _targetScale && (!_useMiddleScale || _middleScale == _targetScale))
                 return;
-            _coroutine = StartCoroutine(PlayAnimation(initialScale));
+            this.StartMonoCoroutine(ref _coroutine, PlayAnimation(initialScale));
         }
 
         protected override void OnDisable()
         {
-            _coroutine = null;
+            this.CancelCoroutine(ref _coroutine);
         }
 
         private IEnumerator PlayAnimation(Vector3 initialScale)
