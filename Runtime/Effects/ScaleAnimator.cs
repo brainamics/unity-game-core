@@ -49,6 +49,7 @@ namespace Brainamics.Core
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             this.CancelCoroutine(ref _coroutine);
         }
 
