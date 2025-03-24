@@ -78,9 +78,9 @@ namespace Brainamics.Core
                 return;
             }
 #endif
-            _pool.Return(obj);
-            if (obj)
+            if (Capacity > 0)
                 obj.transform.SetParent(_parent, false);
+            _pool.Return(obj);
         }
 
         protected virtual GameObject CreateNew()
