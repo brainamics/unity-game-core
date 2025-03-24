@@ -65,7 +65,7 @@ namespace Brainamics.Core
 
         public void Return(GameObject obj)
         {
-            if (obj == null)
+            if (!obj)
             {
                 Debug.LogWarning("Prevented returning null (or destroyed) object into the pool.");
                 return;
@@ -78,8 +78,9 @@ namespace Brainamics.Core
                 return;
             }
 #endif
-            obj.transform.SetParent(_parent, false);
             _pool.Return(obj);
+            if (obj)
+                obj.transform.SetParent(_parent, false);
         }
 
         protected virtual GameObject CreateNew()
