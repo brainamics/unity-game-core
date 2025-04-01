@@ -108,13 +108,7 @@ namespace Brainamics.Core
             var toggleRect = bgRect;
             toggleRect.width = 20;
             toggleRect.x += 3 + (bgRect.width - toggleRect.width) / 2;
-            var oldEnabled = clip.Enabled;
-            clip.Enabled = EditorGUI.Toggle(toggleRect, oldEnabled);
-            // clip.Enabled = EditorGUILayout.Toggle(oldEnabled, GUILayout.Width(20));
-            if (oldEnabled != clip.Enabled)
-            {
-                EditorUtility.SetDirty(target);
-            }
+            EditorGUI.PropertyField(toggleRect, enabledProperty, GUIContent.none);
 
             clip.Fold = EditorGUILayout.BeginFoldoutHeaderGroup(clip.Fold, clipName, guiStyle, rect =>
             {
@@ -179,7 +173,7 @@ namespace Brainamics.Core
                     Undo.RecordObject(Target, $"Move Clip Down");
                     var index = Target.Clips.IndexOf(clip);
                     if (index < Target.Clips.Count)
-                        Target.Clips.Move(clip, index + 1);
+                        Target.Clips.Move(clip, index + 2);
                 });
                 menu.DropDown(rect);
             });
