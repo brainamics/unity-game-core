@@ -49,7 +49,7 @@ namespace Brainamics.Core
 
         public string AsSerializedString()
         {
-            return $"{GetType()}," + JsonUtility.ToJson(this);
+            return $"{GetType().AssemblyQualifiedName},,," + JsonUtility.ToJson(this);
         }
 
         public virtual void PlayImmediate(MonoBehaviour behaviour)
@@ -165,7 +165,7 @@ namespace Brainamics.Core
 
         private static (Type type, string json) DeserializeInternal(string content)
         {
-            var split = content.Split(',', 2);
+            var split = content.Split(",,,", 2);
             if (split.Length < 2)
                 return (null, null);
             var typeName = split[0];
