@@ -35,7 +35,7 @@ namespace Brainamics.Core
 
             EditorGUILayout.Space();
             GUILayout.Label("Clips", EditorStyles.boldLabel);
-            for (int i = 0; i < Target.Clips.Count; i++)
+            for (var i = 0; i < Target.Clips.Count; i++)
             {
                 var clip = Target.Clips[i];
                 var indexProperty = _clipsProperty.GetArrayElementAtIndex(i);
@@ -57,6 +57,7 @@ namespace Brainamics.Core
                     }
                 }
             }
+
             if (Application.isPlaying)
             {
                 if (GUILayout.Button("Play"))
@@ -66,6 +67,7 @@ namespace Brainamics.Core
                 if (GUILayout.Button("Kill"))
                     Target.Kill();
             }
+
             EditorGUILayout.EndHorizontal();
 
             serializedObject.ApplyModifiedProperties();
@@ -73,11 +75,14 @@ namespace Brainamics.Core
 
         private void DrawClipInspector(AnimationClipBase clip, SerializedProperty indexProperty, int index)
         {
+            var enabledProperty = indexProperty.FindPropertyRelative(nameof(AnimationClipBase.Enabled));
+
+            var backgroundTexture = clip.Fold ? Texture2D.normalTexture : Texture2D.grayTexture;
             var guiStyle = new GUIStyle
             {
                 normal =
                 {
-                    background = clip.Fold ? Texture2D.normalTexture : Texture2D.grayTexture,
+                    background = backgroundTexture,
                     textColor = Color.white
                 },
                 fontSize = 12,
@@ -89,6 +94,27 @@ namespace Brainamics.Core
             };
 
             var clipName = ResolveClipName(clip.GetType());
+
+            EditorGUILayout.BeginHorizontal();
+
+            // Checkbox for Enabled property
+            var bgRect = EditorGUILayout.GetControlRect(GUILayout.Width(30));
+            bgRect.width -= 11;
+            bgRect.height += 2;
+            bgRect.y -= 2;
+            EditorGUI.DrawTextureTransparent(bgRect, backgroundTexture, ScaleMode.StretchToFill);
+
+            // Draw toggle on top of the colored rect
+            var toggleRect = bgRect;
+            toggleRect.width = 20;
+            toggleRect.x += 3 + (bgRect.width - toggleRect.width) / 2;
+            var oldEnabled = clip.Enabled;
+            clip.Enabled = EditorGUI.Toggle(toggleRect, oldEnabled);
+            // clip.Enabled = EditorGUILayout.Toggle(oldEnabled, GUILayout.Width(20));
+            if (oldEnabled != clip.Enabled)
+            {
+                EditorUtility.SetDirty(target);
+            }
 
             clip.Fold = EditorGUILayout.BeginFoldoutHeaderGroup(clip.Fold, clipName, guiStyle, rect =>
             {
@@ -109,6 +135,7 @@ namespace Brainamics.Core
                     });
                     menu.AddSeparator(string.Empty);
                 }
+
                 menu.AddItem(new GUIContent("Delete"), false, () =>
                 {
                     Undo.RecordObject(Target, $"Delete Clip: {clipName}");
@@ -138,6 +165,7 @@ namespace Brainamics.Core
                         clip.DeserializeFromString(GUIUtility.systemCopyBuffer);
                     });
                 }
+
                 menu.AddSeparator(null);
                 menu.AddItem(new GUIContent("Move Up"), false, () =>
                 {
@@ -156,10 +184,12 @@ namespace Brainamics.Core
                 menu.DropDown(rect);
             });
             EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.EndHorizontal();
             if (clip.Fold)
             {
                 indexProperty.DrawAllProperties();
             }
+
             EditorGUILayout.Space();
         }
 
@@ -177,6 +207,7 @@ namespace Brainamics.Core
                     Target.Clips.Add(clip);
                 });
             }
+
             menu.ShowAsContext();
         }
 

@@ -18,6 +18,9 @@ namespace Brainamics.Core
         public bool Fold;
 #endif
 
+        [HideInInspector]
+        public bool Enabled = true;
+
         public AnimationClipTimeSettings TimeSettings;
 
         public event Action<AnimationClipBase> OnPlayComplete;
@@ -51,12 +54,15 @@ namespace Brainamics.Core
 
         public virtual void PlayImmediate(MonoBehaviour behaviour)
         {
+            if (!Enabled)
+                return;
             var originalImmediate = TimeSettings.Immediate;
             if (!originalImmediate)
             {
                 TimeSettings.Immediate = true;
                 OnPlayComplete += HandlePlayComplete;
             }
+
             Play(behaviour);
 
             void HandlePlayComplete(AnimationClipBase clip)
@@ -68,7 +74,9 @@ namespace Brainamics.Core
 
         public virtual void Play(MonoBehaviour behaviour)
         {
-            if (behaviour == null)
+            if (!Enabled)
+                return;
+            if (!behaviour)
                 throw new System.ArgumentNullException(nameof(behaviour));
             if (!behaviour.isActiveAndEnabled)
                 return;
