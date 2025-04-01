@@ -44,12 +44,6 @@ namespace Brainamics.Core
                     list.RemoveAt(index);
                     return result;
             }
-            return list.Count switch
-            {
-                0 => default,
-                1 => list[0],
-                _ => list[Random.Range(0, list.Count)],
-            };
         }
 
         public static float Get(Vector2 range, AnimationCurve curve, int steps, OddsRandomizer<float> randomizer)

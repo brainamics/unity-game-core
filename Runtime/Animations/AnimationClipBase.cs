@@ -1,3 +1,5 @@
+#define ENABLED_SUPPORT
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [System.Serializable]
-    public abstract class AnimationClipBase
+    public abstract class AnimationClipBase : ISerializationCallbackReceiver
     {
         private Coroutine _coroutine;
         private bool _keepPlaying = true;
@@ -18,8 +20,16 @@ namespace Brainamics.Core
         public bool Fold;
 #endif
 
+#if ENABLED_SUPPORT
+#if UNITY_EDITOR
+        [HideInInspector]
+        [SerializeField]
+        private bool _initialized;
+#endif
+
         [HideInInspector]
         public bool Enabled = true;
+#endif
 
         public AnimationClipTimeSettings TimeSettings;
 
@@ -28,6 +38,16 @@ namespace Brainamics.Core
         public bool IsPlaying => _coroutine != null;
 
         protected float Time => TimeSettings.UnscaledTime ? UnityEngine.Time.unscaledTime : UnityEngine.Time.time;
+
+        public void OnBeforeSerialize()
+        {
+            OnValidate();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            OnValidate();
+        }
 
         public static AnimationClipBase DeserializeNew(string content)
         {
@@ -54,8 +74,10 @@ namespace Brainamics.Core
 
         public virtual void PlayImmediate(MonoBehaviour behaviour)
         {
+#if ENABLED_SUPPORT
             if (!Enabled)
                 return;
+#endif
             var originalImmediate = TimeSettings.Immediate;
             if (!originalImmediate)
             {
@@ -74,8 +96,10 @@ namespace Brainamics.Core
 
         public virtual void Play(MonoBehaviour behaviour)
         {
+#if ENABLED_SUPPORT
             if (!Enabled)
                 return;
+#endif
             if (!behaviour)
                 throw new System.ArgumentNullException(nameof(behaviour));
             if (!behaviour.isActiveAndEnabled)
@@ -111,6 +135,17 @@ namespace Brainamics.Core
         }
 
         protected abstract IEnumerator PlayCoroutine(MonoBehaviour behaviour);
+
+        protected virtual void OnValidate()
+        {
+#if ENABLED_SUPPORT && UNITY_EDITOR
+            if (!_initialized)
+            {
+                _initialized = true;
+                Enabled = true;
+            }
+#endif
+        }
 
         protected IEnumerator RunTimedLoop(System.Action<float> apply)
         {

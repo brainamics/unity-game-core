@@ -17,7 +17,7 @@ namespace Brainamics.Core
         public int Row;
         public int Column;
 
-        public bool IsValid => Row >= 0 && Column >= 0;
+        public readonly bool IsValid => Row >= 0 && Column >= 0;
 
         public CellAddress(int row, int column)
         {
@@ -76,7 +76,8 @@ namespace Brainamics.Core
             if (!IsValid)
                 return this;
 
-            var distances = new ValueTuple<int, Action>[] {
+            var distances = new ValueTuple<int, Action>[]
+            {
                 (Row, () => row = -1),
                 (Column, () => column = -1),
                 (rows - Row, () => row = rows),
@@ -106,6 +107,7 @@ namespace Brainamics.Core
                 address = new CellAddress(row, column);
                 return true;
             }
+
             return false;
         }
 
@@ -193,7 +195,7 @@ namespace Brainamics.Core
         {
             return new CellAddress(address.Row, column);
         }
-        
+
         public static bool IsValid(this CellAddress address, int rows, int columns)
         {
             if (!address.IsValid)
@@ -201,7 +203,8 @@ namespace Brainamics.Core
             return address.Row < rows && address.Column < columns;
         }
 
-        public static IEnumerable<CellAddress> GetAdjacentAddresses(this CellAddress address, int rows, int columns, bool primary = true, bool diagonal = false)
+        public static IEnumerable<CellAddress> GetAdjacentAddresses(this CellAddress address, int rows, int columns,
+            bool primary = true, bool diagonal = false)
         {
             foreach (var dir in PrimaryDirectionUtils.EnumerateDirections(primary, diagonal))
             {

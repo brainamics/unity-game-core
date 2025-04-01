@@ -1,3 +1,5 @@
+#define ENABLED_SUPPORT
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -75,7 +77,9 @@ namespace Brainamics.Core
 
         private void DrawClipInspector(AnimationClipBase clip, SerializedProperty indexProperty, int index)
         {
+#if ENABLED_SUPPORT
             var enabledProperty = indexProperty.FindPropertyRelative(nameof(AnimationClipBase.Enabled));
+#endif
 
             var backgroundTexture = clip.Fold ? Texture2D.normalTexture : Texture2D.grayTexture;
             var guiStyle = new GUIStyle
@@ -97,6 +101,7 @@ namespace Brainamics.Core
 
             EditorGUILayout.BeginHorizontal();
 
+#if ENABLED_SUPPORT
             // Checkbox for Enabled property
             var bgRect = EditorGUILayout.GetControlRect(GUILayout.Width(30));
             bgRect.width -= 11;
@@ -109,6 +114,7 @@ namespace Brainamics.Core
             toggleRect.width = 20;
             toggleRect.x += 3 + (bgRect.width - toggleRect.width) / 2;
             EditorGUI.PropertyField(toggleRect, enabledProperty, GUIContent.none);
+#endif
 
             clip.Fold = EditorGUILayout.BeginFoldoutHeaderGroup(clip.Fold, clipName, guiStyle, rect =>
             {

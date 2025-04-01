@@ -11,7 +11,6 @@ namespace Brainamics.Core
             if (!spriteRenderer || !spriteRenderer.sprite)
             {
                 throw new System.ArgumentException("Invalid SpriteRenderer or Sprite.", nameof(spriteRenderer));
-                return;
             }
 
             var originalSize = spriteRenderer.sprite.bounds.size;
