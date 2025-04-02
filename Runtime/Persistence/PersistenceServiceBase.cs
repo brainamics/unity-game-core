@@ -10,7 +10,9 @@ using UnityEngine.SceneManagement;
 namespace Brainamics.Core
 {
     // [CreateAssetMenu(menuName = "Game/Services/Persistence/Persistence Service")]
-    public abstract class PersistenceServiceBase<TState> : PersistenceServiceBase<TState, TState> { }
+    public abstract class PersistenceServiceBase<TState> : PersistenceServiceBase<TState, TState>
+    {
+    }
 
     public abstract class PersistenceServiceBase<TState, TMinimalState> : ScriptableObject, IPersistenceService<TState>
         where TState : TMinimalState
@@ -71,6 +73,7 @@ namespace Brainamics.Core
                 LoadGameInBackground(null);
                 return;
             }
+
             _activeScenePersistenceManager = manager;
         }
 
@@ -131,6 +134,12 @@ namespace Brainamics.Core
             return StartSaveLoadOperationAsync(async () =>
             {
                 _state = await MigrateAndLoadStateFromProviderAsync();
+                if (_state == null)
+                {
+                    Log("No game state found; creating a new one.");
+                    _state = NewState();
+                }
+
                 Log($"loading game: {_state}");
                 await LoadGameState(_state, progress);
                 if (_activeScenePersistenceManager && _autoLoadPersistenceManager)
@@ -142,7 +151,7 @@ namespace Brainamics.Core
         {
             LoadGameAsync(progress).RunInBackground();
         }
-        
+
         public void LoadActiveSceneState()
         {
             if (_state == null && ReloadIfStateUnavailableDuringSceneAwake)
@@ -150,6 +159,7 @@ namespace Brainamics.Core
                 LoadGameInBackground(null);
                 return;
             }
+
             StartSaveLoadOperation(() =>
             {
                 if (_activeScenePersistenceManager == null)
@@ -179,11 +189,13 @@ namespace Brainamics.Core
             Debug.LogError($"[Persistence] {o}");
         }
 
-        protected virtual Task<TState> MigrateAsync(int fromVersion, int toVersion, IPersistenceProvider<TState> persistenceProvider)
+        protected virtual Task<TState> MigrateAsync(int fromVersion, int toVersion,
+            IPersistenceProvider<TState> persistenceProvider)
         {
-            throw new NotSupportedException($"Migrating save file from version {fromVersion} to {toVersion} is not supported.");
+            throw new NotSupportedException(
+                $"Migrating save file from version {fromVersion} to {toVersion} is not supported.");
         }
-        
+
         protected virtual bool CanSave(TState state)
         {
             return true;
@@ -250,22 +262,26 @@ namespace Brainamics.Core
                 state = NewState();
                 persistableObjects = EnumeratePersistableObjects(_activeScenePersistenceManager.PersistableObjects);
             }
+
             UpdateStateBeforeSave(state);
             foreach (var obj in persistableObjects)
             {
                 obj.SaveState(state);
             }
+
             if (!CanSave(state))
             {
                 LogWarning("Blocked save of the game state because of CanSave returning false.");
                 return false;
             }
+
             _state = state;
             Log($"saving game: {state}");
             return true;
         }
 
-        private IEnumerable<IPersistentState<TState>> EnumeratePersistableObjects(IEnumerable<IPersistentState<TState>> statefulObjects)
+        private IEnumerable<IPersistentState<TState>> EnumeratePersistableObjects(
+            IEnumerable<IPersistentState<TState>> statefulObjects)
         {
             return ScriptableObjects.OfType<IPersistentState<TState>>().Concat(statefulObjects);
         }
