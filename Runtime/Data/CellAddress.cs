@@ -213,6 +213,16 @@ namespace Brainamics.Core
                     yield return addr;
             }
         }
+        
+        public static IEnumerable<CellAddress> GetAdjacentAddresses(this CellAddress address,
+            bool primary = true, bool diagonal = false)
+        {
+            foreach (var dir in PrimaryDirectionUtils.EnumerateDirections(primary, diagonal))
+            {
+                var addr = address.MoveStep(dir);
+                yield return addr;
+            }
+        }
 
         public static void ThrowIfInvalid(this CellAddress address)
         {
