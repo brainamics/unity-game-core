@@ -23,6 +23,9 @@ namespace Brainamics.Core
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
+            if (!Animator)
+                return;
+        
             if (TransitionDuration > 0)
             {
                 Animator.CrossFade(StateName, TransitionDuration, Layer, NormalizedTime);
