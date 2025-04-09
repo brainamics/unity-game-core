@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Brainamics.Core
 {
     [System.Serializable]
-    [AnimationClip(MenuName = "Particle System/Clone and Play")]
+    [AnimationClip(MenuName = "Animator/Set State")]
     public class SetAnimatorStateAnimation : AnimationClipBase
     {
         public Animator Animator;
