@@ -186,6 +186,11 @@ namespace Brainamics.Core
 
     public static class CellAddressExtensions
     {
+        public static CellAddress Swap(this CellAddress address)
+        {
+            return new CellAddress(address.Column, address.Row);
+        }
+        
         public static CellAddress WithRow(this CellAddress address, int row)
         {
             return new CellAddress(row, address.Column);
