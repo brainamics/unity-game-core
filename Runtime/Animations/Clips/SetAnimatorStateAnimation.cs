@@ -24,7 +24,7 @@ namespace Brainamics.Core
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             if (!Animator)
-                return;
+                yield break;
         
             if (TransitionDuration > 0)
             {
