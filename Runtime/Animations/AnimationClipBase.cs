@@ -32,6 +32,7 @@ namespace Brainamics.Core
 #endif
 
         public AnimationClipTimeSettings TimeSettings;
+        public AnimationPlatformSettings PlatformSettings;
 
         public event Action<AnimationClipBase> OnPlayComplete;
 
@@ -78,6 +79,8 @@ namespace Brainamics.Core
             if (!Enabled)
                 return;
 #endif
+            if (!PlatformSettings.IsApplicable)
+                return;
             var originalImmediate = TimeSettings.Immediate;
             if (!originalImmediate)
             {
@@ -100,6 +103,8 @@ namespace Brainamics.Core
             if (!Enabled)
                 return;
 #endif
+            if (!PlatformSettings.IsApplicable)
+                return;
             if (!behaviour)
                 throw new System.ArgumentNullException(nameof(behaviour));
             if (!behaviour.isActiveAndEnabled)
