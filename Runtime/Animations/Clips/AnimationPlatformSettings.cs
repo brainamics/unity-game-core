@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -10,11 +9,9 @@ namespace Brainamics.Core
     {
         public bool AnyPlatform = true;
 
-        [DisableIf(nameof(AnyPlatform))]
         public bool Android;
 
         [InspectorName("iOS")]
-        [DisableIf(nameof(AnyPlatform))]
         public bool IOS;
 
         public bool IsApplicable
