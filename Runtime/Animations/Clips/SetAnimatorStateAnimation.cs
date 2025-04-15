@@ -21,10 +21,23 @@ namespace Brainamics.Core
         [Min(0)]
         public float TransitionDuration;
 
+        public bool WaitForCurrentState;
+
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
         {
             if (!Animator)
                 yield break;
+
+            if (WaitForCurrentState)
+            {
+                while (true)
+                {
+                    var stateInfo = Animator.GetCurrentAnimatorStateInfo(Layer);
+                    if (stateInfo.normalizedTime >= 1f)
+                        break;
+                    yield return null;
+                }
+            }
         
             if (TransitionDuration > 0)
             {
