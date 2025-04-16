@@ -161,4 +161,30 @@ public static class PrimaryDirectionUtils
             _ => PrimaryDirection.None,
         };
     }
+
+    public static float GetAngleOnPlane(Vector3 fromPoint, Vector3 toPoint, Vector3 referenceDirection, Vector3 up)
+    {
+        var plane = new Plane(up, fromPoint);
+        toPoint = plane.ClosestPointOnPlane(toPoint);
+        var shiftingDelta = toPoint - fromPoint;
+        return Vector3.SignedAngle(referenceDirection, shiftingDelta, up);
+    }
+
+    public static PrimaryDirection DirectionFromAngle(float angle, bool clockwise)
+    {
+        if (!clockwise)
+            angle = 360 - angle;
+        if (angle < 0)
+            angle += 360;
+        angle %= 360;
+
+        return angle switch
+        {
+            < 45 => PrimaryDirection.Right,
+            < 135 => PrimaryDirection.Up,
+            < 225 => PrimaryDirection.Left,
+            < 315 => PrimaryDirection.Down,
+            _ => PrimaryDirection.Right
+        };
+    }
 }
