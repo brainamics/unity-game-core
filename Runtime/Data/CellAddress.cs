@@ -46,7 +46,7 @@ namespace Brainamics.Core
         /// <summary>
         /// Moves the address in a primary or diagonal direction.
         /// </summary>
-        public readonly CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = true)
+        public readonly CellAddress MoveStep(PrimaryDirection direction, bool upDeducts = false)
         {
             var addr = this;
             if (direction == PrimaryDirection.None)
@@ -56,7 +56,7 @@ namespace Brainamics.Core
             return addr;
         }
 
-        public readonly CellAddress MovePrimaryStep(PrimaryDirection direction, bool upDeducts = true)
+        public readonly CellAddress MovePrimaryStep(PrimaryDirection direction, bool upDeducts = false)
         {
             var upAddition = upDeducts ? -1 : 1;
             return direction switch
