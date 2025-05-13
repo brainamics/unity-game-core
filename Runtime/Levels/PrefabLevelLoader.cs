@@ -34,7 +34,7 @@ namespace Brainamics.Core
             protected set => _levelPrefab = value;
         }
 
-        protected GameObject LoadedLevel { get; private set; }
+        public GameObject LoadedLevel { get; protected set; }
 
         public bool IsLevelLoaded => LoadedLevel != null;
 
