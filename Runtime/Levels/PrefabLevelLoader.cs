@@ -19,7 +19,7 @@ namespace Brainamics.Core
         private GameObject _levelPrefab;
     
         [SerializeField]
-        private Transform _host;
+        protected Transform _host;
 
         public bool AllowLevelReloading = true;
 
@@ -34,7 +34,7 @@ namespace Brainamics.Core
             protected set => _levelPrefab = value;
         }
 
-        public GameObject LoadedLevel { get; private set; }
+        protected GameObject LoadedLevel { get; private set; }
 
         public bool IsLevelLoaded => LoadedLevel != null;
 
