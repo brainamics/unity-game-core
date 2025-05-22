@@ -34,14 +34,18 @@ namespace Brainamics.Core
         }
 
         #if PRIMETWEEN
-        public void SetBusy(float duration)
+        public void SetBusy(float duration, System.Action callback = null)
         {
             if (duration <= 0)
                 return;
 
             Counter++;
-            Tween.Delay(duration, DecrementCounter);
-        }
+            Tween.Delay(duration, () =>
+            {
+                DecrementCounter();
+                callback?.Invoke();
+            });
+        }        
         #endif
 
         private void DecrementCounter()
