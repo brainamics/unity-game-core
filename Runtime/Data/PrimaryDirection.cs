@@ -103,7 +103,7 @@ public static class PrimaryDirectionUtils
             PrimaryDirection.Left | PrimaryDirection.Down => PrimaryDirection.Right | PrimaryDirection.Up,
             PrimaryDirection.Right | PrimaryDirection.Down => PrimaryDirection.Left | PrimaryDirection.Up,
             PrimaryDirection.Right | PrimaryDirection.Up => PrimaryDirection.Left | PrimaryDirection.Down,
-            _ => throw new ArgumentOutOfRangeException(nameof(dir), dir, null)
+            _ => throw new System.ArgumentOutOfRangeException(nameof(dir), dir, null)
         };
     }
 
