@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace Brainamics.Core
@@ -25,7 +24,7 @@ namespace Brainamics.Core
             }
         }
 
-        [Button("Adjust")]
+        [ContextMenu("Adjust")]
         public void Adjust()
         {
             var (targetBounds, scaleMultiplier) = Adjust(CurrentBounds);
