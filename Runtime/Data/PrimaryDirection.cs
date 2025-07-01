@@ -91,8 +91,25 @@ public static class PrimaryDirectionUtils
         return (horz, vert);
     }
 
+    public static PrimaryDirection GetOppositeDirection(this PrimaryDirection dir)
+    {
+        return dir switch
+        {
+            PrimaryDirection.Up => PrimaryDirection.Down,
+            PrimaryDirection.Down => PrimaryDirection.Up,
+            PrimaryDirection.Left => PrimaryDirection.Right,
+            PrimaryDirection.Right => PrimaryDirection.Left,
+            PrimaryDirection.Left | PrimaryDirection.Up => PrimaryDirection.Right | PrimaryDirection.Down,
+            PrimaryDirection.Left | PrimaryDirection.Down => PrimaryDirection.Right | PrimaryDirection.Up,
+            PrimaryDirection.Right | PrimaryDirection.Down => PrimaryDirection.Left | PrimaryDirection.Up,
+            PrimaryDirection.Right | PrimaryDirection.Up => PrimaryDirection.Left | PrimaryDirection.Down,
+            _ => throw new ArgumentOutOfRangeException(nameof(dir), dir, null)
+        };
+    }
+
     public static PrimaryDirection Rotate90Clockwise(this PrimaryDirection dir, int times = 1)
     {
+        times %= 4;
         for (; times > 0; times--)
         {
             dir = dir switch
@@ -109,6 +126,7 @@ public static class PrimaryDirectionUtils
 
     public static PrimaryDirection Rotate90CounterClockwise(this PrimaryDirection dir, int times = 1)
     {
+        times %= 4;
         for (; times > 0; times--)
         {
             dir = dir switch
