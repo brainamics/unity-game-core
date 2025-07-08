@@ -86,8 +86,6 @@ public static class PrimaryDirectionUtils
                 horz = flag;
             else if (flag.IsVertical())
                 vert = flag;
-        if (horz == PrimaryDirection.None || vert == PrimaryDirection.None)
-            throw new System.NotSupportedException("The diagonal direction is invalid.");
         return (horz, vert);
     }
 
