@@ -12,7 +12,7 @@ namespace Brainamics.Core
 
         protected Transform TryGetTargetTransform(MonoBehaviour behaviour)
         {
-            return _targetTransform == null ? behaviour.transform : _targetTransform;
+            return _targetTransform;
         }
 
         protected Transform GetTargetTransform(MonoBehaviour behaviour)
