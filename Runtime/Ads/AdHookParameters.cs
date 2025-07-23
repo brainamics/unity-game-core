@@ -11,7 +11,7 @@ namespace Brainamics.Core
             Kind = kind;
         }
 
-        public AdKind Kind { get; }
+        public AdKind Kind { get; set; }
 
         public string PlacementId { get; set; }
 
