@@ -25,5 +25,24 @@ namespace Brainamics.Core
         {
             return $"{Kind} (placement={PlacementId}) (src={SourceName})";
         }
+
+        public void AssignFrom(AdHookParameters hookParams)
+        {
+            if (hookParams == null)
+                throw new System.ArgumentNullException(nameof(hookParams));
+
+            Kind = hookParams.Kind;
+            PlacementId = hookParams.PlacementId;
+            SourceName = hookParams.SourceName;
+            BannerSize = hookParams.BannerSize;
+            BannerPosition = hookParams.BannerPosition;
+        }
+
+        public AdHookParameters Clone()
+        {
+            var clone = new AdHookParameters();
+            clone.AssignFrom(this);
+            return clone;
+        }
     }
 }
