@@ -17,6 +17,8 @@ namespace Brainamics.Core
         [Range(0, 1)]
         public float ToAlpha = 1f;
 
+        public bool adjustInteraction;
+        public bool raycast=true;
         public bool ControlObjectActivation;
 
         protected override IEnumerator PlayCoroutine(MonoBehaviour behaviour)
@@ -25,6 +27,8 @@ namespace Brainamics.Core
             if (group == null)
                 throw new System.InvalidOperationException("Could not find the target canvas group.");
             var fromAlpha = AutoFromAlpha ? group.alpha : FromAlpha;
+            if(adjustInteraction)
+                group.interactable = group.blocksRaycasts = raycast;
             return RunTimedLoop(lerp =>
             {
                 var alpha = Mathf.Lerp(fromAlpha, ToAlpha, lerp);
